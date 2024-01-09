@@ -1,0 +1,16 @@
+{
+  "name": "Resume Craft: Your Custom Resume Solution",
+  "short_name": "Resume Craft",
+  "description": "Resume Craft: Your go-to platform for effortlessly tailoring ATS-friendly resumes to job descriptions. Streamline your job application process and stand out in the competitive market",
+  "start_url": "/",
+  "theme_color": "#f9f9f9",
+  "background_color": "#f9f9f9",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/app/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
