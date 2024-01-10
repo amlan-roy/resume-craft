@@ -1,8 +1,205 @@
+@import "colors.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --brand-primary-green-1: var(--primary-green-50);
+    --brand-primary-green-2: var(--primary-green-100);
+    --brand-primary-green-3: var(--primary-green-200);
+    --brand-primary-green-4: var(--primary-green-300);
+    --brand-primary-green-5: var(--primary-green-400);
+    --brand-primary-green-6: var(--primary-green-500);
+    --brand-primary-green-7: var(--primary-green-600);
+    --brand-primary-green-8: var(--primary-green-700);
+    --brand-primary-green-9: var(--primary-green-800);
+    --brand-primary-green-10: var(--primary-green-900);
+    --brand-primary-brown-1: var(--primary-brown-50);
+    --brand-primary-brown-2: var(--primary-brown-100);
+    --brand-primary-brown-3: var(--primary-brown-200);
+    --brand-primary-brown-4: var(--primary-brown-300);
+    --brand-primary-brown-5: var(--primary-brown-400);
+    --brand-primary-brown-6: var(--primary-brown-500);
+    --brand-primary-brown-7: var(--primary-brown-600);
+    --brand-primary-brown-8: var(--primary-brown-700);
+    --brand-primary-brown-9: var(--primary-brown-800);
+    --brand-primary-brown-10: var(--primary-brown-900);
+    --brand-secondary-green-1: var(--secondary-green-50);
+    --brand-secondary-green-1: var(--secondary-green-100);
+    --brand-secondary-green-3: var(--secondary-green-200);
+    --brand-secondary-green-4: var(--secondary-green-300);
+    --brand-secondary-green-5: var(--secondary-green-400);
+    --brand-secondary-green-6: var(--secondary-green-500);
+    --brand-secondary-green-7: var(--secondary-green-600);
+    --brand-secondary-green-8: var(--secondary-green-700);
+    --brand-secondary-green-9: var(--secondary-green-800);
+    --brand-secondary-green-10: var(--secondary-green-900);
+    --brand-secondary-blue-1: var(--secondary-blue-50);
+    --brand-secondary-blue-2: var(--secondary-blue-100);
+    --brand-secondary-blue-3: var(--secondary-blue-200);
+    --brand-secondary-blue-4: var(--secondary-blue-300);
+    --brand-secondary-blue-5: var(--secondary-blue-400);
+    --brand-secondary-blue-6: var(--secondary-blue-500);
+    --brand-secondary-blue-7: var(--secondary-blue-600);
+    --brand-secondary-blue-8: var(--secondary-blue-700);
+    --brand-secondary-blue-9: var(--secondary-blue-800);
+    --brand-secondary-blue-10: var(--secondary-blue-900);
+    --brand-secondary-cyan-1: var(--secondary-cyan-50);
+    --brand-secondary-cyan-2: var(--secondary-cyan-100);
+    --brand-secondary-cyan-3: var(--secondary-cyan-200);
+    --brand-secondary-cyan-4: var(--secondary-cyan-300);
+    --brand-secondary-cyan-5: var(--secondary-cyan-400);
+    --brand-secondary-cyan-6: var(--secondary-cyan-500);
+    --brand-secondary-cyan-7: var(--secondary-cyan-600);
+    --brand-secondary-cyan-8: var(--secondary-cyan-700);
+    --brand-secondary-cyan-9: var(--secondary-cyan-800);
+    --brand-secondary-cyan-10: var(--secondary-cyan-900);
+    --brand-neutral-1: var(--neutrals-1);
+    --brand-neutral-2: var(--neutrals-2);
+    --brand-neutral-3: var(--neutrals-3);
+    --brand-neutral-4: var(--neutrals-4);
+    --brand-neutral-5: var(--neutrals-5);
+    --brand-neutral-6: var(--neutrals-6);
+    --brand-neutral-7: var(--neutrals-7);
+    --brand-neutral-8: var(--neutrals-8);
+    --brand-neutral-9: var(--neutrals-9);
+    --brand-neutral-10: var(--neutrals-10);
+    --brand-neutral-11: var(--neutrals-11);
+    --brand-neutral-12: var(--neutrals-12);
+    --brand-neutral-13: var(--neutrals-13);
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --brand-primary-green-1: var(--primary-green-900);
+    --brand-primary-green-2: var(--primary-green-800);
+    --brand-primary-green-3: var(--primary-green-700);
+    --brand-primary-green-4: var(--primary-green-600);
+    --brand-primary-green-5: var(--primary-green-500);
+    --brand-primary-green-6: var(--primary-green-400);
+    --brand-primary-green-7: var(--primary-green-300);
+    --brand-primary-green-8: var(--primary-green-200);
+    --brand-primary-green-9: var(--primary-green-100);
+    --brand-primary-green-10: var(--primary-green-50);
+    --brand-primary-brown-1: var(--primary-brown-900);
+    --brand-primary-brown-2: var(--primary-brown-800);
+    --brand-primary-brown-3: var(--primary-brown-700);
+    --brand-primary-brown-4: var(--primary-brown-600);
+    --brand-primary-brown-5: var(--primary-brown-500);
+    --brand-primary-brown-6: var(--primary-brown-400);
+    --brand-primary-brown-7: var(--primary-brown-300);
+    --brand-primary-brown-8: var(--primary-brown-200);
+    --brand-primary-brown-9: var(--primary-brown-100);
+    --brand-primary-brown-10: var(--primary-brown-50);
+    --brand-secondary-green-1: var(--secondary-green-900);
+    --brand-secondary-green-2: var(--secondary-green-800);
+    --brand-secondary-green-3: var(--secondary-green-700);
+    --brand-secondary-green-4: var(--secondary-green-600);
+    --brand-secondary-green-5: var(--secondary-green-500);
+    --brand-secondary-green-6: var(--secondary-green-400);
+    --brand-secondary-green-7: var(--secondary-green-300);
+    --brand-secondary-green-8: var(--secondary-green-200);
+    --brand-secondary-green-9: var(--secondary-green-100);
+    --brand-secondary-green-10: var(--secondary-green-50);
+    --brand-secondary-blue-1: var(--secondary-blue-900);
+    --brand-secondary-blue-2: var(--secondary-blue-800);
+    --brand-secondary-blue-3: var(--secondary-blue-700);
+    --brand-secondary-blue-4: var(--secondary-blue-600);
+    --brand-secondary-blue-5: var(--secondary-blue-500);
+    --brand-secondary-blue-6: var(--secondary-blue-400);
+    --brand-secondary-blue-7: var(--secondary-blue-300);
+    --brand-secondary-blue-8: var(--secondary-blue-200);
+    --brand-secondary-blue-9: var(--secondary-blue-100);
+    --brand-secondary-blue-10: var(--secondary-blue-50);
+    --brand-secondary-cyan-1: var(--secondary-cyan-900);
+    --brand-secondary-cyan-2: var(--secondary-cyan-800);
+    --brand-secondary-cyan-3: var(--secondary-cyan-700);
+    --brand-secondary-cyan-4: var(--secondary-cyan-600);
+    --brand-secondary-cyan-5: var(--secondary-cyan-500);
+    --brand-secondary-cyan-6: var(--secondary-cyan-400);
+    --brand-secondary-cyan-7: var(--secondary-cyan-300);
+    --brand-secondary-cyan-8: var(--secondary-cyan-200);
+    --brand-secondary-cyan-9: var(--secondary-cyan-100);
+    --brand-secondary-cyan-10: var(--secondary-cyan-50);
+    --brand-neutral-1: var(--neutrals-13);
+    --brand-neutral-2: var(--neutrals-12);
+    --brand-neutral-3: var(--neutrals-11);
+    --brand-neutral-4: var(--neutrals-10);
+    --brand-neutral-5: var(--neutrals-9);
+    --brand-neutral-6: var(--neutrals-8);
+    --brand-neutral-7: var(--neutrals-7);
+    --brand-neutral-8: var(--neutrals-6);
+    --brand-neutral-9: var(--neutrals-5);
+    --brand-neutral-10: var(--neutrals-4);
+    --brand-neutral-11: var(--neutrals-3);
+    --brand-neutral-12: var(--neutrals-2);
+    --brand-neutral-13: var(--neutrals-1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
