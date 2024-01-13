@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FaRegClock, FaRegFileAlt, FaCodeBranch } from "react-icons/fa";
+import Link from "next/link";
 
 type LandingPageProps = {};
 
@@ -57,12 +58,14 @@ const LandingPage: React.FC<LandingPageProps> = () => {
             here will later be modified for the different job descriptions that
             you will provide.
           </h5>
-          <Button
-            variant={"default"}
-            className="md:text-4xl text-xl py-7 px-7 w-fit mt-9 md:mx-0 mx-auto"
-          >
-            Get Started
-          </Button>
+          <Link href={"/generate-variants"} passHref>
+            <Button
+              variant={"default"}
+              className="md:text-4xl text-xl py-7 px-7 w-fit mt-9 md:mx-0 mx-auto"
+            >
+              Get Started
+            </Button>
+          </Link>
         </div>
         <div className="justify-center items-center hidden md:flex">
           <Image

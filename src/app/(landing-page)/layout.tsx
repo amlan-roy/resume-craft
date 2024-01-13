@@ -1,3 +1,4 @@
+import Footer from "@/components/global/Footer";
 import Header from "@/components/landing-page/Header";
 import React from "react";
 
@@ -10,6 +11,7 @@ const HomePageLayout: React.FC<HomePageLayoutProps> = ({ children }) => {
     <main>
       <Header />
       {children}
+      <Footer />
     </main>
   );
 };
