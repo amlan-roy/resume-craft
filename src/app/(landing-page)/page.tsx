@@ -8,7 +8,7 @@ type LandingPageProps = {};
 const LandingPage: React.FC<LandingPageProps> = () => {
   return (
     <>
-      <section className="overflow-hidden px-4 sm:px-6 mt-10 sm:flex md:justify-center md:items-end md:mx-12">
+      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 sm:flex md:justify-center md:items-end items-center md:mx-auto mx-6">
         <div className="flex flex-col w-full max-w-2xl">
           <h1 className="md:text-6xl text-5xl font-bold text-brand-neutral-11">
             Welcome to Resume Cart
@@ -40,6 +40,54 @@ const LandingPage: React.FC<LandingPageProps> = () => {
             height={416}
             alt={"Resume illustration"}
           />
+        </div>
+      </section>
+      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-24 sm:flex sm:flex-col md:justify-center md:items-start items-center md:mx-auto mx-6">
+        <h2 className="md:text-5xl text-4xl font-bold text-brand-neutral-11 mx-auto text-center">
+          How It Works
+        </h2>
+        <div className="flex gap-5 mt-6">
+          <div className="flex justify-center items-center rounded-full md:w-16 md:h-16 w-10 h-10 bg-brand-primary-brown-4 md:text-4xl text-3xl text-brand-secondary-blue-10 font-bold p-6 md:p-8">
+            1
+          </div>
+          <div>
+            <h3 className="md:text-3xl text-2xl text-brand-primary-brown-10 font-bold">
+              One-Time Resume Input
+            </h3>
+            <p className="md:text-xl text-base text-brand-neutral-9">
+              Input your resume details just once. We store your information in
+              your browser for future use. Your information is not shared with
+              any third party.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-5 mt-6">
+          <div className="flex justify-center items-center rounded-full md:w-16 md:h-16 w-10 h-10 bg-brand-primary-brown-4 md:text-4xl text-3xl text-brand-secondary-blue-10 font-bold p-6 md:p-8">
+            2
+          </div>
+          <div>
+            <h3 className="md:text-3xl text-2xl text-brand-primary-brown-10 font-bold">
+              Job Description Integration
+            </h3>
+            <p className="md:text-xl text-base text-brand-neutral-9">
+              Provide the job description for the position you're targeting. Our
+              intelligent system generates a custom ChatGPT prompt just for you.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-5 mt-6">
+          <div className="flex justify-center items-center rounded-full md:w-16 md:h-16 w-10 h-10 bg-brand-primary-brown-4 md:text-4xl text-3xl text-brand-secondary-blue-10 font-bold p-6 md:p-8">
+            3
+          </div>
+          <div>
+            <h3 className="md:text-3xl text-2xl text-brand-primary-brown-10 font-bold">
+              Generate Your Custom Resume
+            </h3>
+            <p className="md:text-xl text-base text-brand-neutral-9">
+              Copy and paste the ChatGPT response into the app. Watch as Resume
+              Craft transforms it into a tailor-made, ATS-friendly resume.
+            </p>
+          </div>
         </div>
       </section>
     </>
