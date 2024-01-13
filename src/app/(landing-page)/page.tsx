@@ -104,8 +104,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
               Job Description Integration
             </h3>
             <p className="md:text-xl text-base text-brand-neutral-9">
-              Provide the job description for the position you're targeting. Our
-              intelligent system generates a custom ChatGPT prompt just for you.
+              Provide the job description for the position you&apos;re
+              targeting. Our intelligent system generates a custom ChatGPT
+              prompt just for you.
             </p>
           </div>
         </div>
@@ -129,7 +130,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
           Key Features
         </h2>
         <h5 className="md:text-2xl text-base text-brand-neutral-8 mt-6 text-center mx-auto">
-          Unlock Your Potential with Resume Craft's Powerful Features
+          Unlock Your Potential with Resume Craft&apos;s Powerful Features
         </h5>
 
         <div className="flex flex-wrap md:gap-12 gap-8 mx-auto items-center justify-center">
@@ -144,7 +145,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
             icon={<FaRegFileAlt size={20} />}
             title={"ATS Optimization"}
             description={
-              "Our system is designed to enhance your resume's compatibility with Applicant Tracking Systems, increasing your chances of getting noticed."
+              "Our system is designed to enhance your resume&apos;s compatibility with Applicant Tracking Systems, increasing your chances of getting noticed."
             }
           />
           <FeaturesCard
