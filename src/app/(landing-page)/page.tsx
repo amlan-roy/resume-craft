@@ -27,7 +27,9 @@ const FeaturesCard = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-brand-primary-green-8 text-base">{description}</p>
+          <p className="text-brand-primary-green-8 dark:text-brand-primary-green-10 text-base">
+            {description}
+          </p>
         </CardContent>
       </Card>
     </div>
@@ -150,6 +152,40 @@ const LandingPage: React.FC<LandingPageProps> = () => {
             }
           />
         </div>
+      </section>
+      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-24 sm:flex sm:flex-col md:justify-center md:items-start items-center md:mx-auto mx-6">
+        <h2 className="md:text-5xl text-4xl font-bold text-brand-neutral-11 mx-auto text-center">
+          Why Choose Resume Craft
+        </h2>
+
+        <Card className="p-2 bg-brand-primary-brown-3 mt-11 px-7 py-8 w-full max-w-6xl">
+          <p className="text-brand-neutral-9 text-base">
+            Embark on a seamless journey to career success with Resume Craft.
+            Our platform is designed to empower you, ensuring your resume stands
+            out in the competitive job market. By combining efficiency,
+            precision, and user-friendly navigation, Resume Craft becomes your
+            trusted companion in crafting tailored resumes. Say goodbye to the
+            uncertainty of job applications and embrace the confidence that
+            comes with presenting a customized, ATS-friendly resume. Elevate
+            your career prospects effortlessly with Resume Craft - where your
+            professional journey takes center stage.
+          </p>
+        </Card>
+      </section>
+      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-24 mb-16 md:justify-center md:items-start items-center md:mx-auto mx-6 gap-10 flex flex-col">
+        <h2 className="md:text-5xl text-4xl font-bold text-brand-neutral-11 mx-auto text-center">
+          Get Started Today
+        </h2>
+
+        <p className="text-brand-neutral-9 text-xl md:text-center">
+          Crafting your dream career starts with the right resume. Sign up for
+          Resume Craft now and experience a new era of personalized, efficient
+          job application preparation.
+        </p>
+
+        <h3 className="italic text-brand-secondary-blue-10 md:text-2xl text-xl text-center mx-auto mt-9">
+          - Your Journey to Success Begins with Resume Craft -
+        </h3>
       </section>
     </>
   );
