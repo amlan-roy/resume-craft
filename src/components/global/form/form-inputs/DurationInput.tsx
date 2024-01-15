@@ -1,3 +1,7 @@
+import React from "react";
+import { CalendarIcon } from "lucide-react";
+import { Control, FieldValues } from "react-hook-form";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -13,10 +17,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import React from "react";
-import { Control, FieldValues } from "react-hook-form";
 
 type DurationInputProps = {
   fieldName: string;

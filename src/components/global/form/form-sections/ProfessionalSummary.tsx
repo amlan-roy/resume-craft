@@ -1,9 +1,9 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import React from "react";
 import { Control, FieldValues } from "react-hook-form";
-import TextInput from "../form-inputs/TextInput";
 import { Trash2Icon } from "lucide-react";
-import HiddenInput from "../form-inputs/HiddenInput";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import TextInput from "@/components/global/form/form-inputs/TextInput";
+import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import { SECTION } from "@/lib/types/form";
 
 type ProfessionalSummaryProps = {

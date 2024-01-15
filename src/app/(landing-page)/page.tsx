@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FaRegClock, FaRegFileAlt, FaCodeBranch } from "react-icons/fa";
+import Image from "next/image";
 import Link from "next/link";
+import { FaRegClock, FaRegFileAlt, FaCodeBranch } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type LandingPageProps = {};
 

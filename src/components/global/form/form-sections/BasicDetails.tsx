@@ -1,15 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import React from "react";
-import TextInput from "../form-inputs/TextInput";
 import { Control, FieldValues } from "react-hook-form";
-import HiddenInput from "../form-inputs/HiddenInput";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
+import TextInput from "@/components/global/form/form-inputs/TextInput";
 import { SECTION } from "@/lib/types/form";
 
 type BasicDetailsProps = {
