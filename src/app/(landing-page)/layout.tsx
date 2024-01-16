@@ -1,6 +1,6 @@
+import React from "react";
 import Footer from "@/components/global/Footer";
 import Header from "@/components/landing-page/Header";
-import React from "react";
 
 type HomePageLayoutProps = {
   children: React.ReactNode;
