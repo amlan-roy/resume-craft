@@ -36,7 +36,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
             />
           </CardTitle>
         )}
-        <button className="ml-auto" onClick={deleteSection}>
+        <button className="ml-auto" onClick={deleteSection} type="button">
           <Trash2Icon />
         </button>
       </CardHeader>
