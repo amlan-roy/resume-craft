@@ -99,16 +99,16 @@ export const additionalSectionSchema = z.object({
   }),
 });
 
+export const sectionTypes = z.union([
+  professionalSummarySectionSchema,
+  workExperienceSectionSchema,
+  projectsSectionSchema,
+  skillsSectionSchema,
+  educationSectionSchema,
+  additionalSectionSchema,
+]);
+
 export const formSchema = z.object({
   basicDetails: basicDetailsSectionSchema,
-  optionalSections: z.array(
-    z.union([
-      professionalSummarySectionSchema,
-      workExperienceSectionSchema,
-      projectsSectionSchema,
-      skillsSectionSchema,
-      educationSectionSchema,
-      additionalSectionSchema,
-    ])
-  ),
+  optionalSections: z.array(sectionTypes),
 });

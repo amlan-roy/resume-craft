@@ -20,7 +20,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
   index,
 }) => {
   return (
-    <Card>
+    <Card data-form-section="PROFESSIONAL_SUMMARY">
       <HiddenInput
         fieldName={`optionalSections.${index}.type`}
         value={SECTION.PROFESSIONAL_SUMMARY}
