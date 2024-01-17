@@ -25,6 +25,14 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type EnterDataPageProps = {};
 
@@ -75,14 +83,17 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
 
   const submitHandler = handleSubmit(onSubmit);
 
-  const addSection = () => {
-    append({
-      sectionTitle: "a",
-      type: SECTION.PROFESSIONAL_SUMMARY,
-      fields: {
-        value: "",
-      },
-    });
+  const addSection = (sectionType: SECTION) => {
+    switch (sectionType) {
+      case SECTION.PROFESSIONAL_SUMMARY:
+        append({
+          sectionTitle: "a",
+          type: SECTION.PROFESSIONAL_SUMMARY,
+          fields: {
+            value: "",
+          },
+        });
+    }
   };
 
   return (
@@ -112,14 +123,14 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 variant="link"
                 className="text-brand-neutral-10 text-center text-2xl m-0 px-0"
               >
-                Google's X-Y-Z format
+                Google&apos;s X-Y-Z format
               </Button>
             </HoverCardTrigger>
             <HoverCardContent className="w-96">
               <div className="flex justify-between space-x-4">
                 <div className="space-y-1">
                   <h4 className="text-sm font-semibold">
-                    Google's X-Y-Z format
+                    Google&apos;s X-Y-Z format
                   </h4>
                   <p className="text-sm">
                     The Google resume x y z format is a way of writing your
@@ -148,7 +159,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           for reference.
         </p>
       </section>
-      <div className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
+      <div className="max-w-screen-xl overflow-hidden p-4 sm:px-6 mt-10 mx-auto mb-28">
         <Form {...form}>
           <form
             onSubmit={(e) => {
@@ -179,10 +190,26 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 }
               })}
             </section>
-            <Button variant={"outline"} onClick={addSection}>
-              Add Section
-            </Button>
-            <button type="submit">Submit</button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"outline"} className="m-4">
+                  Add Section
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Select section to add</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  data-add-section-menu-item="PROFESSIONAL_SUMMARY"
+                  onSelect={() => {
+                    addSection(SECTION.PROFESSIONAL_SUMMARY);
+                  }}
+                >
+                  Professional Summary
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </div>
