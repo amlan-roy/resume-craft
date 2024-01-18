@@ -61,6 +61,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
           <Link href={"/generate-variants"} passHref>
             <Button
               variant={"default"}
+              role="button"
               className="md:text-4xl text-xl py-7 px-7 w-fit mt-9 md:mx-0 mx-auto"
             >
               Get Started

@@ -10,7 +10,10 @@ type HeaderProps = {};
 const Header: React.FC<HeaderProps> = () => {
   const { setTheme, theme } = useTheme();
   return (
-    <header className="p-4 w-full flex justify-between mx-auto max-w-screen-xl">
+    <header
+      data-testid="global_header"
+      className="p-4 w-full flex justify-between mx-auto max-w-screen-xl"
+    >
       <Logo linkify />
       <div className="flex items-center space-x-2 mx-2">
         <Switch
