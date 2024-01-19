@@ -11,7 +11,7 @@ const Header: React.FC<HeaderProps> = () => {
   const { setTheme, theme } = useTheme();
   return (
     <header
-      data-testid="global_header"
+      data-testid="global__header"
       className="p-4 w-full flex justify-between mx-auto max-w-screen-xl"
     >
       <Logo linkify />
