@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration:components/global/header snapshot 1`] = `
+<div>
+  <header
+    class="p-4 w-full flex justify-between mx-auto max-w-screen-xl"
+    data-testid="global__header"
+  >
+    <a
+      class="flex justify-center items-center"
+      data-testid="global__logo-linkified"
+      href="/"
+    >
+      <img
+        alt="Resume Craft Icon"
+        class="w-9 h-9 sm:w-full sm:h-full"
+        data-nimg="1"
+        decoding="async"
+        height="36"
+        loading="lazy"
+        src="/_next/image?url=%2Ficon.png&w=96&q=75"
+        srcset="/_next/image?url=%2Ficon.png&w=48&q=75 1x, /_next/image?url=%2Ficon.png&w=96&q=75 2x"
+        style="color: transparent;"
+        width="36"
+      />
+      <div
+        class="flex flex-col text-brand-neutral-12 mx-3 justify-center items-center"
+      >
+        <p
+          class="text-base sm:text-xl font-extrabold leading-none sm:leading-none"
+        >
+          RESUME
+        </p>
+        <p
+          class="text-base sm:text-xl leading-none sm:leading-none "
+        >
+          <span
+            class="font-light"
+          >
+             - 
+          </span>
+          craft
+          <span
+            class="font-light"
+          >
+             - 
+          </span>
+        </p>
+      </div>
+    </a>
+    <div
+      class="flex items-center space-x-2 mx-2"
+    >
+      <button
+        aria-checked="false"
+        class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+        data-state="unchecked"
+        id="dark-mode"
+        role="switch"
+        type="button"
+        value="on"
+      >
+        <span
+          class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+          data-state="unchecked"
+        />
+      </button>
+      <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        for="dark-mode"
+      >
+        Dark Mode
+      </label>
+    </div>
+  </header>
+</div>
+`;
+
+exports[`integration:components/landing-page/header snapshot 1`] = `
+<div>
+  <header
+    class="p-4 w-full flex"
+    data-testid="landing-page__header"
+  >
+    <div
+      class="flex justify-between items-center w-full max-w-2xl mx-auto"
+    >
+      <a
+        class="flex justify-center items-center"
+        data-testid="global__logo-linkified"
+        href="/"
+      >
+        <img
+          alt="Resume Craft Icon"
+          class="w-9 h-9 sm:w-full sm:h-full"
+          data-nimg="1"
+          decoding="async"
+          height="36"
+          loading="lazy"
+          src="/_next/image?url=%2Ficon.png&w=96&q=75"
+          srcset="/_next/image?url=%2Ficon.png&w=48&q=75 1x, /_next/image?url=%2Ficon.png&w=96&q=75 2x"
+          style="color: transparent;"
+          width="36"
+        />
+        <div
+          class="flex flex-col text-brand-neutral-12 mx-3 justify-center items-center"
+        >
+          <p
+            class="text-base sm:text-xl font-extrabold leading-none sm:leading-none"
+          >
+            RESUME
+          </p>
+          <p
+            class="text-base sm:text-xl leading-none sm:leading-none "
+          >
+            <span
+              class="font-light"
+            >
+               - 
+            </span>
+            craft
+            <span
+              class="font-light"
+            >
+               - 
+            </span>
+          </p>
+        </div>
+      </a>
+      <div
+        class="sm:flex gap-3 hidden"
+      >
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-2 bg-transparent text-brand-secondary-blue-10 border-brand-secondary-blue-10 hover:border-brand-secondary-blue-8 active:border-brand-secondary-blue-6 disabled:border-brand-neutral-7 disabled:text-brand-neutral-8 dark:border-brand-secondary-blue-2 dark:hover:border-brand-secondary-blue-4 dark:active:border-brand-secondary-blue-6 dark:disabled:border-brand-neutral-7 dark:disabled:text-brand-neutral-6 h-10 px-4 py-2"
+          disabled=""
+          title="Coming soon"
+        >
+          Generate Resume
+        </button>
+        <a
+          href="/generate-variants"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-brand-secondary-blue-4 text-brand-secondary-blue-10 hover:bg-brand-secondary-blue-6 active:bg-brand-secondary-blue-8 disabled:bg-brand-primary-green-7 disabled:text-brand-neutral-8 dark:bg-brand-secondary-blue-4 dark:text-brand-secondary-blue-10 dark:hover:bg-brand-secondary-blue-6 dark:active:bg-brand-secondary-blue-8 dark:disabled:bg-brand-neutral-7 dark:disabled:text-brand-neutral-8 h-10 px-4 py-2"
+          >
+            Generate Variants
+          </button>
+        </a>
+      </div>
+    </div>
+    <div
+      class="flex items-center space-x-2 mx-2"
+    >
+      <button
+        aria-checked="false"
+        class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+        data-state="unchecked"
+        id="dark-mode"
+        role="switch"
+        type="button"
+        value="on"
+      >
+        <span
+          class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+          data-state="unchecked"
+        />
+      </button>
+      <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        for="dark-mode"
+      >
+        Dark Mode
+      </label>
+    </div>
+  </header>
+</div>
+`;
