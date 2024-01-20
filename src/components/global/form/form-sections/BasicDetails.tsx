@@ -1,5 +1,4 @@
 import React from "react";
-import { Control, FieldValues } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
@@ -7,100 +6,113 @@ import { SECTION } from "@/lib/types/form";
 
 type BasicDetailsProps = {
   sectionTitle?: string;
-  control?: Control<FieldValues> | undefined;
+  register?: any;
+  fieldName?: string;
+  fieldErrors?: any;
 };
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({
   sectionTitle = "Basic Details",
-  control,
+  register,
+  fieldName,
+  fieldErrors,
 }) => {
   return (
     <Card data-testid="form-sections__basic-details">
       <HiddenInput
-        fieldName={"basicDetails.type"}
+        fieldName={fieldName && `${fieldName}.type`}
         value={SECTION.BASIC_DETAILS}
-        control={control}
+        register={register}
       />
       <CardHeader className="text-brand-neutral-11 text-3xl md:text-4xl">
         {sectionTitle && <CardTitle>{sectionTitle}</CardTitle>}
       </CardHeader>
       <CardContent className="flex flex-wrap w-full gap-5 justify-between">
         <HiddenInput
-          fieldName={"basicDetails.sectionTitle"}
+          fieldName={fieldName && `${fieldName}.sectionTitle`}
           value={sectionTitle}
-          control={control}
+          register={register}
         />
         <TextInput
-          fieldName={"basicDetails.fields.name"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.name`}
+          register={register}
           label="Name"
           autoComplete="name"
           placeholder="Stephen Hawwkins"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.name?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.email"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.email`}
+          register={register}
           label="Email"
           autoComplete="email"
           placeholder="little-people@complex-equations.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.email?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.phone"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.phone`}
+          register={register}
           label="Phone Number"
           autoComplete="tel"
           placeholder="+69 4206996024"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.phone?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.location"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.location`}
+          register={register}
           label="Location"
           autoComplete="address-level2"
           placeholder="Epstein Island"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.location?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.portfolioUrl"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.portfolioUrl`}
+          register={register}
           label="Portfolio Url"
           autoComplete="url"
           placeholder="www.tooHighUpChalkboard.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.portfolioUrl?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.githubUrl"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.githubUrl`}
+          register={register}
           label="Github Url"
           autoComplete="url"
           placeholder="www.github.com/thisIsAShocker"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.githubUrl?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.linkedinUrl"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.linkedinUrl`}
+          register={register}
           label="LinkedIn Url"
           autoComplete="url"
           placeholder="www.linkedin.com/narakMeJaega"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.linkedinUrl?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.stackoverflowUrl"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.stackoverflowUrl`}
+          register={register}
           label="Stack Overflow Url"
           autoComplete="url"
           placeholder="www.stackoverflow.com/iAmOutOfIdeas"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.stackoverflowUrl?.message}
         />
         <TextInput
-          fieldName={"basicDetails.fields.blogUrl"}
-          control={control}
+          fieldName={fieldName && `${fieldName}.fields.blogUrl`}
+          register={register}
           label="Blog Url"
           autoComplete="url"
           placeholder="www.cantFindFunnyPlaceholders.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
+          errorMessage={fieldErrors?.fields?.blogUrl?.message}
         />
       </CardContent>
     </Card>
