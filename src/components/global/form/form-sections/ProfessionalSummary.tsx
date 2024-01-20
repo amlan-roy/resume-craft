@@ -20,7 +20,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
   index,
 }) => {
   return (
-    <Card data-form-section="PROFESSIONAL_SUMMARY">
+    <Card data-testid="form-sections__professional-summary">
       <HiddenInput
         fieldName={`optionalSections.${index}.type`}
         value={SECTION.PROFESSIONAL_SUMMARY}
@@ -36,7 +36,12 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
             />
           </CardTitle>
         )}
-        <button className="ml-auto" onClick={deleteSection} type="button">
+        <button
+          className="ml-auto"
+          onClick={deleteSection}
+          type="button"
+          data-testid="form-sections__delete-icon"
+        >
           <Trash2Icon />
         </button>
       </CardHeader>

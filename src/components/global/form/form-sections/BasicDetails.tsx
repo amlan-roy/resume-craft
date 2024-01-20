@@ -15,7 +15,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
   control,
 }) => {
   return (
-    <Card data-form-section="BASIC_DETAILS">
+    <Card data-testid="form-sections__basic-details">
       <HiddenInput
         fieldName={"basicDetails.type"}
         value={SECTION.BASIC_DETAILS}
