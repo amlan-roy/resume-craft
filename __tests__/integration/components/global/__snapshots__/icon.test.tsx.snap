@@ -1,51 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`integration:components/global/header snapshot 1`] = `
-<div>
-  <div
-    class="flex justify-center items-center"
-    data-testid="global__logo"
-  >
-    <img
-      alt="Resume Craft Icon"
-      class="w-9 h-9 sm:w-full sm:h-full"
-      data-nimg="1"
-      decoding="async"
-      height="36"
-      loading="lazy"
-      src="/_next/image?url=%2Ficon.png&w=96&q=75"
-      srcset="/_next/image?url=%2Ficon.png&w=48&q=75 1x, /_next/image?url=%2Ficon.png&w=96&q=75 2x"
-      style="color: transparent;"
-      width="36"
-    />
-    <div
-      class="flex flex-col text-brand-neutral-12 mx-3 justify-center items-center"
-    >
-      <p
-        class="text-base sm:text-xl font-extrabold leading-none sm:leading-none"
-      >
-        RESUME
-      </p>
-      <p
-        class="text-base sm:text-xl leading-none sm:leading-none "
-      >
-        <span
-          class="font-light"
-        >
-           - 
-        </span>
-        craft
-        <span
-          class="font-light"
-        >
-           - 
-        </span>
-      </p>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`integration:components/global/icon snapshot 1`] = `
 <div>
   <div
