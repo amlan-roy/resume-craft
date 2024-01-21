@@ -33,6 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
 
 type EnterDataPageProps = {};
 
@@ -57,7 +58,12 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = form;
 
   const [alertDialogState, setAlertDialogState] = useState<{
     open: boolean;
@@ -71,7 +77,6 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     fields,
     append,
     remove: deleteSection,
-    update,
   } = useFieldArray({
     control,
     name: "optionalSections", // unique name for your Field Array
@@ -95,6 +100,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         });
     }
   };
+
+  const [focusOnLastSection, setFocusOnLastSection] = useState(false);
 
   return (
     <>
@@ -171,20 +178,24 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             <section className="w-full flex flex-col gap-8">
               {/* Todo: Fix This Later */}
               {/* @ts-ignore */}
-              <BasicDetails control={control} />
+              <BasicDetails
+                fieldErrors={errors?.basicDetails}
+                register={register}
+                fieldName={"basicDetails"}
+              />
               {fields.map((field, index) => {
                 switch (field.type) {
                   case SECTION.PROFESSIONAL_SUMMARY:
                     return (
                       <ProfessionalSummary
                         key={field.id}
-                        // Todo: Fix This Later
-                        // @ts-ignore
-                        control={control}
                         deleteSection={() =>
                           setAlertDialogState({ index, open: true })
                         }
                         index={index.toString()}
+                        fieldErrors={errors?.optionalSections?.[index]}
+                        register={register}
+                        fieldName={"optionalSections"}
                       />
                     );
                 }
@@ -196,12 +207,25 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                   Add Section
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent
+                onCloseAutoFocus={(e: Event) => {
+                  if (focusOnLastSection) {
+                    e.preventDefault();
+                    const firstFocusableInLastCard = findFirstFocusable();
+                    firstFocusableInLastCard?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                    firstFocusableInLastCard?.focus();
+                    setFocusOnLastSection(false);
+                  }
+                }}
+              >
                 <DropdownMenuLabel>Select section to add</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   data-add-section-menu-item="PROFESSIONAL_SUMMARY"
                   onSelect={() => {
+                    setFocusOnLastSection(true);
                     addSection(SECTION.PROFESSIONAL_SUMMARY);
                   }}
                 >

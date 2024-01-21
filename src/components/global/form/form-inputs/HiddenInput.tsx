@@ -1,30 +1,24 @@
 import React from "react";
-import { Control, FieldValues } from "react-hook-form";
-import { FormField, FormItem, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 type HiddenInputProps = {
-  fieldName: string;
-  control?: Control<FieldValues> | undefined;
+  fieldName?: string;
+  register?: any;
   value: string | number;
 };
 
 const HiddenInput: React.FC<HiddenInputProps> = ({
-  control,
+  register,
   fieldName,
   value,
 }) => {
   return (
-    <FormField
-      control={control}
-      name={fieldName}
-      render={({ field }) => (
-        <FormItem className="hidden">
-          <FormControl>
-            <Input {...field} type={"hidden"} value={value} />
-          </FormControl>
-        </FormItem>
-      )}
+    <Input
+      type={"hidden"}
+      hidden={true}
+      value={value}
+      data-testid="hidden-input__container"
+      {...(register && fieldName ? register(fieldName) : {})}
     />
   );
 };

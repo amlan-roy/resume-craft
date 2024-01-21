@@ -11,35 +11,35 @@ export enum SECTION {
 }
 
 export const durationFieldSchema = z.object({
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
-  current: z.boolean().optional(),
+  startDate: z.date().optional().nullish(),
+  endDate: z.date().optional().nullish(),
+  current: z.boolean().optional().nullish(),
 });
 
 export const basicDetailsFieldSchema = z.object({
   name: z.string().min(2),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  location: z.string().optional(),
-  portfolioUrl: z.string().url().optional(),
-  githubUrl: z.string().url().optional(),
-  linkedinUrl: z.string().url().optional(),
-  stackoverflowUrl: z.string().url().optional(),
-  blogUrl: z.string().url().optional(),
+  email: z.string().email().optional().nullish().or(z.literal("")),
+  phone: z.string().optional().nullish().or(z.literal("")),
+  location: z.string().optional().nullish().or(z.literal("")),
+  portfolioUrl: z.string().url().optional().nullish().or(z.literal("")),
+  githubUrl: z.string().url().optional().nullish().or(z.literal("")),
+  linkedinUrl: z.string().url().optional().nullish().or(z.literal("")),
+  stackoverflowUrl: z.string().url().optional().nullish().or(z.literal("")),
+  blogUrl: z.string().url().optional().nullish().or(z.literal("")),
 });
 export const workExperienceFieldSchema = z.object({
   jobTitle: z.string(),
-  companyName: z.string().optional(),
-  location: z.string().optional(),
-  duration: durationFieldSchema.optional(),
+  companyName: z.string().optional().nullish().or(z.literal("")),
+  location: z.string().optional().nullish().or(z.literal("")),
+  duration: durationFieldSchema.optional().nullish(),
   details: z.string(),
 });
 export const projectsFieldSchema = z.object({
   projectTitle: z.string(),
-  projectUrl: z.string().optional(),
-  associatedWith: z.string().optional(),
-  duration: durationFieldSchema.optional(),
-  details: z.string().optional(),
+  projectUrl: z.string().optional().nullish().or(z.literal("")),
+  associatedWith: z.string().optional().nullish().or(z.literal("")),
+  duration: durationFieldSchema.optional().nullish(),
+  details: z.string().optional().nullish().or(z.literal("")),
 });
 export const skillsFieldSchema = z.union([
   z
@@ -47,16 +47,17 @@ export const skillsFieldSchema = z.union([
       title: z.string(),
       skills: z.string(),
     })
-    .optional(),
-  z.string().optional(),
+    .optional()
+    .nullish(),
+  z.string().optional().nullish().or(z.literal("")),
 ]);
 export const educationFieldSchema = z.object({
   universityName: z.string(),
   degreeName: z.string(),
-  majorName: z.string().optional(),
-  grade: z.string().optional(),
-  location: z.string().optional(),
-  duration: durationFieldSchema.optional(),
+  majorName: z.string().optional().nullish().or(z.literal("")),
+  grade: z.string().optional().nullish().or(z.literal("")),
+  location: z.string().optional().nullish().or(z.literal("")),
+  duration: durationFieldSchema.optional().nullish(),
 });
 
 export const basicDetailsSectionSchema = z.object({

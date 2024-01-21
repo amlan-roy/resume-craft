@@ -1,71 +1,64 @@
 import React from "react";
-import { Control, FieldValues } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 type TextInputProps = {
-  fieldName: string;
-  label?: string;
-  placeholder?: string;
-  multiline?: boolean;
-  control?: Control<FieldValues> | undefined;
-  type?: React.HTMLInputTypeAttribute;
-  className?: string;
   autoComplete?: string;
+  className?: string;
+  errorMessage?: string;
+  fieldName?: string;
   inputClassName?: string;
+  label?: string;
+  multiline?: boolean;
+  placeholder?: string;
+  // todo: use proper type for register
+  register?: any;
+  type?: React.HTMLInputTypeAttribute;
 };
 
 const TextInput: React.FC<TextInputProps> = ({
-  control,
-  fieldName,
-  label,
-  placeholder,
-  type,
-  multiline,
-  className,
-  inputClassName,
   autoComplete,
+  className,
+  errorMessage,
+  fieldName,
+  inputClassName,
+  label,
+  multiline,
+  placeholder,
+  register,
+  type,
 }) => {
   return (
-    <FormField
-      control={control}
-      name={fieldName}
-      render={({ field }) => (
-        <FormItem className={className}>
-          {label && (
-            <FormLabel className="text-lg md:text-xl text-brand-neutral-11">
-              {label}
-            </FormLabel>
-          )}
-          <FormControl>
-            {multiline ? (
-              <Textarea
-                placeholder={placeholder}
-                {...field}
-                autoComplete={autoComplete}
-                className={inputClassName}
-              />
-            ) : (
-              <Input
-                placeholder={placeholder}
-                {...field}
-                type={type}
-                autoComplete={autoComplete}
-                className={inputClassName}
-              />
-            )}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+    <div className={className} data-testid="text-input__container">
+      {label && (
+        <Label className="text-lg md:text-xl text-brand-neutral-11">
+          {label}
+        </Label>
       )}
-    />
+      {multiline ? (
+        <Textarea
+          placeholder={placeholder}
+          {...(register && fieldName ? register(fieldName) : {})}
+          autoComplete={autoComplete}
+          className={cn("my-3", inputClassName)}
+        />
+      ) : (
+        <Input
+          placeholder={placeholder}
+          {...(register && fieldName ? register(fieldName) : {})}
+          type={type}
+          autoComplete={autoComplete}
+          className={cn("my-3", inputClassName)}
+        />
+      )}
+      {errorMessage && (
+        <p className="text-sm font-medium text-destructive">
+          {errorMessage?.toString()}
+        </p>
+      )}
+    </div>
   );
 };
 export default TextInput;
