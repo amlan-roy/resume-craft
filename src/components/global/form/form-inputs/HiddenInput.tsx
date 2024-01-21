@@ -15,7 +15,9 @@ const HiddenInput: React.FC<HiddenInputProps> = ({
   return (
     <Input
       type={"hidden"}
+      hidden={true}
       value={value}
+      data-testid="hidden-input__container"
       {...(register && fieldName ? register(fieldName) : {})}
     />
   );

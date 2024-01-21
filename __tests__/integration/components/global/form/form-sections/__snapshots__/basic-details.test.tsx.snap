@@ -1,0 +1,173 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration:components/global/form/form-sections/basic-details snapshot 1`] = `
+<div>
+  <div
+    class="rounded-lg border bg-card text-card-foreground shadow-sm"
+    data-testid="form-sections__basic-details"
+  >
+    <input
+      class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      data-testid="hidden-input__container"
+      hidden=""
+      type="hidden"
+      value="BASIC_DETAILS"
+    />
+    <div
+      class="flex flex-col space-y-1.5 p-6 text-brand-neutral-11 text-3xl md:text-4xl"
+    >
+      <h3
+        class="text-2xl font-semibold leading-none tracking-tight"
+      >
+        Section Title
+      </h3>
+    </div>
+    <div
+      class="p-6 pt-0 flex flex-wrap w-full gap-5 justify-between"
+    >
+      <input
+        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        data-testid="hidden-input__container"
+        hidden=""
+        type="hidden"
+        value="Section Title"
+      />
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Name
+        </label>
+        <input
+          autocomplete="name"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="Stephen Hawwkins"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Email
+        </label>
+        <input
+          autocomplete="email"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="little-people@complex-equations.com"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Phone Number
+        </label>
+        <input
+          autocomplete="tel"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="+69 4206996024"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Location
+        </label>
+        <input
+          autocomplete="address-level2"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="Epstein Island"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Portfolio Url
+        </label>
+        <input
+          autocomplete="url"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="www.tooHighUpChalkboard.com"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Github Url
+        </label>
+        <input
+          autocomplete="url"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="www.github.com/thisIsAShocker"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          LinkedIn Url
+        </label>
+        <input
+          autocomplete="url"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="www.linkedin.com/narakMeJaega"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Stack Overflow Url
+        </label>
+        <input
+          autocomplete="url"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="www.stackoverflow.com/iAmOutOfIdeas"
+        />
+      </div>
+      <div
+        class="w-full lg:max-w-[30%] md:max-w-[45%]"
+        data-testid="text-input__container"
+      >
+        <label
+          class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg md:text-xl text-brand-neutral-11"
+        >
+          Blog Url
+        </label>
+        <input
+          autocomplete="url"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 my-3"
+          placeholder="www.cantFindFunnyPlaceholders.com"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

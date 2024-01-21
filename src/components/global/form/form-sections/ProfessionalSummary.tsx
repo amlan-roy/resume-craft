@@ -8,8 +8,8 @@ import { SECTION } from "@/lib/types/form";
 type ProfessionalSummaryProps = {
   sectionTitle?: string;
   deleteSection: () => void;
-  index: string;
-  fieldName: string;
+  index?: string;
+  fieldName?: string;
   register?: any;
   fieldErrors?: any;
 };
@@ -27,14 +27,16 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
       data-card-type={SECTION.PROFESSIONAL_SUMMARY}
     >
       <HiddenInput
-        fieldName={fieldName && `${fieldName}.${index}.type`}
+        fieldName={fieldName && index && `${fieldName}.${index}.type`}
         value={SECTION.PROFESSIONAL_SUMMARY}
         register={register}
       />
       <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
         <CardTitle>
           <TextInput
-            fieldName={fieldName && `${fieldName}.${index}.sectionTitle`}
+            fieldName={
+              fieldName && index && `${fieldName}.${index}.sectionTitle`
+            }
             register={register}
             inputClassName="text-xl md:text-2xl py-6"
             placeholder="Section title"
@@ -53,7 +55,9 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
       </CardHeader>
       <CardContent className="flex flex-wrap w-full gap-5">
         <TextInput
-          fieldName={fieldName && `${fieldName}.[${index}].fields.value`}
+          fieldName={
+            fieldName && index && `${fieldName}.[${index}].fields.value`
+          }
           register={register}
           multiline
           className="w-full"

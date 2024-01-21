@@ -31,7 +31,7 @@ const TextInput: React.FC<TextInputProps> = ({
   type,
 }) => {
   return (
-    <div className={className}>
+    <div className={className} data-testid="text-input__container">
       {label && (
         <Label className="text-lg md:text-xl text-brand-neutral-11">
           {label}
