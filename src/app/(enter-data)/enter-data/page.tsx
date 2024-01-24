@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
+import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
 
 type EnterDataPageProps = {};
 
@@ -54,6 +55,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             value: "",
           },
         },
+        {
+          type: SECTION.WORK_EXPERIENCE,
+          sectionTitle: "Work Experience",
+          fields: [
+            { jobTitle: "", details: "", companyName: "", location: "" },
+          ],
+        },
       ],
     },
   });
@@ -63,6 +71,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     handleSubmit,
     register,
     formState: { errors },
+    watch,
+    setValue,
   } = form;
 
   const [alertDialogState, setAlertDialogState] = useState<{
@@ -77,6 +87,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     fields,
     append,
     remove: deleteSection,
+    update: updateSection,
   } = useFieldArray({
     control,
     name: "optionalSections", // unique name for your Field Array
@@ -92,12 +103,25 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     switch (sectionType) {
       case SECTION.PROFESSIONAL_SUMMARY:
         append({
-          sectionTitle: "a",
+          sectionTitle: "Professional Summary",
           type: SECTION.PROFESSIONAL_SUMMARY,
           fields: {
             value: "",
           },
         });
+        break;
+      case SECTION.WORK_EXPERIENCE:
+        append({
+          sectionTitle: "Work Experience",
+          type: SECTION.WORK_EXPERIENCE,
+          fields: [
+            {
+              jobTitle: "",
+              details: "",
+            },
+          ],
+        });
+        break;
     }
   };
 
@@ -170,7 +194,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         <Form {...form}>
           <form
             onSubmit={(e) => {
-              console.log(form.getValues());
+              console.log(form.formState.errors);
               submitHandler(e);
             }}
             className="space-y-8"
@@ -183,19 +207,70 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 register={register}
                 fieldName={"basicDetails"}
               />
-              {fields.map((field, index) => {
+              {fields.map((field, sectionIndex) => {
                 switch (field.type) {
                   case SECTION.PROFESSIONAL_SUMMARY:
                     return (
                       <ProfessionalSummary
                         key={field.id}
                         deleteSection={() =>
-                          setAlertDialogState({ index, open: true })
+                          setAlertDialogState({
+                            index: sectionIndex,
+                            open: true,
+                          })
                         }
-                        index={index.toString()}
-                        fieldErrors={errors?.optionalSections?.[index]}
+                        index={sectionIndex.toString()}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
                         register={register}
                         fieldName={"optionalSections"}
+                      />
+                    );
+                  case SECTION.WORK_EXPERIENCE:
+                    return (
+                      <WorkExperience
+                        key={field.id}
+                        deleteSection={() =>
+                          setAlertDialogState({
+                            index: sectionIndex,
+                            open: true,
+                          })
+                        }
+                        index={sectionIndex.toString()}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
+                        register={register}
+                        fieldName={"optionalSections"}
+                        fields={field.fields}
+                        updateFields={(
+                          addFields?: boolean,
+                          index?: number
+                        ): void => {
+                          if (addFields) {
+                            updateSection(sectionIndex, {
+                              ...field,
+                              fields: [
+                                ...field.fields,
+                                {
+                                  jobTitle: "",
+                                  details: "",
+                                  companyName: "",
+                                  location: "",
+                                },
+                              ],
+                            });
+                            return;
+                          }
+                          if (index) {
+                            const newFields = [...field.fields];
+                            newFields.splice(index, 1);
+                            updateSection(sectionIndex, {
+                              ...field,
+                              fields: newFields,
+                            });
+                          }
+                        }}
+                        watch={watch}
+                        setValue={setValue}
+                        control={control}
                       />
                     );
                 }
@@ -230,6 +305,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                   }}
                 >
                   Professional Summary
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="WORK_EXPERIENCE"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.WORK_EXPERIENCE);
+                  }}
+                >
+                  Work Experience
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

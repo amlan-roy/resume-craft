@@ -32,7 +32,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
         register={register}
       />
       <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
-        <CardTitle>
+        <CardTitle className="w-full max-w-[75%]">
           <TextInput
             fieldName={
               fieldName && index && `${fieldName}.${index}.sectionTitle`
