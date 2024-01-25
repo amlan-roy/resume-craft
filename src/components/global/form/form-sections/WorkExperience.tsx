@@ -39,7 +39,11 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
   return (
     <Card data-card-type={SECTION.WORK_EXPERIENCE}>
       <HiddenInput
-        fieldName={fieldName && index && `${fieldName}.${index}.type`}
+        fieldName={
+          fieldName && (index !== undefined || index !== null)
+            ? `${fieldName}.${index}.type`
+            : undefined
+        }
         value={SECTION.WORK_EXPERIENCE}
         register={register}
       />
@@ -47,7 +51,9 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
         <CardTitle className="w-full max-w-[75%]">
           <TextInput
             fieldName={
-              fieldName && index && `${fieldName}.${index}.sectionTitle`
+              fieldName && (index !== undefined || index !== null)
+                ? `${fieldName}.${index}.sectionTitle`
+                : undefined
             }
             register={register}
             inputClassName="text-xl md:text-2xl py-6"
@@ -86,9 +92,9 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
             <CardContent className="flex flex-row flex-wrap gap-10">
               <TextInput
                 fieldName={
-                  fieldName &&
-                  index &&
-                  `${fieldName}.[${index}].fields.[${subSectionIndex}].jobTitle`
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].jobTitle`
+                    : undefined
                 }
                 register={register}
                 label="Job Title"
@@ -101,9 +107,9 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
               />
               <TextInput
                 fieldName={
-                  fieldName &&
-                  index &&
-                  `${fieldName}.[${index}].fields.[${subSectionIndex}].companyName`
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].companyName`
+                    : undefined
                 }
                 register={register}
                 label="Company Name"
@@ -116,9 +122,9 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
               />
               <TextInput
                 fieldName={
-                  fieldName &&
-                  index &&
-                  `${fieldName}.[${index}].fields.[${subSectionIndex}].location`
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].location`
+                    : undefined
                 }
                 register={register}
                 label="Location"
@@ -144,9 +150,9 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
               />
               <TextInput
                 fieldName={
-                  fieldName &&
-                  index &&
-                  `${fieldName}.[${index}].fields.[${subSectionIndex}].details`
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].details`
+                    : undefined
                 }
                 label="Description"
                 multiline

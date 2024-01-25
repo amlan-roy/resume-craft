@@ -10,6 +10,7 @@ import {
   formSchema,
   formType,
   workExperienceFieldSchema,
+  workExperienceSectionSchema,
 } from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
@@ -245,14 +246,12 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                             // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
                             // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
                             // So we need to use form.getValues instead
-                            const currentFields =
-                              form.getValues().optionalSections[sectionIndex]
-                                ?.fields;
-                            const updatedFields = [
-                              ...((currentFields as z.infer<
-                                typeof workExperienceFieldSchema
-                              >[]) || []),
-                            ];
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof workExperienceSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
                             updatedFields.push({
                               jobTitle: "",
                               details: "",
@@ -260,7 +259,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                               location: "",
                             });
                             updateSection(sectionIndex, {
-                              ...field,
+                              ...currentField,
                               fields: updatedFields,
                             });
                             return;

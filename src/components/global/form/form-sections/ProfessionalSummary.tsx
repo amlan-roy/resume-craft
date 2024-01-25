@@ -7,7 +7,6 @@ import { SECTION, formType } from "@/lib/types/form";
 import { useFormContext } from "react-hook-form";
 
 type ProfessionalSummaryProps = {
-  sectionTitle?: string;
   deleteSection: () => void;
   index?: number;
 };
@@ -29,7 +28,9 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
     >
       <HiddenInput
         fieldName={
-          fieldName && index ? `${fieldName}.${index}.type` : undefined
+          index !== undefined && index !== null
+            ? `${fieldName}.${index}.type`
+            : undefined
         }
         value={SECTION.PROFESSIONAL_SUMMARY}
         register={register}
@@ -38,7 +39,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
         <CardTitle className="w-full max-w-[75%]">
           <TextInput
             fieldName={
-              fieldName && index
+              index !== undefined && index !== null
                 ? `${fieldName}.${index}.sectionTitle`
                 : undefined
             }
@@ -46,7 +47,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
             inputClassName="text-xl md:text-2xl py-6"
             placeholder="Section title"
             errorMessage={
-              index
+              index !== undefined
                 ? errors?.[fieldName]?.[index]?.sectionTitle?.message
                 : undefined
             }
@@ -65,8 +66,8 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
       <CardContent className="flex flex-wrap w-full gap-5">
         <TextInput
           fieldName={
-            fieldName && index
-              ? `${fieldName}.[${index}].fields.value`
+            index !== undefined && index !== null
+              ? `${fieldName}.${index}.fields.value`
               : undefined
           }
           register={register}
@@ -74,7 +75,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
           className="w-full"
           placeholder="Galactic Theorist with decades of experience, specializing in unraveling the fabric of the cosmos and visiting islands. Proficient in quantum mechanics, general relativity, and little people. Experienced in solving complex quadratic equations."
           errorMessage={
-            index
+            index !== undefined
               ? // todo: fix this later
                 // @ts-expect-error: some ts error
                 errors?.[fieldName]?.[index]?.fields?.value?.message
