@@ -5,7 +5,12 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { SECTION, formSchema, formType } from "@/lib/types/form";
+import {
+  SECTION,
+  formSchema,
+  formType,
+  workExperienceFieldSchema,
+} from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 import {
@@ -34,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
+import { z } from "zod";
 
 type EnterDataPageProps = {};
 
@@ -235,7 +241,18 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                           index?: number
                         ): void => {
                           if (addFields) {
-                            const updatedFields = [...field.fields];
+                            // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                            // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                            // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                            // So we need to use form.getValues instead
+                            const currentFields =
+                              form.getValues().optionalSections[sectionIndex]
+                                ?.fields;
+                            const updatedFields = [
+                              ...((currentFields as z.infer<
+                                typeof workExperienceFieldSchema
+                              >[]) || []),
+                            ];
                             updatedFields.push({
                               jobTitle: "",
                               details: "",
