@@ -1,15 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
-import {
-  Control,
-  FieldValues,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
+import React from "react";
+import { useFormContext } from "react-hook-form";
 import DateInput from "./DateInput";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   FormControl,
   FormField,
@@ -17,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { formType } from "@/lib/types/form";
 
 type DurationInputProps = {
   fieldName: string;
@@ -25,21 +20,16 @@ type DurationInputProps = {
     endDate: string;
     current: string;
   };
-  control?: Control<FieldValues> | undefined;
   labels?: {
     startDate?: string;
     endDate?: string;
     current?: string;
   };
   className?: string;
-  //Todo: Once a complete type for the form schame is ready, then update this any to it
-  watch: UseFormWatch<any>;
-  setValue: UseFormSetValue<any>;
 };
 
 const DurationInput: React.FC<DurationInputProps> = ({
   fieldName,
-  control,
   labels = {
     startDate: "Start Date",
     endDate: "End Date",
@@ -51,10 +41,14 @@ const DurationInput: React.FC<DurationInputProps> = ({
     endDate: "endDate",
     current: "current",
   },
-  watch,
-  setValue,
 }) => {
+  const { watch, setValue, control } = useFormContext<formType>();
+
+  // todo: Fix this ts error later
+  // @ts-expect-error: React hooks form reuire these names (the param here) as a literal (so would require exact name)
   const endDate = watch(`${fieldName}.${subFieldNames.endDate}`);
+  // todo: Fix this ts error later
+  // @ts-expect-error: React hooks form reuire these names (the param here) as a literal (so would require exact name)
   const currentlyWorking = watch(`${fieldName}.${subFieldNames.current}`);
 
   return (
@@ -63,22 +57,24 @@ const DurationInput: React.FC<DurationInputProps> = ({
     >
       <DateInput
         fieldName={`${fieldName}.${subFieldNames.startDate}`}
-        control={control}
         label={labels.startDate}
       />
       <DateInput
         fieldName={`${fieldName}.${subFieldNames.endDate}`}
-        control={control}
         label={labels.endDate}
         onSelect={(selectedDate) => {
           // manually set the checkbox as undefined when end date is selected
           if (selectedDate) {
+            //Todo: Fix this ts error later
+            // @ts-expect-error: This is a ts error. Fix it later.
             setValue(`${fieldName}.${subFieldNames.current}`, undefined);
           }
         }}
       />
       <FormField
         control={control}
+        // todo: Fix this ts error later
+        // @ts-expect-error: React hooks form reuire these name as a literal (so would require exact name)
         name={`${fieldName}.${subFieldNames.current}`}
         render={({ field }) => (
           <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 self-end">
@@ -88,7 +84,10 @@ const DurationInput: React.FC<DurationInputProps> = ({
                 checked={!!currentlyWorking}
                 onCheckedChange={(checkedState) => {
                   field.onChange(checkedState);
+                  // todo: Fix this ts error later
+                  // @ts-expect-error: React hooks form reuire these names (the first param here) as a literal (so would require exact name)
                   setValue(`${fieldName}.${subFieldNames.endDate}`, undefined);
+                  console.log(endDate);
                 }}
               />
             </FormControl>

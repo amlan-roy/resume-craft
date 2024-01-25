@@ -45,23 +45,37 @@ export const basicDetailsFieldSchema = z.object({
   email: z.string().email().optional().nullish().or(z.literal("")),
   phone: z.string().optional().nullish().or(z.literal("")),
   location: z.string().optional().nullish().or(z.literal("")),
-  portfolioUrl: z.string().url().optional().nullish().or(z.literal("")),
-  githubUrl: z.string().url().optional().nullish().or(z.literal("")),
-  linkedinUrl: z.string().url().optional().nullish().or(z.literal("")),
-  stackoverflowUrl: z.string().url().optional().nullish().or(z.literal("")),
-  blogUrl: z.string().url().optional().nullish().or(z.literal("")),
+  portfolioUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  githubUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  linkedinUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  stackoverflowUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  blogUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
 });
-export type TBasicDetails = {
-  name: string;
-  email?: string | null | undefined;
-  phone?: string | null | undefined;
-  location?: string | null | undefined;
-  portfolioUrl?: string | null | undefined;
-  githubUrl?: string | null | undefined;
-  linkedinUrl?: string | null | undefined;
-  stackoverflowUrl?: string | null | undefined;
-  blogUrl?: string | null | undefined;
-};
 
 export const workExperienceFieldSchema = z.object({
   jobTitle: z.string().min(1, "You need to enter the job title"),
@@ -72,13 +86,6 @@ export const workExperienceFieldSchema = z.object({
     .string()
     .min(1, "You need to enter the description of your job experience"),
 });
-export type TWorkExperience = {
-  jobTitle: string;
-  details: string;
-  companyName?: string | null | undefined;
-  location?: string | null | undefined;
-  duration?: TDuration | null | undefined;
-};
 
 export const projectsFieldSchema = z.object({
   projectTitle: z.string(),
@@ -159,3 +166,5 @@ export const formSchema = z.object({
   basicDetails: basicDetailsSectionSchema,
   optionalSections: z.array(sectionTypes),
 });
+
+export type formType = z.infer<typeof formSchema>;

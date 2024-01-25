@@ -2,7 +2,7 @@ import { FaGithub, FaLinkedin, FaTwitter, FaGlobeAsia } from "react-icons/fa";
 
 export const LINKS = [
   {
-    url: "https://amlan-roy.github.io/",
+    url: "https://www.amlan-roy.com/",
     description: "Amlan Roy's Portfolio Website's Link",
     icon: <FaGlobeAsia size={32} className="w-4 h-4 md:w-6 md:h-6" />,
   },

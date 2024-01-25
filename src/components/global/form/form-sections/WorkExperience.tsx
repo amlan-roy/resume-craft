@@ -1,11 +1,6 @@
 import React from "react";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
-import {
-  Control,
-  FieldValues,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardHeader,
@@ -15,38 +10,32 @@ import {
 } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import { SECTION, TWorkExperience } from "@/lib/types/form";
+import { SECTION, formType, workExperienceFieldSchema } from "@/lib/types/form";
 import { Button } from "@/components/ui/button";
 import DurationInput from "../form-inputs/DurationInput";
+import { z } from "zod";
+
+const fieldName = "optionalSections";
 
 type WorkExperienceProps = {
   //todo: Getting the error: "Types of property '_reset' are incompatible." in page.tsx where this WorkExperience component is called
   // Adding this any in the type to ignore the error for now, but will need to fix it later
-  control?: Control<FieldValues> | undefined | any;
   deleteSection: () => void;
   index: string;
-  fieldName: string;
-  register?: any;
   fieldErrors?: any;
-  fields?: TWorkExperience[];
+  fields?: z.infer<typeof workExperienceFieldSchema>[];
   updateFields?: (addFields?: boolean, index?: number) => void;
-  //Todo: Once a complete type for the form schame is ready, then update this any to it
-  watch: UseFormWatch<any>;
-  setValue: UseFormSetValue<any>;
 };
 
 const WorkExperience: React.FC<WorkExperienceProps> = ({
-  control,
   deleteSection,
   index,
-  fieldName,
   fieldErrors,
-  register,
   fields,
   updateFields,
-  watch,
-  setValue,
 }) => {
+  const { register } = useFormContext<formType>();
+
   return (
     <Card data-card-type={SECTION.WORK_EXPERIENCE}>
       <HiddenInput
@@ -142,7 +131,6 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
               />
               <DurationInput
                 fieldName={`${fieldName}.[${index}].fields.[${subSectionIndex}].duration`}
-                control={control}
                 subFieldNames={{
                   startDate: "startDate",
                   endDate: "endDate",
@@ -153,8 +141,6 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   endDate: "End Date",
                   current: "I an currently working here",
                 }}
-                watch={watch}
-                setValue={setValue}
               />
               <TextInput
                 fieldName={

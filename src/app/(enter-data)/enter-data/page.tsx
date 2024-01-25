@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import * as z from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { SECTION, formSchema } from "@/lib/types/form";
+import { SECTION, formSchema, formType } from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 import {
@@ -39,7 +38,7 @@ import WorkExperience from "@/components/global/form/form-sections/WorkExperienc
 type EnterDataPageProps = {};
 
 const EnterDataPage: React.FC<EnterDataPageProps> = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<formType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       basicDetails: {
@@ -93,7 +92,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     name: "optionalSections", // unique name for your Field Array
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: formType) => {
     console.log(values);
   };
 
@@ -202,11 +201,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             <section className="w-full flex flex-col gap-8">
               {/* Todo: Fix This Later */}
               {/* @ts-ignore */}
-              <BasicDetails
-                fieldErrors={errors?.basicDetails}
-                register={register}
-                fieldName={"basicDetails"}
-              />
+              <BasicDetails fieldName={"basicDetails"} />
               {fields.map((field, sectionIndex) => {
                 switch (field.type) {
                   case SECTION.PROFESSIONAL_SUMMARY:
@@ -219,10 +214,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                             open: true,
                           })
                         }
-                        index={sectionIndex.toString()}
-                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                        register={register}
-                        fieldName={"optionalSections"}
+                        index={sectionIndex}
                       />
                     );
                   case SECTION.WORK_EXPERIENCE:
@@ -237,25 +229,22 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }
                         index={sectionIndex.toString()}
                         fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                        register={register}
-                        fieldName={"optionalSections"}
                         fields={field.fields}
                         updateFields={(
                           addFields?: boolean,
                           index?: number
                         ): void => {
                           if (addFields) {
+                            const updatedFields = [...field.fields];
+                            updatedFields.push({
+                              jobTitle: "",
+                              details: "",
+                              companyName: "",
+                              location: "",
+                            });
                             updateSection(sectionIndex, {
                               ...field,
-                              fields: [
-                                ...field.fields,
-                                {
-                                  jobTitle: "",
-                                  details: "",
-                                  companyName: "",
-                                  location: "",
-                                },
-                              ],
+                              fields: updatedFields,
                             });
                             return;
                           }
@@ -268,9 +257,6 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                             });
                           }
                         }}
-                        watch={watch}
-                        setValue={setValue}
-                        control={control}
                       />
                     );
                 }

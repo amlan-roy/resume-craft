@@ -188,7 +188,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
             <a
               aria-label="Amlan Roy's Portfolio Website's Link"
               class=""
-              href="https://amlan-roy.github.io/"
+              href="https://www.amlan-roy.com/"
             >
               <svg
                 class="w-4 h-4 md:w-6 md:h-6"
