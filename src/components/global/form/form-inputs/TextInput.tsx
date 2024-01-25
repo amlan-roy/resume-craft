@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { formType } from "@/lib/types/form";
+import { UseFormRegister } from "react-hook-form";
 
 type TextInputProps = {
   autoComplete?: string;
@@ -13,8 +15,7 @@ type TextInputProps = {
   label?: string;
   multiline?: boolean;
   placeholder?: string;
-  // todo: use proper type for register
-  register?: any;
+  register?: UseFormRegister<formType>;
   type?: React.HTMLInputTypeAttribute;
 };
 
@@ -40,6 +41,8 @@ const TextInput: React.FC<TextInputProps> = ({
       {multiline ? (
         <Textarea
           placeholder={placeholder}
+          // todo: Fix this ts error later
+          // @ts-expect-error: React hooks form reuire these names (fieldName here) as a literal (so would require exact name)
           {...(register && fieldName ? register(fieldName) : {})}
           autoComplete={autoComplete}
           className={cn("my-3", inputClassName)}
@@ -47,6 +50,8 @@ const TextInput: React.FC<TextInputProps> = ({
       ) : (
         <Input
           placeholder={placeholder}
+          // todo: Fix this ts error later
+          // @ts-expect-error: React hooks form reuire these names (fieldName here) as a literal (so would require exact name)
           {...(register && fieldName ? register(fieldName) : {})}
           type={type}
           autoComplete={autoComplete}

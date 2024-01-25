@@ -1,12 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import * as z from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { SECTION, formSchema } from "@/lib/types/form";
+import {
+  SECTION,
+  formSchema,
+  formType,
+  workExperienceFieldSchema,
+  workExperienceSectionSchema,
+} from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 import {
@@ -34,11 +39,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
+import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
+import { z } from "zod";
 
 type EnterDataPageProps = {};
 
 const EnterDataPage: React.FC<EnterDataPageProps> = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<formType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       basicDetails: {
@@ -54,6 +61,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             value: "",
           },
         },
+        {
+          type: SECTION.WORK_EXPERIENCE,
+          sectionTitle: "Work Experience",
+          fields: [
+            { jobTitle: "", details: "", companyName: "", location: "" },
+          ],
+        },
       ],
     },
   });
@@ -63,6 +77,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     handleSubmit,
     register,
     formState: { errors },
+    watch,
+    setValue,
   } = form;
 
   const [alertDialogState, setAlertDialogState] = useState<{
@@ -77,12 +93,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     fields,
     append,
     remove: deleteSection,
+    update: updateSection,
   } = useFieldArray({
     control,
     name: "optionalSections", // unique name for your Field Array
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: formType) => {
     console.log(values);
   };
 
@@ -92,12 +109,25 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     switch (sectionType) {
       case SECTION.PROFESSIONAL_SUMMARY:
         append({
-          sectionTitle: "a",
+          sectionTitle: "Professional Summary",
           type: SECTION.PROFESSIONAL_SUMMARY,
           fields: {
             value: "",
           },
         });
+        break;
+      case SECTION.WORK_EXPERIENCE:
+        append({
+          sectionTitle: "Work Experience",
+          type: SECTION.WORK_EXPERIENCE,
+          fields: [
+            {
+              jobTitle: "",
+              details: "",
+            },
+          ],
+        });
+        break;
     }
   };
 
@@ -170,7 +200,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         <Form {...form}>
           <form
             onSubmit={(e) => {
-              console.log(form.getValues());
+              console.log(form.formState.errors);
               submitHandler(e);
             }}
             className="space-y-8"
@@ -178,24 +208,71 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             <section className="w-full flex flex-col gap-8">
               {/* Todo: Fix This Later */}
               {/* @ts-ignore */}
-              <BasicDetails
-                fieldErrors={errors?.basicDetails}
-                register={register}
-                fieldName={"basicDetails"}
-              />
-              {fields.map((field, index) => {
+              <BasicDetails fieldName={"basicDetails"} />
+              {fields.map((field, sectionIndex) => {
                 switch (field.type) {
                   case SECTION.PROFESSIONAL_SUMMARY:
                     return (
                       <ProfessionalSummary
                         key={field.id}
                         deleteSection={() =>
-                          setAlertDialogState({ index, open: true })
+                          setAlertDialogState({
+                            index: sectionIndex,
+                            open: true,
+                          })
                         }
-                        index={index.toString()}
-                        fieldErrors={errors?.optionalSections?.[index]}
-                        register={register}
-                        fieldName={"optionalSections"}
+                        index={sectionIndex}
+                      />
+                    );
+                  case SECTION.WORK_EXPERIENCE:
+                    return (
+                      <WorkExperience
+                        key={field.id}
+                        deleteSection={() =>
+                          setAlertDialogState({
+                            index: sectionIndex,
+                            open: true,
+                          })
+                        }
+                        index={sectionIndex.toString()}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
+                        fields={field.fields}
+                        updateFields={(
+                          addFields?: boolean,
+                          index?: number
+                        ): void => {
+                          if (addFields) {
+                            // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                            // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                            // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                            // So we need to use form.getValues instead
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof workExperienceSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.push({
+                              jobTitle: "",
+                              details: "",
+                              companyName: "",
+                              location: "",
+                            });
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                            return;
+                          }
+                          if (index) {
+                            const newFields = [...field.fields];
+                            newFields.splice(index, 1);
+                            updateSection(sectionIndex, {
+                              ...field,
+                              fields: newFields,
+                            });
+                          }
+                        }}
                       />
                     );
                 }
@@ -230,6 +307,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                   }}
                 >
                   Professional Summary
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="WORK_EXPERIENCE"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.WORK_EXPERIENCE);
+                  }}
+                >
+                  Work Experience
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

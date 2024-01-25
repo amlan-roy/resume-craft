@@ -2,21 +2,29 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import { SECTION } from "@/lib/types/form";
+import { SECTION, formType } from "@/lib/types/form";
+import { useFormContext } from "react-hook-form";
 
 type BasicDetailsProps = {
   sectionTitle?: string;
-  register?: any;
-  fieldName?: string;
-  fieldErrors?: any;
+  fieldName?: keyof formType;
 };
 
+const fieldName = "basicDetails";
+
+/**
+ * This is a compoenet used to render the Basic Details section in the resume data input form.
+ * This is tightly coupled with the formSchema from zod, and any changes there might requrie changes here as well
+ * (especially in the fieldName and error messages)
+ */
 const BasicDetails: React.FC<BasicDetailsProps> = ({
   sectionTitle = "Basic Details",
-  register,
-  fieldName,
-  fieldErrors,
 }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<formType>();
+
   return (
     <Card data-testid="form-sections__basic-details">
       <HiddenInput
@@ -40,7 +48,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="name"
           placeholder="Stephen Hawwkins"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.name?.message}
+          errorMessage={errors?.[fieldName]?.fields?.name?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.email`}
@@ -49,7 +57,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="email"
           placeholder="little-people@complex-equations.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.email?.message}
+          errorMessage={errors?.[fieldName]?.fields?.email?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.phone`}
@@ -58,7 +66,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="tel"
           placeholder="+69 4206996024"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.phone?.message}
+          errorMessage={errors?.[fieldName]?.fields?.phone?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.location`}
@@ -67,7 +75,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="address-level2"
           placeholder="Epstein Island"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.location?.message}
+          errorMessage={errors?.[fieldName]?.fields?.location?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.portfolioUrl`}
@@ -76,7 +84,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="url"
           placeholder="www.tooHighUpChalkboard.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.portfolioUrl?.message}
+          errorMessage={errors?.[fieldName]?.fields?.portfolioUrl?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.githubUrl`}
@@ -85,7 +93,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="url"
           placeholder="www.github.com/thisIsAShocker"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.githubUrl?.message}
+          errorMessage={errors?.[fieldName]?.fields?.githubUrl?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.linkedinUrl`}
@@ -94,7 +102,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="url"
           placeholder="www.linkedin.com/narakMeJaega"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.linkedinUrl?.message}
+          errorMessage={errors?.[fieldName]?.fields?.linkedinUrl?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.stackoverflowUrl`}
@@ -103,7 +111,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="url"
           placeholder="www.stackoverflow.com/iAmOutOfIdeas"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.stackoverflowUrl?.message}
+          errorMessage={errors?.[fieldName]?.fields?.stackoverflowUrl?.message}
         />
         <TextInput
           fieldName={fieldName && `${fieldName}.fields.blogUrl`}
@@ -112,7 +120,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           autoComplete="url"
           placeholder="www.cantFindFunnyPlaceholders.com"
           className="w-full lg:max-w-[30%] md:max-w-[45%]"
-          errorMessage={fieldErrors?.fields?.blogUrl?.message}
+          errorMessage={errors?.[fieldName]?.fields?.blogUrl?.message}
         />
       </CardContent>
     </Card>

@@ -89,7 +89,7 @@ exports[`integration:components/global/footer snapshot 1`] = `
           <a
             aria-label="Amlan Roy's Portfolio Website's Link"
             class=""
-            href="https://amlan-roy.github.io/"
+            href="https://www.amlan-roy.com/"
           >
             <svg
               class="w-4 h-4 md:w-6 md:h-6"

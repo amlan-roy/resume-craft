@@ -10,30 +10,83 @@ export enum SECTION {
   WORK_EXPERIENCE = "WORK_EXPERIENCE",
 }
 
-export const durationFieldSchema = z.object({
-  startDate: z.date().optional().nullish(),
-  endDate: z.date().optional().nullish(),
-  current: z.boolean().optional().nullish(),
-});
+export const durationFieldSchema = z
+  .object({
+    startDate: z.date().optional().nullish(),
+    endDate: z.date().optional().nullish(),
+    current: z.boolean().optional().nullish(),
+  })
+  .refine(
+    (data) => {
+      return !(data.endDate || !!data.current) || !!data.startDate;
+    },
+    (data) => {
+      if (data.endDate) {
+        return {
+          message: "Start Date is required when you select an end date",
+          path: ["startDate"],
+        };
+      }
+      return {
+        message: "Start Date is required when you select the current checkbox",
+        path: ["startDate"],
+      };
+    }
+  );
+
+export type TDuration = {
+  startDate?: Date | null | undefined;
+  endDate?: Date | null | undefined;
+  current?: boolean | null | undefined;
+};
 
 export const basicDetailsFieldSchema = z.object({
-  name: z.string().min(2),
+  name: z.string().min(1, "Name is required"),
   email: z.string().email().optional().nullish().or(z.literal("")),
   phone: z.string().optional().nullish().or(z.literal("")),
   location: z.string().optional().nullish().or(z.literal("")),
-  portfolioUrl: z.string().url().optional().nullish().or(z.literal("")),
-  githubUrl: z.string().url().optional().nullish().or(z.literal("")),
-  linkedinUrl: z.string().url().optional().nullish().or(z.literal("")),
-  stackoverflowUrl: z.string().url().optional().nullish().or(z.literal("")),
-  blogUrl: z.string().url().optional().nullish().or(z.literal("")),
+  portfolioUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  githubUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  linkedinUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  stackoverflowUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
+  blogUrl: z
+    .string()
+    .url("Invalid URL. URL should be of the format: 'https://www.abcd.com'")
+    .optional()
+    .nullish()
+    .or(z.literal("")),
 });
+
 export const workExperienceFieldSchema = z.object({
-  jobTitle: z.string(),
+  jobTitle: z.string().min(1, "You need to enter the job title"),
   companyName: z.string().optional().nullish().or(z.literal("")),
   location: z.string().optional().nullish().or(z.literal("")),
   duration: durationFieldSchema.optional().nullish(),
-  details: z.string(),
+  details: z
+    .string()
+    .min(1, "You need to enter the description of your job experience"),
 });
+
 export const projectsFieldSchema = z.object({
   projectTitle: z.string(),
   projectUrl: z.string().optional().nullish().or(z.literal("")),
@@ -69,7 +122,7 @@ export const professionalSummarySectionSchema = z.object({
   type: z.literal(SECTION.PROFESSIONAL_SUMMARY),
   sectionTitle: z.string().min(1),
   fields: z.object({
-    value: z.string().min(1),
+    value: z.string().min(1, "You can not leave this field as empty"),
   }),
 });
 export const workExperienceSectionSchema = z.object({
@@ -113,3 +166,5 @@ export const formSchema = z.object({
   basicDetails: basicDetailsSectionSchema,
   optionalSections: z.array(sectionTypes),
 });
+
+export type formType = z.infer<typeof formSchema>;

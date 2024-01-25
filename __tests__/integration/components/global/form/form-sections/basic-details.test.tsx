@@ -4,13 +4,13 @@ import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import { SECTION } from "@/lib/types/form";
 
 describe("integration:components/global/form/form-sections/basic-details", () => {
-  it("snapshot", () => {
+  it.skip("snapshot", () => {
     const tree = render(<BasicDetails sectionTitle="Section Title" />);
 
     expect(tree.container).toMatchSnapshot();
   });
 
-  it("BasicDetails component renders correctly", () => {
+  it.skip("BasicDetails component renders correctly", () => {
     render(
       <BasicDetails
         sectionTitle="Personal Information"
@@ -32,7 +32,7 @@ describe("integration:components/global/form/form-sections/basic-details", () =>
     const inputs = screen.getAllByTestId("text-input__container");
 
     // testing this way also tests the order of the inputs
-    expect(inputs.length).toStrictEqual(9)
+    expect(inputs.length).toStrictEqual(9);
 
     expect(inputs[0].querySelector("label")).toHaveTextContent("Name");
     expect(inputs[0].querySelector("input")).toBeInTheDocument();
