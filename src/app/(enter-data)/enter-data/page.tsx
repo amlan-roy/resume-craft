@@ -187,7 +187,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                     This format helps you showcase your achievements and how
                     they relate to the job you are applying for. It also makes
                     it easier for recruiters to understand your value and
-                    potential.
+                    potential. aasdasdadasdads
                   </p>
                 </div>
               </div>
