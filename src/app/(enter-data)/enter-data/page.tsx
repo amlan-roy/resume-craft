@@ -215,12 +215,9 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                     return (
                       <ProfessionalSummary
                         key={field.id}
-                        deleteSection={() =>
-                          setAlertDialogState({
-                            index: sectionIndex,
-                            open: true,
-                          })
-                        }
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
                         index={sectionIndex}
                       />
                     );
@@ -228,13 +225,10 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                     return (
                       <WorkExperience
                         key={field.id}
-                        deleteSection={() =>
-                          setAlertDialogState({
-                            index: sectionIndex,
-                            open: true,
-                          })
-                        }
-                        index={sectionIndex.toString()}
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
+                        index={sectionIndex}
                         fieldErrors={errors?.optionalSections?.[sectionIndex]}
                         fields={field.fields}
                         updateFields={(
@@ -264,12 +258,17 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                             });
                             return;
                           }
-                          if (index) {
-                            const newFields = [...field.fields];
-                            newFields.splice(index, 1);
+                          if (index || index === 0) {
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof workExperienceSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.splice(index, 1);
                             updateSection(sectionIndex, {
-                              ...field,
-                              fields: newFields,
+                              ...currentField,
+                              fields: updatedFields,
                             });
                           }
                         }}
@@ -323,7 +322,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           </form>
         </Form>
       </div>
-      <AlertDialog open={alertDialogState.open}>
+      {/* <AlertDialog open={alertDialogState.open}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -352,7 +351,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
     </>
   );
 };
