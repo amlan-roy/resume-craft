@@ -61,7 +61,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         },
         {
           type: SECTION.PROJECTS,
-          sectionTitle: "Projects",
+          sectionTitle: "Relevant Projects",
           fields: [
             {
               projectTitle: "",
@@ -384,14 +384,6 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <Button type="submit">Submit</Button>
-            <Button type="button" variant={"secondary"}>
-              {" "}
-              Print Values
-            </Button>
-            <Button type="button" variant={"secondary"}>
-              {" "}
-              Print Errors
-            </Button>
           </form>
         </Form>
       </div>
