@@ -159,6 +159,20 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                 <TextInput
                   fieldName={
                     fieldName && (index !== undefined || index !== null)
+                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].jobSubtitle`
+                      : undefined
+                  }
+                  register={register}
+                  label="Job subtitle"
+                  placeholder="Jethalal Gada"
+                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                  errorMessage={
+                    fieldErrors?.fields[subSectionIndex]?.jobSubtitle?.message
+                  }
+                />
+                <TextInput
+                  fieldName={
+                    fieldName && (index !== undefined || index !== null)
                       ? `${fieldName}.[${index}].fields.[${subSectionIndex}].companyName`
                       : undefined
                   }

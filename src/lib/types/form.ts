@@ -79,6 +79,7 @@ export const basicDetailsFieldSchema = z.object({
 
 export const workExperienceFieldSchema = z.object({
   jobTitle: z.string().min(1, "You need to enter the job title"),
+  jobSubtitle: z.string().optional().nullish().or(z.literal("")),
   companyName: z.string().optional().nullish().or(z.literal("")),
   location: z.string().optional().nullish().or(z.literal("")),
   duration: durationFieldSchema.optional().nullish(),
