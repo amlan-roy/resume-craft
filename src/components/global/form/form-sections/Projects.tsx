@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import { SECTION, formType, workExperienceFieldSchema } from "@/lib/types/form";
+import { SECTION, formType, projectsFieldSchema } from "@/lib/types/form";
 import { Button } from "@/components/ui/button";
 import DurationInput from "../form-inputs/DurationInput";
 import { z } from "zod";
@@ -45,17 +45,17 @@ const TEXT_COPIES = {
   },
 };
 
-type WorkExperienceProps = {
-  //todo: Getting the error: "Types of property '_reset' are incompatible." in page.tsx where this WorkExperience component is called
+type ProjectsProps = {
+  //todo: Getting the error: "Types of property '_reset' are incompatible." in page.tsx where this Projects component is called
   // Adding this any in the type to ignore the error for now, but will need to fix it later
   deleteSection: () => void;
   index: number;
   fieldErrors?: any;
-  fields?: z.infer<typeof workExperienceFieldSchema>[];
+  fields?: z.infer<typeof projectsFieldSchema>[];
   updateFields?: (addFields?: boolean, index?: number) => void;
 };
 
-const WorkExperience: React.FC<WorkExperienceProps> = ({
+const Projects: React.FC<ProjectsProps> = ({
   deleteSection,
   index,
   fieldErrors,
@@ -74,14 +74,14 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
 
   return (
     <>
-      <Card data-card-type={SECTION.WORK_EXPERIENCE}>
+      <Card data-card-type={SECTION.PROJECTS}>
         <HiddenInput
           fieldName={
             fieldName && (index !== undefined || index !== null)
               ? `${fieldName}.${index}.type`
               : undefined
           }
-          value={SECTION.WORK_EXPERIENCE}
+          value={SECTION.PROJECTS}
           register={register}
         />
         <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
@@ -94,7 +94,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
               }
               register={register}
               inputClassName="text-xl md:text-2xl py-6"
-              placeholder="Section title"
+              placeholder="Relevant Projects"
               errorMessage={fieldErrors?.sectionTitle?.message}
             />
           </CardTitle>
@@ -118,7 +118,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
           {fields?.map((field, subSectionIndex) => (
             <Card
               className="w-full"
-              key={`work-experience-${index}-subsection-${subSectionIndex}`}
+              key={`projects-${index}-subsection-${subSectionIndex}`}
             >
               <CardHeader className="items-end">
                 <Button
@@ -144,60 +144,61 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                 <TextInput
                   fieldName={
                     fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].jobTitle`
+                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectTitle`
                       : undefined
                   }
                   register={register}
-                  label="Job Title"
-                  autoComplete="organization-title"
-                  placeholder="Jethalal Gada"
+                  label="Project Title"
+                  placeholder="Jalebi Maker"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.jobTitle?.message
+                    fieldErrors?.fields[subSectionIndex]?.projectTitle?.message
                   }
                 />
                 <TextInput
                   fieldName={
                     fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].jobSubtitle`
+                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectSubtitle`
                       : undefined
                   }
+                  label="Project Subtitle"
                   register={register}
-                  label="Job subtitle"
-                  placeholder="Jethalal Gada"
+                  placeholder="Food Tech, Electronics, Automation"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.jobSubtitle?.message
+                    fieldErrors?.fields[subSectionIndex]?.projectSubtitle
+                      ?.message
                   }
                 />
                 <TextInput
                   fieldName={
                     fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].companyName`
+                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectUrl`
                       : undefined
                   }
                   register={register}
-                  label="Company Name"
+                  label="Project Url"
+                  autoComplete="url"
+                  placeholder="www.jalebi-maker.com"
+                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                  errorMessage={
+                    fieldErrors?.fields[subSectionIndex]?.projectUrl?.message
+                  }
+                />
+                <TextInput
+                  fieldName={
+                    fieldName && (index !== undefined || index !== null)
+                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].associatedWith`
+                      : undefined
+                  }
+                  register={register}
+                  label="Associated with"
                   autoComplete="organization"
                   placeholder="Gada Electronics"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.companyName?.message
-                  }
-                />
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].location`
-                      : undefined
-                  }
-                  register={register}
-                  label="Location"
-                  autoComplete="address-level2"
-                  placeholder="Gokuldham Society"
-                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
-                  errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.location?.message
+                    fieldErrors?.fields[subSectionIndex]?.associatedWith
+                      ?.message
                   }
                 />
                 <DurationInput
@@ -210,7 +211,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   labels={{
                     startDate: "Start Date",
                     endDate: "End Date",
-                    current: "I an currently working here",
+                    current: "I am currently working on this project",
                   }}
                 />
                 <TextInput
@@ -223,7 +224,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   multiline
                   register={register}
                   placeholder={
-                    "- Managed electronics store for 20+ years\n- Generated job opportunitites for many people\n- Earned a lot of money"
+                    '- Created Jalebi Maker Machine- Goes well with "Chi Piyo, Biscuit Khao"\n-Got Funding from Gada Electronics'
                   }
                   className="w-full"
                   errorMessage={
@@ -273,4 +274,4 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
     </>
   );
 };
-export default WorkExperience;
+export default Projects;

@@ -9,21 +9,11 @@ import {
   SECTION,
   formSchema,
   formType,
-  workExperienceFieldSchema,
+  projectsSectionSchema,
   workExperienceSectionSchema,
 } from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import {
   HoverCard,
   HoverCardContent,
@@ -41,6 +31,7 @@ import {
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
 import { z } from "zod";
+import Projects from "@/components/global/form/form-sections/Projects";
 
 type EnterDataPageProps = {};
 
@@ -68,6 +59,19 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             { jobTitle: "", details: "", companyName: "", location: "" },
           ],
         },
+        {
+          type: SECTION.PROJECTS,
+          sectionTitle: "Projects",
+          fields: [
+            {
+              projectTitle: "",
+              projectSubtitle: "",
+              projectUrl: undefined,
+              associatedWith: undefined,
+              details: "",
+            },
+          ],
+        },
       ],
     },
   });
@@ -75,19 +79,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const {
     control,
     handleSubmit,
-    register,
     formState: { errors },
-    watch,
-    setValue,
   } = form;
-
-  const [alertDialogState, setAlertDialogState] = useState<{
-    open: boolean;
-    index?: number;
-  }>({
-    open: false,
-    index: undefined,
-  });
 
   const {
     fields,
@@ -123,6 +116,18 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           fields: [
             {
               jobTitle: "",
+              details: "",
+            },
+          ],
+        });
+        break;
+      case SECTION.PROJECTS:
+        append({
+          sectionTitle: "Relevant Projects",
+          type: SECTION.PROJECTS,
+          fields: [
+            {
+              projectTitle: "",
               details: "",
             },
           ],
@@ -274,6 +279,57 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }}
                       />
                     );
+                  case SECTION.PROJECTS:
+                    return (
+                      <Projects
+                        key={field.id}
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
+                        index={sectionIndex}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
+                        fields={field.fields}
+                        updateFields={(
+                          addFields?: boolean,
+                          index?: number
+                        ): void => {
+                          if (addFields) {
+                            // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                            // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                            // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                            // So we need to use form.getValues instead
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof projectsSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.push({
+                              projectTitle: "",
+                              details: "",
+                            });
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                            return;
+                          }
+                          if (index || index === 0) {
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof projectsSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.splice(index, 1);
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                          }
+                        }}
+                      />
+                    );
                 }
               })}
             </section>
@@ -316,42 +372,29 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 >
                   Work Experience
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="PROJECTS"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.PROJECTS);
+                  }}
+                >
+                  Projects
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button type="submit">Submit</Button>
+            <Button type="button" variant={"secondary"}>
+              {" "}
+              Print Values
+            </Button>
+            <Button type="button" variant={"secondary"}>
+              {" "}
+              Print Errors
+            </Button>
           </form>
         </Form>
       </div>
-      {/* <AlertDialog open={alertDialogState.open}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Do you want to delete this section?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently the data that
-              you have entered for this section.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => {
-                setAlertDialogState({ open: false, index: undefined });
-              }}
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                deleteSection(alertDialogState.index);
-                setAlertDialogState({ open: false, index: undefined });
-              }}
-            >
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog> */}
     </>
   );
 };
