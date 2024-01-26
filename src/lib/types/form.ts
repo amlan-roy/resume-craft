@@ -89,7 +89,10 @@ export const workExperienceFieldSchema = z.object({
 });
 
 export const projectsFieldSchema = z.object({
-  projectTitle: z.string(),
+  projectTitle: z
+    .string()
+    .min(1, "You need to enter the title of your project"),
+  projectSubtitle: z.string().optional().nullish().or(z.literal("")),
   projectUrl: z.string().optional().nullish().or(z.literal("")),
   associatedWith: z.string().optional().nullish().or(z.literal("")),
   duration: durationFieldSchema.optional().nullish(),
