@@ -98,16 +98,11 @@ export const projectsFieldSchema = z.object({
   duration: durationFieldSchema.optional().nullish(),
   details: z.string().optional().nullish().or(z.literal("")),
 });
-export const skillsFieldSchema = z.union([
-  z
-    .object({
-      title: z.string(),
-      skills: z.string(),
-    })
-    .optional()
-    .nullish(),
-  z.string().optional().nullish().or(z.literal("")),
-]);
+export const skillsFieldSchema = z.object({
+  title: z.string().optional().nullish().or(z.literal("")),
+  skills: z.string().min(1, "This is a required skill"),
+});
+
 export const educationFieldSchema = z.object({
   universityName: z.string(),
   degreeName: z.string(),
