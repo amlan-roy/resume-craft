@@ -104,8 +104,8 @@ export const skillsFieldSchema = z.object({
 });
 
 export const educationFieldSchema = z.object({
-  universityName: z.string(),
-  degreeName: z.string(),
+  universityName: z.string().min(1, "University Name is required"),
+  degreeName: z.string().min(1, "Degree Name is required"),
   majorName: z.string().optional().nullish().or(z.literal("")),
   grade: z.string().optional().nullish().or(z.literal("")),
   location: z.string().optional().nullish().or(z.literal("")),
