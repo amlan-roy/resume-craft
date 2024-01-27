@@ -100,7 +100,7 @@ export const projectsFieldSchema = z.object({
 });
 export const skillsFieldSchema = z.object({
   title: z.string().optional().nullish().or(z.literal("")),
-  skills: z.string().min(1, "This is a required skill"),
+  skills: z.string().min(1, "This is a required field"),
 });
 
 export const educationFieldSchema = z.object({
@@ -114,41 +114,41 @@ export const educationFieldSchema = z.object({
 
 export const basicDetailsSectionSchema = z.object({
   type: z.literal(SECTION.BASIC_DETAILS),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: basicDetailsFieldSchema,
 });
 export const professionalSummarySectionSchema = z.object({
   type: z.literal(SECTION.PROFESSIONAL_SUMMARY),
-  sectionTitle: z.string().min(1),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.object({
     value: z.string().min(1, "You can not leave this field as empty"),
   }),
 });
 export const workExperienceSectionSchema = z.object({
   type: z.literal(SECTION.WORK_EXPERIENCE),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.array(workExperienceFieldSchema),
 });
 export const projectsSectionSchema = z.object({
   type: z.literal(SECTION.PROJECTS),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.array(projectsFieldSchema),
 });
 export const skillsSectionSchema = z.object({
   type: z.literal(SECTION.SKILLS),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.array(skillsFieldSchema),
 });
 export const educationSectionSchema = z.object({
   type: z.literal(SECTION.EDUCATION),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.array(educationFieldSchema),
 });
 export const additionalSectionSchema = z.object({
   type: z.literal(SECTION.ADDITIONAL),
-  sectionTitle: z.string(),
+  sectionTitle: z.string().min(1, "The section title is required"),
   fields: z.object({
-    value: z.string(),
+    value: z.string().min(1, "This information is required"),
   }),
 });
 
