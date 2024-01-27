@@ -36,6 +36,7 @@ import { z } from "zod";
 import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
 import Education from "@/components/global/form/form-sections/Education";
+import Additional from "@/components/global/form/form-sections/Additional";
 
 type EnterDataPageProps = {};
 
@@ -97,6 +98,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
               location: "",
             },
           ],
+        },
+        {
+          type: SECTION.ADDITIONAL,
+          sectionTitle: "Additional Information",
+          fields: {
+            value: "",
+          },
         },
       ],
     },
@@ -183,6 +191,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
               location: "",
             },
           ],
+        });
+        break;
+      case SECTION.ADDITIONAL:
+        append({
+          sectionTitle: "Additional Information",
+          type: SECTION.ADDITIONAL,
+          fields: {
+            value: "",
+          },
         });
         break;
     }
@@ -382,7 +399,6 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }}
                       />
                     );
-
                   case SECTION.SKILLS:
                     return (
                       <Skills
@@ -484,6 +500,16 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }}
                       />
                     );
+                  case SECTION.ADDITIONAL:
+                    return (
+                      <Additional
+                        key={field.id}
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
+                        index={sectionIndex}
+                      />
+                    );
                 }
               })}
             </section>
@@ -552,6 +578,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                   }}
                 >
                   Education
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="ADDITIONAL"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.ADDITIONAL);
+                  }}
+                >
+                  Additional
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
