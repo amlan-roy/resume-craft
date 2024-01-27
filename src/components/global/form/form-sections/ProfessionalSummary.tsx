@@ -5,16 +5,6 @@ import TextInput from "@/components/global/form/form-inputs/TextInput";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import { SECTION, formType } from "@/lib/types/form";
 import { useFormContext } from "react-hook-form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
 
 type ProfessionalSummaryProps = {

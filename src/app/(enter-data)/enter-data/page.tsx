@@ -10,6 +10,7 @@ import {
   formSchema,
   formType,
   projectsSectionSchema,
+  skillsSectionSchema,
   workExperienceSectionSchema,
 } from "@/lib/types/form";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
@@ -32,6 +33,7 @@ import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
 import { z } from "zod";
 import Projects from "@/components/global/form/form-sections/Projects";
+import Skills from "@/components/global/form/form-sections/Skills";
 
 type EnterDataPageProps = {};
 
@@ -61,7 +63,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         },
         {
           type: SECTION.PROJECTS,
-          sectionTitle: "Projects",
+          sectionTitle: "Relevant Projects",
           fields: [
             {
               projectTitle: "",
@@ -69,6 +71,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
               projectUrl: undefined,
               associatedWith: undefined,
               details: "",
+            },
+          ],
+        },
+        {
+          type: SECTION.SKILLS,
+          sectionTitle: "Technical Skills",
+          fields: [
+            {
+              skills: "",
             },
           ],
         },
@@ -129,6 +140,17 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             {
               projectTitle: "",
               details: "",
+            },
+          ],
+        });
+        break;
+      case SECTION.SKILLS:
+        append({
+          sectionTitle: "Technical Skills",
+          type: SECTION.SKILLS,
+          fields: [
+            {
+              skills: "",
             },
           ],
         });
@@ -205,7 +227,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         <Form {...form}>
           <form
             onSubmit={(e) => {
-              console.log(form.formState.errors);
+              e.preventDefault();
               submitHandler(e);
             }}
             className="space-y-8"
@@ -330,6 +352,57 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }}
                       />
                     );
+
+                  case SECTION.SKILLS:
+                    return (
+                      <Skills
+                        key={field.id}
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
+                        index={sectionIndex}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
+                        fields={field.fields}
+                        updateFields={(
+                          addFields?: boolean,
+                          index?: number
+                        ): void => {
+                          if (addFields) {
+                            // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                            // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                            // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                            // So we need to use form.getValues instead
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof skillsSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.push({
+                              skills: "",
+                            });
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                            return;
+                          }
+                          if (index || index === 0) {
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof skillsSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.splice(index, 1);
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                          }
+                        }}
+                      />
+                    );
                 }
               })}
             </section>
@@ -381,17 +454,18 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 >
                   Projects
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="SKILLS"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.SKILLS);
+                  }}
+                >
+                  Skills
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button type="submit">Submit</Button>
-            <Button type="button" variant={"secondary"}>
-              {" "}
-              Print Values
-            </Button>
-            <Button type="button" variant={"secondary"}>
-              {" "}
-              Print Errors
-            </Button>
           </form>
         </Form>
       </div>
