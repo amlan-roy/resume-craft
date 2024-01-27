@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import {
   SECTION,
+  educationSectionSchema,
   formSchema,
   formType,
   projectsSectionSchema,
@@ -34,6 +35,7 @@ import WorkExperience from "@/components/global/form/form-sections/WorkExperienc
 import { z } from "zod";
 import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
+import Education from "@/components/global/form/form-sections/Education";
 
 type EnterDataPageProps = {};
 
@@ -80,6 +82,19 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           fields: [
             {
               skills: "",
+            },
+          ],
+        },
+        {
+          type: SECTION.EDUCATION,
+          sectionTitle: "Education",
+          fields: [
+            {
+              universityName: "",
+              degreeName: "",
+              majorName: "",
+              grade: "",
+              location: "",
             },
           ],
         },
@@ -151,6 +166,21 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           fields: [
             {
               skills: "",
+            },
+          ],
+        });
+        break;
+      case SECTION.EDUCATION:
+        append({
+          sectionTitle: "Education",
+          type: SECTION.EDUCATION,
+          fields: [
+            {
+              universityName: "",
+              degreeName: "",
+              majorName: "",
+              grade: "",
+              location: "",
             },
           ],
         });
@@ -403,6 +433,57 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         }}
                       />
                     );
+                  case SECTION.EDUCATION:
+                    return (
+                      <Education
+                        key={field.id}
+                        deleteSection={() => {
+                          deleteSection(sectionIndex);
+                        }}
+                        index={sectionIndex}
+                        fieldErrors={errors?.optionalSections?.[sectionIndex]}
+                        fields={field.fields}
+                        updateFields={(
+                          addFields?: boolean,
+                          index?: number
+                        ): void => {
+                          if (addFields) {
+                            // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                            // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                            // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                            // So we need to use form.getValues instead
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof educationSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.push({
+                              universityName: "",
+                              degreeName: "",
+                            });
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                            return;
+                          }
+                          if (index || index === 0) {
+                            const currentField = form.getValues()
+                              .optionalSections[sectionIndex] as z.infer<
+                              typeof educationSectionSchema
+                            >;
+                            const currentFields = currentField?.fields;
+                            const updatedFields = [...(currentFields || [])];
+                            updatedFields.splice(index, 1);
+                            updateSection(sectionIndex, {
+                              ...currentField,
+                              fields: updatedFields,
+                            });
+                          }
+                        }}
+                      />
+                    );
                 }
               })}
             </section>
@@ -462,6 +543,15 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                   }}
                 >
                   Skills
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  data-add-section-menu-item="EDUCATION"
+                  onSelect={() => {
+                    setFocusOnLastSection(true);
+                    addSection(SECTION.EDUCATION);
+                  }}
+                >
+                  Education
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
