@@ -32,6 +32,7 @@ const Footer: React.FC<FooterProps> = () => {
             {LINKS.map(({ url, description, icon }, index) => (
               <Link
                 href={url}
+                target="_blank"
                 key={`footer-icons-${index}`}
                 aria-label={description}
                 className=""
