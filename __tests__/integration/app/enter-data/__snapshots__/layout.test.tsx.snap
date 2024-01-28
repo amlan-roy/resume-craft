@@ -189,6 +189,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
               aria-label="Amlan Roy's Portfolio Website's Link"
               class=""
               href="https://www.amlan-roy.com/"
+              target="_blank"
             >
               <svg
                 class="w-4 h-4 md:w-6 md:h-6"
@@ -209,6 +210,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
               aria-label="Amlan Roy' GitHub Link"
               class=""
               href="https://github.com/amlan-roy/"
+              target="_blank"
             >
               <svg
                 class="w-4 h-4 md:w-6 md:h-6"
@@ -229,6 +231,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
               aria-label="Amlan Roy's LinkedIn Link"
               class=""
               href="https://www.linkedin.com/in/amlan-roy/"
+              target="_blank"
             >
               <svg
                 class="w-4 h-4 md:w-6 md:h-6"
@@ -249,6 +252,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
               aria-label="Amlan Roy's Twitter Link"
               class=""
               href="https://twitter.com/_royamlan_"
+              target="_blank"
             >
               <svg
                 class="w-4 h-4 md:w-6 md:h-6"
