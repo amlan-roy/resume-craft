@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
 import Education from "@/components/global/form/form-sections/Education";
 import Additional from "@/components/global/form/form-sections/Additional";
+import Loading from "@/components/global/form/form-sections/Loading";
 
 type EnterDataPageProps = {};
 
@@ -205,6 +206,12 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     }
   };
 
+  const [loading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
   const [focusOnLastSection, setFocusOnLastSection] = useState(false);
 
   return (
@@ -280,6 +287,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
             className="space-y-8"
           >
             <section className="w-full flex flex-col gap-8">
+              {loading ? (
+                <>
+                  <Loading />
+                  <Loading />
+                </>
+              ) : (
+                <>
               {/* Todo: Fix This Later */}
               {/* @ts-ignore */}
               <BasicDetails fieldName={"basicDetails"} />
@@ -512,85 +526,91 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                     );
                 }
               })}
+                </>
+              )}
             </section>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant={"outline"} className="m-4">
-                  Add Section
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                onCloseAutoFocus={(e: Event) => {
-                  if (focusOnLastSection) {
-                    e.preventDefault();
-                    const firstFocusableInLastCard = findFirstFocusable();
-                    firstFocusableInLastCard?.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                    firstFocusableInLastCard?.focus();
-                    setFocusOnLastSection(false);
-                  }
-                }}
-              >
-                <DropdownMenuLabel>Select section to add</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  data-add-section-menu-item="PROFESSIONAL_SUMMARY"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.PROFESSIONAL_SUMMARY);
-                  }}
-                >
-                  Professional Summary
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-add-section-menu-item="WORK_EXPERIENCE"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.WORK_EXPERIENCE);
-                  }}
-                >
-                  Work Experience
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-add-section-menu-item="PROJECTS"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.PROJECTS);
-                  }}
-                >
-                  Projects
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-add-section-menu-item="SKILLS"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.SKILLS);
-                  }}
-                >
-                  Skills
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-add-section-menu-item="EDUCATION"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.EDUCATION);
-                  }}
-                >
-                  Education
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  data-add-section-menu-item="ADDITIONAL"
-                  onSelect={() => {
-                    setFocusOnLastSection(true);
-                    addSection(SECTION.ADDITIONAL);
-                  }}
-                >
-                  Additional
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button type="submit">Submit</Button>
+            {!loading && (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant={"outline"} className="m-4">
+                      Add Section
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    onCloseAutoFocus={(e: Event) => {
+                      if (focusOnLastSection) {
+                        e.preventDefault();
+                        const firstFocusableInLastCard = findFirstFocusable();
+                        firstFocusableInLastCard?.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                        firstFocusableInLastCard?.focus();
+                        setFocusOnLastSection(false);
+                      }
+                    }}
+                  >
+                    <DropdownMenuLabel>Select section to add</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      data-add-section-menu-item="PROFESSIONAL_SUMMARY"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.PROFESSIONAL_SUMMARY);
+                      }}
+                    >
+                      Professional Summary
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-add-section-menu-item="WORK_EXPERIENCE"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.WORK_EXPERIENCE);
+                      }}
+                    >
+                      Work Experience
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-add-section-menu-item="PROJECTS"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.PROJECTS);
+                      }}
+                    >
+                      Projects
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-add-section-menu-item="SKILLS"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.SKILLS);
+                      }}
+                    >
+                      Skills
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-add-section-menu-item="EDUCATION"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.EDUCATION);
+                      }}
+                    >
+                      Education
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      data-add-section-menu-item="ADDITIONAL"
+                      onSelect={() => {
+                        setFocusOnLastSection(true);
+                        addSection(SECTION.ADDITIONAL);
+                      }}
+                    >
+                      Additional
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button type="submit">Submit</Button>
+              </>
+            )}
           </form>
         </Form>
       </div>
