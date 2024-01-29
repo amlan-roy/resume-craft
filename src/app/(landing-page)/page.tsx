@@ -58,7 +58,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
             here will later be modified for the different job descriptions that
             you will provide.
           </h5>
-          <Link href={"/generate-variants"} passHref>
+          <Link href={"/home"} passHref>
             <Button
               variant={"default"}
               role="button"
