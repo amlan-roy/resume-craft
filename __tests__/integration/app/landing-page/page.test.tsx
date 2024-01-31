@@ -16,7 +16,7 @@ describe("integration:landing-page/page", () => {
     // button is wrapped up in anchor tag with correct href
     expect(screen.getByText("Get Started").parentElement).toHaveAttribute(
       "href",
-      "/generate-variants"
+      "/home"
     );
   });
 });
