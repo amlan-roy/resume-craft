@@ -1,8 +1,40 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import React from "react";
 
 type pageProps = {};
 
 const page: React.FC<pageProps> = () => {
-  return <div>Home Page</div>;
+  return (
+    <>
+      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
+        <h1 className="md:text-6xl text-5xl font-bold text-brand-neutral-11 text-center">
+          Home Page
+        </h1>
+        <p className="md:text-2xl text-base text-brand-neutral-8 mt-14 text-center">
+          Select what you want to do today?
+        </p>
+
+        <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12">
+          <Button
+            className="w-fit"
+            variant={"outline"}
+            title="Generate Base Resume"
+          >
+            <span className="max-w-64">Generate Base Resume</span>
+          </Button>
+          <Button disabled variant={"outline"} title="Coming soon!">
+            Generate Variant
+          </Button>
+          <Link href={"/enter-data"}>
+            <Button title="Edit base resume data" variant={"outline"}>
+              Edit Base Resume
+            </Button>
+          </Link>
+        </div>
+      </section>
+      ;
+    </>
+  );
 };
 export default page;

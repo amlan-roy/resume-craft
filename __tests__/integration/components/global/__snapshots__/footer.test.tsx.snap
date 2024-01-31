@@ -3,7 +3,7 @@
 exports[`integration:components/global/footer snapshot 1`] = `
 <div>
   <footer
-    class="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5"
+    class="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5 fixed bottom-0 left-0 right-0"
     data-testid="global__footer"
   >
     <div

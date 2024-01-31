@@ -10,7 +10,7 @@ const Footer: React.FC<FooterProps> = () => {
   return (
     <footer
       data-testid="global__footer"
-      className="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5"
+      className="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5 fixed bottom-0 left-0 right-0"
     >
       <div className="flex h-8 justify-between w-full max-w-xl mx-auto px-4">
         <Logo
