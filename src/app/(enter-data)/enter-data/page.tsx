@@ -28,7 +28,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const onSubmit = async (values: formType) => {
     const formData = cleanFormData(values);
     setBaseResumeData(JSON.stringify(formData));
-    router.push("/somewhere-else");
+    router.push("/home");
   };
 
   const [loading, setIsLoading] = useState(true);
