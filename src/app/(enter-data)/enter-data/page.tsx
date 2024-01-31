@@ -44,9 +44,11 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           Enter Your Data
         </h1>
         <p className="text-brand-neutral-10 text-center text-2xl mt-11">
-          This data will be used to generate the customised resume for different
-          job types. Fill in this detail as accurately as possible. You can
-          refer this{" "}
+          This is your base resume data. This data will be used to generate the
+          customised resume for different job types. Fill in this detail as
+          accurately as possible.
+          <br />
+          You can refer this{" "}
           <Link
             href={
               "https://cdn-careerservices.fas.harvard.edu/wp-content/uploads/sites/161/2023/08/College-resume-and-cover-letter.pdf"

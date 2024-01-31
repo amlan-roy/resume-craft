@@ -8,7 +8,7 @@ type HomePageLayoutProps = {
 
 const HomePageLayout: React.FC<HomePageLayoutProps> = ({ children }) => {
   return (
-    <main>
+    <main className="min-h-screen">
       <Header />
       {children}
       <Footer />
