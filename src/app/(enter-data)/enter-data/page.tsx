@@ -19,8 +19,7 @@ type EnterDataPageProps = {};
 
 const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const [baseResumeData, setBaseResumeData] = useLocalStorage(
-    "base-resume-data-local",
-    JSON.stringify(DEFAULT_FORM_VALUE)
+    "base-resume-data-local"
   );
 
   const router = useRouter();
@@ -118,7 +117,11 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
       </section>
       <div className="max-w-screen-xl overflow-hidden p-4 sm:px-6 mt-10 mx-auto mb-28">
         <DynamicForm
-          defaultValues={JSON.parse(baseResumeData) as formType}
+          defaultValues={
+            baseResumeData
+              ? (JSON.parse(baseResumeData) as formType)
+              : (DEFAULT_FORM_VALUE as formType)
+          }
           onSubmit={onSubmit}
           loading={loading}
         />
