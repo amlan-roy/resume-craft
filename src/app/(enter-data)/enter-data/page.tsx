@@ -26,11 +26,12 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const searchParams = useSearchParams();
 
   const disclaimerVisible = searchParams.has("showDisclaimer");
+  const fromGenerateResumeRoute = searchParams.has("generateFlow");
 
   const onSubmit = async (values: formType) => {
     const formData = cleanFormData(values);
     setBaseResumeData(JSON.stringify(formData));
-    router.push("/home");
+    router.push(fromGenerateResumeRoute ? "/generate-resume" : "/home");
   };
 
   const [loading, setIsLoading] = useState(true);
