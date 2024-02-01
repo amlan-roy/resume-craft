@@ -1,4 +1,6 @@
-<!-- Add the issue/ticket number if available -->
+Issue:
+
+<!-- NOTE: Each PR should be associated with an issue. Create an issue if it does not already exists -->
 
 # Summary
 
@@ -14,7 +16,7 @@
 
 <!-- Add details of how these changes have been tested -->
 
-### Screenshots / Videos (If required)
+### Screenshots / Videos <!-- (Optional but recommended) -->
 
 ## Checklist:
 
