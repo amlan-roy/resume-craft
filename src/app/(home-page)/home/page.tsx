@@ -16,13 +16,16 @@ const page: React.FC<pageProps> = () => {
         </p>
 
         <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12">
-          <Button
-            className="w-fit"
-            variant={"outline"}
-            title="Generate Base Resume"
-          >
-            <span className="max-w-64">Generate Base Resume</span>
-          </Button>
+          <Link href={"/generate-resume"}>
+            <Button
+              className="w-fit"
+              variant={"outline"}
+              title="Generate Base Resume"
+            >
+              <span className="max-w-64">Generate Base Resume</span>
+            </Button>
+          </Link>
+
           <Button disabled variant={"outline"} title="Coming soon!">
             Generate Variant
           </Button>
