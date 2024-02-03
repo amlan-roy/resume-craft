@@ -13,22 +13,25 @@ import { cleanFormData } from "@/lib/utils/data-formatting";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { DEFAULT_FORM_VALUE } from "@/lib/const/form/form-data";
 import DynamicForm from "@/components/global/form/DynamicForm";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type EnterDataPageProps = {};
 
 const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const [baseResumeData, setBaseResumeData] = useLocalStorage(
-    "base-resume-data-local",
-    JSON.stringify(DEFAULT_FORM_VALUE)
+    "base-resume-data-local"
   );
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const disclaimerVisible = searchParams.has("showDisclaimer");
+  const redirectToRoute = searchParams.get("redirectTo");
 
   const onSubmit = async (values: formType) => {
     const formData = cleanFormData(values);
     setBaseResumeData(JSON.stringify(formData));
-    router.push("/home");
+    router.push(redirectToRoute === "base" ? "/generate-resume/base" : "/home");
   };
 
   const [loading, setIsLoading] = useState(true);
@@ -39,7 +42,9 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
 
   return (
     <>
-      <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
+      <section
+        className={`max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto ${disclaimerVisible ? "mb-16" : "mb-24"}`}
+      >
         <h1 className="text-brand-neutral-12 text-center text-6xl font-bold">
           Enter Your Data
         </h1>
@@ -101,10 +106,23 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           </HoverCard>{" "}
           for reference.
         </p>
+        {disclaimerVisible && (
+          <div className="flex flex-col items-start gap-2 rounded-lg border p-3 bg-brand-neutral-4 mt-10">
+            <p className="text-center mx-auto text-md">
+              You need to enter your base resume data in order to generate
+              variants of your resume for different jobs. Please enter your base
+              resume data to proceed!
+            </p>
+          </div>
+        )}
       </section>
       <div className="max-w-screen-xl overflow-hidden p-4 sm:px-6 mt-10 mx-auto mb-28">
         <DynamicForm
-          defaultValues={JSON.parse(baseResumeData) as formType}
+          defaultValues={
+            baseResumeData
+              ? (JSON.parse(baseResumeData) as formType)
+              : (DEFAULT_FORM_VALUE as formType)
+          }
           onSubmit={onSubmit}
           loading={loading}
         />
