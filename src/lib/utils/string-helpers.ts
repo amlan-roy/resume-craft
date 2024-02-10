@@ -15,7 +15,7 @@ export const mailToLinks = (options?: {
   };
 }) => {
   const {
-    to = "amlanroy2500.resumeCraftBugReport@gmail.com",
+    to = "amlanroy2500+resumeCraftBugReport@gmail.com",
     cc,
     bcc,
     subject = "Bug Report: Resume Craft",
@@ -25,6 +25,7 @@ export const mailToLinks = (options?: {
 
   const body = `${content} ${systemInfo ? "\n System Info:\n \tbrowser: " + systemInfo.browser + "\n \tOS: " + systemInfo.OS + "\n \ttime: " + systemInfo.time + "\n \tdevice:" + systemInfo.device : ""}`;
   return (
-    "mailto:" + `?to=${to}&cc=${cc}&bcc=${bcc}&subject=${subject}&body=${body}`
+    "mailto:" +
+    `?to=${to}${cc ? `&cc=${cc}` : ""}${bcc ? `&bcc=${bcc}` : ""}&subject=${subject}&body=${body}`
   );
 };
