@@ -3,7 +3,6 @@ import {
   additionalSectionSchema,
   basicDetailsSectionSchema,
   educationSectionSchema,
-  formType,
   professionalSummarySectionSchema,
   projectsSectionSchema,
   skillsSectionSchema,
@@ -88,13 +87,7 @@ export const DEFAULT_ADDITIONAL_FORM_VALUE: z.infer<
 };
 
 export const DEFAULT_FORM_VALUE = {
-  basicDetails: {
-    type: SECTION.BASIC_DETAILS,
-    sectionTitle: "Basic Details",
-    fields: {
-      name: "",
-    },
-  },
+  basicDetails: DEFAULT_BASIC_DETAILS_FORM_VALUE,
   optionalSections: [
     DEFAULT_PROFESSIONAL_SUMMARY_FORM_VALUE,
     DEFAULT_WORK_EXPERIENCE_FORM_VALUE,

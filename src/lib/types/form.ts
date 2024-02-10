@@ -35,8 +35,8 @@ export const durationFieldSchema = z
   );
 
 export type TDuration = {
-  startDate?: Date | null | undefined;
-  endDate?: Date | null | undefined;
+  startDate?: string | null | undefined;
+  endDate?: string | null | undefined;
   current?: boolean | null | undefined;
 };
 

@@ -29,8 +29,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const redirectToRoute = searchParams.get("redirectTo");
 
   const onSubmit = async (values: formType) => {
-    const formData = cleanFormData(values);
-    setBaseResumeData(JSON.stringify(formData));
+    const formDataString = JSON.stringify(cleanFormData(values));
+    setBaseResumeData(formDataString);
     router.push(redirectToRoute === "base" ? "/generate-resume/base" : "/home");
   };
 
