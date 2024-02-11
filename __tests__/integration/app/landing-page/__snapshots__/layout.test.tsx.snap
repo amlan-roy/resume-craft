@@ -102,7 +102,7 @@ exports[`integration:landing-page/layout renders the layout with header, child a
       Child
     </div>
     <footer
-      class="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5 fixed bottom-0 left-0 right-0"
+      class="md:h-20 bg-brand-primary-green-10 dark:bg-brand-primary-green-9 py-5"
       data-testid="global__footer"
     >
       <div
