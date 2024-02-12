@@ -10,11 +10,11 @@ const GenerateResumePageLayout: React.FC<GenerateResumePageLayoutProps> = ({
   children,
 }) => {
   return (
-    <main>
+    <>
       <Header />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </>
   );
 };
 export default GenerateResumePageLayout;

@@ -8,11 +8,11 @@ type HomePageLayoutProps = {
 
 const HomePageLayout: React.FC<HomePageLayoutProps> = ({ children }) => {
   return (
-    <main>
+    <>
       <Header />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </>
   );
 };
 export default HomePageLayout;

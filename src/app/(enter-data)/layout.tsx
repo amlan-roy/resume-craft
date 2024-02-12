@@ -10,11 +10,11 @@ const EnterDataPageLayout: React.FC<EnterDataPageLayoutProps> = ({
   children,
 }) => {
   return (
-    <main>
+    <>
       <Header />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </>
   );
 };
 export default EnterDataPageLayout;
