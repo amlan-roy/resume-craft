@@ -167,3 +167,19 @@ export const formSchema = z.object({
 });
 
 export type formType = z.infer<typeof formSchema>;
+
+export const resumeVariantGenerationFormSchema = z.object({
+  jobDescription: z
+    .string()
+    .min(
+      1,
+      "It looks like you have missed to add the job description. A job description is required for generating a variant of your resume."
+    ),
+  modifiedResumeJSON: z
+    .string()
+    .min(1, "Please enter the JSON response from chat GPT")
+    .refine((data) => {
+      return formSchema.safeParse(data).success;
+    }, "The entered data is not in the correct format. Please try entering both the commands in a new chatGPT conversation. If the issue continues, please write to us"),
+  customResumeName: z.string().optional().nullish().or(z.literal("")),
+});

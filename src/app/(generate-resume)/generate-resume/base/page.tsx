@@ -66,8 +66,8 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
       }
 
       if (downloadState.status.toString().startsWith("2")) {
-        const downloadUrlRes = await axios(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=getDownloadLink${params.get("mockTrue") ? "&mockTrue=true" : ""}`
+        const downloadUrlRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=getDownloadLink&id=base${params.get("mockTrue") ? "&mockTrue=true" : ""}`
         );
 
         if (!downloadUrlRes?.data?.downloadUrl) {
@@ -113,7 +113,7 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
     } else {
       setShowRedirectModal(false);
     }
-  }, []);
+  }, [baseResumeData]);
 
   return (
     <>

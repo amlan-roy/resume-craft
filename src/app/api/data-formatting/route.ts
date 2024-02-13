@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
 
     const r = formSchema.safeParse(resumeData);
     if (!r.success) {
-      console.log(r.error);
       return new NextResponse("Resume data is not valid", {
         status: 400,
         statusText: "Bad Request",
