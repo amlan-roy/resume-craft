@@ -19,7 +19,7 @@ const LogoContainer: React.FC<{
   return linkify ? (
     <Link
       data-testid="global__logo-linkified"
-      href={"/"}
+      href={"/home"}
       className={cn(["flex justify-center items-center", className])}
     >
       {children}

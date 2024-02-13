@@ -26,7 +26,7 @@ describe("integration:components/global/icon", () => {
     const linkifiedLogo = screen.getByTestId("global__logo-linkified");
 
     expect(linkifiedLogo).toBeInTheDocument();
-    expect(linkifiedLogo).toHaveAttribute("href", "/");
+    expect(linkifiedLogo).toHaveAttribute("href", "/home");
   });
 
   it("Does not render the text when hideText is true", () => {

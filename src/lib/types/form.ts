@@ -12,8 +12,8 @@ export enum SECTION {
 
 export const durationFieldSchema = z
   .object({
-    startDate: z.date().optional().nullish(),
-    endDate: z.date().optional().nullish(),
+    startDate: z.string().optional().nullish(),
+    endDate: z.string().optional().nullish(),
     current: z.boolean().optional().nullish(),
   })
   .refine(
@@ -167,3 +167,16 @@ export const formSchema = z.object({
 });
 
 export type formType = z.infer<typeof formSchema>;
+
+export const resumeVariantGenerationFormSchema = z.object({
+  jobDescription: z
+    .string()
+    .min(
+      1,
+      "It looks like you have missed to add the job description. A job description is required for generating a variant of your resume."
+    ),
+  modifiedResumeJSON: z
+    .string()
+    .min(1, "Please enter the JSON response from chat GPT"),
+  customResumeName: z.string().optional().nullish().or(z.literal("")),
+});

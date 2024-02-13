@@ -129,10 +129,18 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        // for first 30% of time, stays invisisble. Then for the remaining 70% time, goes from 0 -> 1.2 in 80% of remaining time, then goes to 1 in the remaining time.
+        "pop-in": {
+          "0%": { transform: "scale(0)" },
+          "80%": { transform: "scale(1.2)" },
+          "95%": { transform: "scale(0.95)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pop-in": "popin 0.3s linear 1",
       },
     },
   },

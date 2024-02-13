@@ -9,7 +9,7 @@ exports[`integration:components/global/header snapshot 1`] = `
     <a
       class="flex justify-center items-center"
       data-testid="global__logo-linkified"
-      href="/"
+      href="/home"
     >
       <img
         alt="Resume Craft Icon"

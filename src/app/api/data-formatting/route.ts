@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     const mockTrue = requestUrl.searchParams.get("mockTrue");
+    console.log(mockTrue);
     if (mockTrue) {
       return new NextResponse("The resume has been created", {
         status: 200,
@@ -51,7 +52,6 @@ export async function POST(req: NextRequest) {
 
     const r = formSchema.safeParse(resumeData);
     if (!r.success) {
-      console.log(r.error);
       return new NextResponse("Resume data is not valid", {
         status: 400,
         statusText: "Bad Request",
@@ -85,16 +85,6 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get("id");
     const downloadAsPdf = searchParams.get("downloadAsPdf");
 
-    if (getDownloadLink && id) {
-      return new NextResponse(
-        "The backend is not supported yet. Please try again later.",
-        {
-          status: 500,
-          statusText: "Internal Server Error",
-        }
-      );
-    }
-
     const mockTrue = requestUrl.searchParams.get("mockTrue");
 
     if (mockTrue === "true") {
@@ -106,6 +96,16 @@ export async function GET(req: NextRequest) {
         {
           status: 200,
           statusText: "Success",
+        }
+      );
+    }
+
+    if (getDownloadLink && id) {
+      return new NextResponse(
+        "The backend is not supported yet. Please try again later.",
+        {
+          status: 500,
+          statusText: "Internal Server Error",
         }
       );
     }

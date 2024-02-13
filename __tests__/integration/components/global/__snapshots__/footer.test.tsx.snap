@@ -12,7 +12,7 @@ exports[`integration:components/global/footer snapshot 1`] = `
       <a
         class="justify-center items-center hidden sm:flex"
         data-testid="global__logo-linkified"
-        href="/"
+        href="/home"
       >
         <img
           alt="Resume Craft Icon"

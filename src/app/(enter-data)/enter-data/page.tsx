@@ -18,27 +18,38 @@ import { useRouter, useSearchParams } from "next/navigation";
 type EnterDataPageProps = {};
 
 const EnterDataPage: React.FC<EnterDataPageProps> = () => {
-  const [baseResumeData, setBaseResumeData] = useLocalStorage(
-    "base-resume-data-local"
-  );
-
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const disclaimerVisible = searchParams.has("showDisclaimer");
+  const formId = searchParams.get("id");
   const redirectToRoute = searchParams.get("redirectTo");
+
+  const [resumeData, setResumeData] = useLocalStorage(
+    `${formId || "base"}-resume-data-local`
+  );
 
   const onSubmit = async (values: formType) => {
     const formDataString = JSON.stringify(cleanFormData(values));
-    setBaseResumeData(formDataString);
-    router.push(redirectToRoute === "base" ? "/generate-resume/base" : "/home");
+    setResumeData(formDataString);
+    const redirectionPath =
+      redirectToRoute === "base"
+        ? "/generate-resume/base"
+        : redirectToRoute
+          ? `/generate-resume/${redirectToRoute}`
+          : "/home";
+
+    router.push(redirectionPath);
   };
 
   const [loading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(false);
-  }, []);
+    if (formId !== "base" && !!!resumeData) router.push("/home");
+    else {
+      setIsLoading(false);
+    }
+  }, [formId, resumeData]);
 
   return (
     <>
@@ -46,12 +57,13 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         className={`max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto ${disclaimerVisible ? "mb-16" : "mb-24"}`}
       >
         <h1 className="text-brand-neutral-12 text-center text-6xl font-bold">
-          Enter Your Data
+          {formId === "base" ? "Enter Your Data" : "Update your resume variant"}
         </h1>
         <p className="text-brand-neutral-10 text-center text-2xl mt-11">
-          This is your base resume data. This data will be used to generate the
-          customised resume for different job types. Fill in this detail as
-          accurately as possible.
+          {formId === "base"
+            ? "This is your base resume data. This data will be used to generate the customised resume for different job types. Fill in this detail as accurately as possible."
+            : "This is the resume data generated for you using AI. It is advised that you carefully verify / update the data as you see fit"}
+          .
           <br />
           You can refer this{" "}
           <Link
@@ -119,8 +131,8 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
       <div className="max-w-screen-xl overflow-hidden p-4 sm:px-6 mt-10 mx-auto mb-28">
         <DynamicForm
           defaultValues={
-            baseResumeData
-              ? (JSON.parse(baseResumeData) as formType)
+            resumeData
+              ? (JSON.parse(resumeData) as formType)
               : (DEFAULT_FORM_VALUE as formType)
           }
           onSubmit={onSubmit}

@@ -30,3 +30,43 @@ function replaceEmptyValues(key: any, value: any) {
 
   return value;
 }
+
+export const removeSensitiveInformation = (resumeData: formType) => {
+  const retData = JSON.parse(JSON.stringify(resumeData)) as formType;
+
+  const {
+    email,
+    phone,
+    location,
+    portfolioUrl,
+    githubUrl,
+    linkedinUrl,
+    stackoverflowUrl,
+    blogUrl,
+  } = retData.basicDetails.fields;
+
+  retData.basicDetails.fields = {
+    name: "SENSITIVE DATA",
+    ...(email && { email: "SENSITIVE DATA" }),
+    ...(phone && { phone: "SENSITIVE DATA" }),
+    ...(location && { location: "SENSITIVE DATA" }),
+    ...(portfolioUrl && { portfolioUrl: "SENSITIVE DATA" }),
+    ...(githubUrl && { githubUrl: "SENSITIVE DATA" }),
+    ...(linkedinUrl && { linkedinUrl: "SENSITIVE DATA" }),
+    ...(stackoverflowUrl && { stackoverflowUrl: "SENSITIVE DATA" }),
+    ...(blogUrl && { blogUrl: "SENSITIVE DATA" }),
+  };
+  return retData;
+};
+
+export const addBackSensitiveInformation = (
+  filteredFormData: formType,
+  originalFormData: formType
+) => {
+  const retData = JSON.parse(JSON.stringify(filteredFormData)) as formType;
+
+  retData.basicDetails = JSON.parse(
+    JSON.stringify(originalFormData.basicDetails)
+  );
+  return retData;
+};
