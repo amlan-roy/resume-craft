@@ -4,28 +4,27 @@ import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  formSchema,
-  resumeVariantGenerationFormSchema,
-} from "@/lib/types/form";
-import useLocalStorage from "@/lib/hooks/useLocalStorage";
-import { addBackSensitiveInformation } from "@/lib/utils/data-formatting";
+import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
 
 type StepThreeProps = {
   id: string;
+  // Todo: Add types for these values and typecast in the appropriate places
+  resumeVariantData?: any;
+  setResumeVariantData: any;
+  baseResumeData?: any;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const StepThree: React.FC<StepThreeProps> = ({ id, ...props }) => {
+const StepThree: React.FC<StepThreeProps> = ({
+  id,
+  resumeVariantData,
+  setResumeVariantData,
+  baseResumeData,
+  ...props
+}) => {
   const router = useRouter();
 
-  const { trigger, getValues, setError } =
+  const { setError } =
     useFormContext<z.infer<typeof resumeVariantGenerationFormSchema>>();
-
-  const [resumeData, setResumeData] = useLocalStorage(
-    `${id}-resume-data-local`
-  );
-
-  const [baseResumeData] = useLocalStorage("base-resume-data-local");
 
   return (
     <Card className="w-full" {...props}>
@@ -39,26 +38,16 @@ const StepThree: React.FC<StepThreeProps> = ({ id, ...props }) => {
         <Button
           type="button"
           onClick={async () => {
-            const enteredData = getValues().modifiedResumeJSON;
-            const enteredDataObjWithSensitiveInfo =
-              enteredData &&
-              addBackSensitiveInformation(
-                JSON.parse(enteredData),
-                JSON.parse(baseResumeData)
-              );
-            if (
-              !formSchema.safeParse(enteredDataObjWithSensitiveInfo).success
-            ) {
+            if (!resumeVariantData) {
               setError(
                 "modifiedResumeJSON",
                 {
                   message:
-                    "The entered data is not in the correct format. Please try entering both the commands in a new chatGPT conversation. If the issue continues, please write to us",
+                    "Oops. Looks like you have missed validating this input. Please enter a valid response from the last command here.",
                 },
                 { shouldFocus: true }
               );
             } else {
-              setResumeData(JSON.stringify(enteredDataObjWithSensitiveInfo));
               router.push(`/enter-data?redirectTo=${id}&id=${id}`);
             }
           }}

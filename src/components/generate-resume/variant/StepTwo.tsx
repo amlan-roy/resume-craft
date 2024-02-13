@@ -13,8 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
-import { removeSensitiveInformation } from "@/lib/utils/data-formatting";
+import {
+  formSchema,
+  resumeVariantGenerationFormSchema,
+} from "@/lib/types/form";
+import {
+  addBackSensitiveInformation,
+  removeSensitiveInformation,
+} from "@/lib/utils/data-formatting";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 
 const CopyCommandButtonIcon = ({
@@ -37,15 +43,24 @@ const CopyCommandButtonIcon = ({
 };
 
 type StepTwoProps = {
-  baseResumeData?: string;
+  baseResumeData: string;
+  resumeVariantData?: any;
+  setResumeVariantData: any;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
+const StepTwo: React.FC<StepTwoProps> = ({
+  baseResumeData,
+  resumeVariantData,
+  setResumeVariantData,
+  ...props
+}) => {
   const {
     register,
     formState: { errors },
     trigger,
     getValues,
+    setError,
+    clearErrors,
   } = useFormContext<z.infer<typeof resumeVariantGenerationFormSchema>>();
 
   const [commandsState, setCommandsState] = useState<
@@ -54,6 +69,8 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
       command?: string;
     }[]
   >([{ state: "neutral" }, { state: "neutral" }, { state: "neutral" }]);
+
+  const [enteredDataIsValid, setEnteredDataIsValid] = useState(false);
 
   const onCopyCommandClick = async (index: number) => {
     try {
@@ -79,12 +96,11 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
         `${process.env.NEXT_PUBLIC_SITE_URL}/api/ai-prompts?action=getCommand`,
         {
           commandId: index,
-          ...(!!baseResumeData &&
-            index === 1 && {
-              baseResumeData: removeSensitiveInformation(
-                JSON.parse(baseResumeData)
-              ),
-            }),
+          ...(index === 1 && {
+            baseResumeData: removeSensitiveInformation(
+              JSON.parse(baseResumeData)
+            ),
+          }),
           ...(!!jdInputValue &&
             index === 2 && { jobDescription: jdInputValue }),
         }
@@ -206,12 +222,64 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
             }
             {...register("modifiedResumeJSON")}
             className={"my-3"}
+            onChange={() => {
+              setEnteredDataIsValid(false);
+            }}
           />
-          <Button variant={"outline"} onClick={() => {}}>
-            Validate the entered data
+          <Button
+            variant={"outline"}
+            type="button"
+            onClick={() => {
+              try {
+                const enteredData = getValues().modifiedResumeJSON;
+                const enteredDataObjWithSensitiveInfo =
+                  enteredData &&
+                  addBackSensitiveInformation(
+                    JSON.parse(enteredData),
+                    JSON.parse(baseResumeData)
+                  );
+                const isEnteredDataValid = formSchema.safeParse(
+                  enteredDataObjWithSensitiveInfo
+                ).success;
+
+                setEnteredDataIsValid(isEnteredDataValid);
+                if (!isEnteredDataValid) {
+                  setError(
+                    "modifiedResumeJSON",
+                    {
+                      message:
+                        "The entered data is not in the correct format. Please try entering both the commands in a new chatGPT conversation. If the issue continues, please write to us",
+                    },
+                    { shouldFocus: true }
+                  );
+                } else {
+                  clearErrors("modifiedResumeJSON");
+                  setResumeVariantData(
+                    JSON.stringify(enteredDataObjWithSensitiveInfo)
+                  );
+                }
+              } catch (e) {
+                setEnteredDataIsValid(false);
+                setError(
+                  "modifiedResumeJSON",
+                  {
+                    message:
+                      "The entered data is not in the correct format. Please try entering both the commands in a new chatGPT conversation. If the issue continues, please write to us",
+                  },
+                  { shouldFocus: true }
+                );
+              }
+            }}
+          >
+            Validate and save the entered data
           </Button>
+          {enteredDataIsValid && (
+            <p className="text-sm font-medium text-green-400 py-6">
+              The entered data is valid 🎉
+            </p>
+          )}
           {errors.modifiedResumeJSON && (
-            <p className="text-sm font-medium text-destructive">
+            <p className="text-sm font-medium text-destructive py-6">
               {errors.modifiedResumeJSON.message?.toString()}
             </p>
           )}
