@@ -65,7 +65,7 @@ exports[`integration:enter-data/layout renders the layout with header, child and
           </button>
         </a>
         <a
-          href="/generate-resume/1707845689635"
+          href="/generate-resume/1707845828750"
         >
           <button
             class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-brand-secondary-blue-4 text-brand-secondary-blue-10 hover:bg-brand-secondary-blue-6 active:bg-brand-secondary-blue-8 disabled:bg-brand-primary-green-7 disabled:text-brand-neutral-8 dark:bg-brand-secondary-blue-4 dark:text-brand-secondary-blue-10 dark:hover:bg-brand-secondary-blue-6 dark:active:bg-brand-secondary-blue-8 dark:disabled:bg-brand-neutral-7 dark:disabled:text-brand-neutral-8 h-10 px-4 py-2"
