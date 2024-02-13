@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import Header from "@/components/landing-page/Header";
 
+jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
+
 describe("integration:components/landing-page/header", () => {
   it("snapshot", () => {
     const tree = render(<Header />);
