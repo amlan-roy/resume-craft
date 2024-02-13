@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
 import { removeSensitiveInformation } from "@/lib/utils/data-formatting";
+import { mailToLinks } from "@/lib/utils/string-helpers";
 
 const CopyCommandButtonIcon = ({
   state,
@@ -146,7 +147,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
             <br />
             Copy the commands sequentially and enter them into chat GPT. After
             entering the last command, copy the JSON output from chat GPT and
-            paste it below
+            paste it below and validate it.
           </p>
         </div>
         <Image
@@ -178,6 +179,17 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
             );
           })}
         </div>
+        {!!commandsState.find((command) => command.state === "fail") && (
+          <p className="text-sm font-medium text-destructive py-6">
+            Copying the command has failed. Please verify the inputs and try
+            again.
+            <br />
+            If this issue persists, please report it to us{" "}
+            <a href={mailToLinks()} className="font-bold">
+              here.
+            </a>
+          </p>
+        )}
         <a href="https://chat.openai.com/" target="_blank">
           <Button type="button" variant={"outline"}>
             Open chat GPT
@@ -195,6 +207,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ baseResumeData, ...props }) => {
             {...register("modifiedResumeJSON")}
             className={"my-3"}
           />
+          <Button variant={"outline"} onClick={() => {}}>
+            Validate the entered data
+          </Button>
           {errors.modifiedResumeJSON && (
             <p className="text-sm font-medium text-destructive">
               {errors.modifiedResumeJSON.message?.toString()}

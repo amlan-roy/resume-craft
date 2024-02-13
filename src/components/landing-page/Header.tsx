@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = () => {
             Generate Resume
           </Button>
           {/* </Link> */}
-          <Link href={"/generate-variants"} passHref>
+          <Link href={`/generate-resume/${new Date().getTime()}`} passHref>
             <Button>Generate Variants</Button>
           </Link>
         </div>

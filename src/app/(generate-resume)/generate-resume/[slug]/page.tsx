@@ -1,5 +1,10 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -9,17 +14,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { useTimeout } from "@/lib/hooks/useTimeout";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
-import { useForm } from "react-hook-form";
 import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import StepOne from "@/components/generate-resume/variant/StepOne";
 import StepTwo from "@/components/generate-resume/variant/StepTwo";
+import StepThree from "@/components/generate-resume/variant/StepThree";
 
 type GenerateVariantHomePageProps = { params: { slug: string } };
 
@@ -125,6 +126,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
             <form onSubmit={handleFormSubmit} className="space-y-8 w-full">
               <StepOne />
               <StepTwo baseResumeData={baseResumeData} />
+              <StepThree id={id} />
             </form>
           </Form>
         </section>

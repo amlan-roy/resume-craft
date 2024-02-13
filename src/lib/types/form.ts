@@ -12,8 +12,8 @@ export enum SECTION {
 
 export const durationFieldSchema = z
   .object({
-    startDate: z.date().optional().nullish(),
-    endDate: z.date().optional().nullish(),
+    startDate: z.string().optional().nullish(),
+    endDate: z.string().optional().nullish(),
     current: z.boolean().optional().nullish(),
   })
   .refine(
@@ -177,9 +177,6 @@ export const resumeVariantGenerationFormSchema = z.object({
     ),
   modifiedResumeJSON: z
     .string()
-    .min(1, "Please enter the JSON response from chat GPT")
-    .refine((data) => {
-      return formSchema.safeParse(data).success;
-    }, "The entered data is not in the correct format. Please try entering both the commands in a new chatGPT conversation. If the issue continues, please write to us"),
+    .min(1, "Please enter the JSON response from chat GPT"),
   customResumeName: z.string().optional().nullish().or(z.literal("")),
 });
