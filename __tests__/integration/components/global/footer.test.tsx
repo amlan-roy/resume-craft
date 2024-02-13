@@ -19,7 +19,7 @@ describe("integration:components/global/footer", () => {
     const authorName = screen.getByText(/Amlan Roy/i);
     const socialLinks = screen
       .getAllByRole("link")
-      .filter((element) => element.getAttribute("href") !== "/");
+      .filter((element) => element.getAttribute("href") !== "/home");
 
     expect(footer).toBeInTheDocument();
     expect(logo).toBeInTheDocument();
@@ -29,12 +29,12 @@ describe("integration:components/global/footer", () => {
     expect(socialLinks).toHaveLength(4);
   });
 
-  it("renders the footer with all expected elements", () => {
+  it("renders the footer with all expected links", () => {
     render(<Footer />);
 
     const links = screen
       .getAllByRole("link")
-      .filter((element) => element.getAttribute("href") !== "/");
+      .filter((element) => element.getAttribute("href") !== "/home");
 
     links.forEach((linkElement, index) => {
       const expectedUrl = LINKS[index].url;
