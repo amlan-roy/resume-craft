@@ -1,4 +1,6 @@
+import { GOOGLE_ACCESS_TOKEN_COOKIE_LABEL } from "@/lib/const/auth/auth-constants";
 import { formSchema } from "@/lib/types/form";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -109,13 +111,60 @@ export async function GET(req: NextRequest) {
         }
       );
     }
+    const authToken = req.cookies.get(GOOGLE_ACCESS_TOKEN_COOKIE_LABEL);
+    console.log("id", id);
+    console.log("authToken", authToken);
+    if (getDownloadLink && id && authToken) {
+      const url = process.env.GOOGLE_APP_SCRIPT_TEST_DEPLOYMENT_URL || "";
+      console.log("url", url);
 
+<<<<<<< Updated upstream
+=======
+      const resp = await axios.post(
+        "<Script URL>",
+        {
+          function: "testFunction",
+          parameters: ["val1", "val2"],
+          devMode: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken.value}`,
+          },
+        }
+      );
+      // const respon = await fetch(
+      //   "Script Url",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       Authorization: authToken,
+      //     },
+      //     body: JSON.stringify({
+      //       function: "testFunction",
+      //     }),
+      //   }
+      // );
+
+      console.log(resp.data);
+      console.log(resp.status);
+      console.log(resp.statusText);
+
+      // return resp;
+      return new NextResponse(JSON.stringify({ resBody: resp.data }), {
+        status: 200,
+        statusText: "Iasdasdasd",
+      });
+    }
+
+>>>>>>> Stashed changes
     return new NextResponse("Bad Request", {
       status: 400,
       statusText: "Bad Request",
     });
   } catch (err: unknown) {
-    console.error(err);
+    const a = await err;
+    console.log(a.response);
     return new NextResponse(
       "An error occurred while generating the resume. Please try again later",
       {

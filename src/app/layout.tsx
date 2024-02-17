@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body className={cn(inter.className, "min-h-screen flex flex-col")}>
         <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
-          {children}
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
+          >
+            {children}
+          </GoogleOAuthProvider>
         </ThemeProvider>
       </body>
     </html>
