@@ -1,15 +1,15 @@
-import LoginForm from "@/components/auth/login/LoginForm";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-
 import React from "react";
-import { FaGoogle } from "react-icons/fa";
+import LoginForm from "@/components/auth/login/LoginForm";
+import { Card } from "@/components/ui/card";
 
 type LoginPageProps = {
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+/**
+ * The login page component.
+ */
 const LoginPage: React.FC<LoginPageProps> = () => {
   return (
     <div className="p-6">
@@ -22,19 +22,6 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         </p>
 
         <LoginForm />
-        <p className="my-4 text-center text-brand-neutral-7">OR</p>
-        <div className="flex justify-center">
-          <Button
-            variant={"outline"}
-            className="w-full max-w-72 text-md py-6"
-            type="button"
-          >
-            <div className="flex items-center flex-wrap">
-              <FaGoogle className="mr-2" /> Login with Google
-            </div>
-          </Button>
-        </div>
-
         <p className="mt-6 text-center text-wrap">
           Dont have an account? Click here to{" "}
           <a

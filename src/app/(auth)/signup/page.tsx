@@ -1,13 +1,21 @@
 import React from "react";
-import { FaGoogle } from "react-icons/fa";
 import SignupForm from "@/components/auth/signup/SignupForm";
-import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+
 type SignupPageProps = {
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+/**
+ * Represents the Signup Page component.
+ * - When emailSent query parameter is present, it shows a message that a confirmation email has been sent.
+ * - Also when email sent query parameter is present, it hides the signup form but displays the google login option
+ *
+ * @param {object} props - The component props.
+ * @param {object} props.searchParams - The search parameters object.
+ * @returns {JSX.Element} - The rendered Signup Page component.
+ */
 const SignupPage: React.FC<SignupPageProps> = ({ searchParams }) => {
   const emailSent = searchParams?.["emailSent"];
 
@@ -22,32 +30,26 @@ const SignupPage: React.FC<SignupPageProps> = ({ searchParams }) => {
         </p>
 
         <>
-          {emailSent ? (
+          {emailSent && (
             <Card className="p-2 m-2 my-10 mb-4">
               <CardTitle className="text-lg">
                 A confirmation email has been sent
               </CardTitle>
               <CardDescription>
-                Follow the link sent in the email to activate your account and
-                log in.
+                Follow the link sent in the email to activate your account and{" "}
+                {""}
+                <a
+                  href="/login"
+                  className="text-brand-primary-7 hover:underline font-semibold"
+                >
+                  Login
+                </a>
+                .
               </CardDescription>
             </Card>
-          ) : (
-            <SignupForm />
           )}
+          <SignupForm hideForm={!!emailSent} />
         </>
-        <p className="my-4 text-center text-brand-neutral-7">OR</p>
-        <div className="flex justify-center">
-          <Button
-            variant={"outline"}
-            className="w-full max-w-72 text-md py-6 text-wrap"
-            type="button"
-          >
-            <div className="flex items-center flex-wrap">
-              <FaGoogle className="mr-2" /> Login with Google
-            </div>
-          </Button>
-        </div>
 
         <p className="mt-6 text-center text-wrap">
           Already have an account? Click here to{" "}

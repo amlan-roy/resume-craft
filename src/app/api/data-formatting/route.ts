@@ -5,7 +5,6 @@ export async function POST(req: NextRequest) {
   try {
     const requestUrl = new URL(req.url);
 
-    // const genResume = requestUrl.searchParams.get("generate-resume");
     const action = requestUrl.searchParams.get("action");
     if (!action) {
       return new NextResponse("Action is Required", {
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
     }
 
     const mockTrue = requestUrl.searchParams.get("mockTrue");
-    console.log(mockTrue);
     if (mockTrue) {
       return new NextResponse("The resume has been created", {
         status: 200,
