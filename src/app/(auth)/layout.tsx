@@ -10,7 +10,7 @@ type AuthPagesLayoutProps = {
 const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = ({ children }) => {
   return (
     <>
-      <AuthenticatedHeader />
+      <AuthenticatedHeader hideLogout />
       <main className="flex-grow">
         {children}
         <Toaster />

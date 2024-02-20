@@ -31,9 +31,13 @@ const ThemeSwitch = ({ className }: { className?: string }) => {
   );
 };
 
-type AuthenticatedHeaderProps = {};
+type AuthenticatedHeaderProps = {
+  hideLogout?: boolean;
+};
 
-const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = () => {
+const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
+  hideLogout,
+}) => {
   return (
     <header
       data-testid="global__header"
@@ -41,7 +45,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = () => {
     >
       <Logo linkify />
       <div className="flex items-center">
-        {auth.currentUser ? (
+        {!hideLogout ? (
           <DropdownMenu>
             <DropdownMenuTrigger title="See More" className="p-4">
               <CircleUserRoundIcon />
