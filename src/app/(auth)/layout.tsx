@@ -1,5 +1,6 @@
 import Footer from "@/components/global/Footer";
-import Header from "@/components/global/Header";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
+import { Toaster } from "@/components/ui/toaster";
 import React from "react";
 
 type AuthPagesLayoutProps = {
@@ -9,8 +10,11 @@ type AuthPagesLayoutProps = {
 const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = ({ children }) => {
   return (
     <>
-      <Header />
-      <main className="flex-grow">{children}</main>
+      <AuthenticatedHeader />
+      <main className="flex-grow">
+        {children}
+        <Toaster />
+      </main>
       <Footer />
     </>
   );

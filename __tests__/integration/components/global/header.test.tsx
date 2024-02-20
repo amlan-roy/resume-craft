@@ -1,16 +1,16 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import Header from "@/components/global/Header";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 
 describe("integration:components/global/header", () => {
   it("snapshot", () => {
-    const tree = render(<Header />);
+    const tree = render(<AuthenticatedHeader />);
     expect(tree.container).toMatchSnapshot();
   });
 
   //Todo: Had issue mocking the next themes and working with ThemeProvider here. Add proper tests later
-  it("Header renders initial theme correctly", () => {
-    render(<Header />);
+  it("AuthenticatedHeader renders initial theme correctly", () => {
+    render(<AuthenticatedHeader />);
     expect(screen.getByTestId("global__header")).toBeInTheDocument();
     expect(screen.getByLabelText("Dark Mode")).toBeInTheDocument();
     expect(

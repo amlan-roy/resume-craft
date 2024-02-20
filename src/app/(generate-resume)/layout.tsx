@@ -1,5 +1,5 @@
 import Footer from "@/components/global/Footer";
-import Header from "@/components/global/Header";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 import React from "react";
 
 type GenerateResumePageLayoutProps = {
@@ -11,7 +11,7 @@ const GenerateResumePageLayout: React.FC<GenerateResumePageLayoutProps> = ({
 }) => {
   return (
     <>
-      <Header />
+      <AuthenticatedHeader />
       <main className="flex-grow">{children}</main>
       <Footer />
     </>
