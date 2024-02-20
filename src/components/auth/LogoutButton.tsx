@@ -20,14 +20,13 @@ export const logout = async (
   avoidRedirect?: boolean
 ) => {
   try {
-    await auth.signOut();
+    auth.currentUser && (await auth.signOut());
     const response = await axios.post("/api/logout");
 
     if (!avoidRedirect && response.status === 200) {
       router.push("/login");
       return;
     }
-    throw new Error("An error has occurred while logging out!");
   } catch (e: Error | any) {
     console.error(e);
     onError?.(e);

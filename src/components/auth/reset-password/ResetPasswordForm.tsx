@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/lib/utils/firebase/config";
 import { useToast } from "@/components/ui/use-toast";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 type ResetPasswordFormProps = {};
 
@@ -67,7 +68,16 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = () => {
       });
     }
   };
-  return (
+
+  const [componentLoading, setComponentLoading] = React.useState(true);
+
+  useEffect(() => {
+    setComponentLoading(false);
+  }, []);
+
+  return componentLoading ? (
+    <LoadingSkeleton inputCount={1} />
+  ) : (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}

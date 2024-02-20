@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import { auth } from "@/lib/utils/firebase/config";
 import { useToast } from "@/components/ui/use-toast";
 import { logout } from "@/components/auth/LogoutButton";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 type LoginFormProps = {
   hideForm?: boolean;
@@ -45,6 +46,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
     register,
     formState: { errors },
   } = form;
+
+  const [componentLoading, setComponentLoading] = React.useState(true);
+
+  useEffect(() => {
+    setComponentLoading(false);
+  }, []);
 
   /**
    * Handles the form submission for the login form.
@@ -121,69 +128,75 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
 
   return (
     <>
-      {!hideForm && (
-        <Form {...form}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-5 mt-8"
-          >
-            <div>
-              <Label className="text-md">Email</Label>
-              <Input
-                {...register("email")}
-                placeholder="youremail@gmail.com"
-                type="email"
-                autoComplete="email"
-              ></Input>
-              {errors.email && (
-                <p className="text-sm font-medium text-destructive my-3">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label className="text-md">Password</Label>
-              <Input
-                {...register("password")}
-                placeholder="*********"
-                type="password"
-                autoComplete="current-password"
-              ></Input>
-
-              {errors.password && (
-                <p className="text-sm font-medium text-destructive my-3">
-                  {errors.password.message}
-                </p>
-              )}
-
-              <a
-                type="button"
-                href="/reset-password"
-                className="text-sm text-right ml-auto block mt-2 text-brand-primary-7 hover:underline"
-                title="Click here to reset your password"
+      {componentLoading ? (
+        <LoadingSkeleton />
+      ) : (
+        <>
+          {!hideForm && (
+            <Form {...form}>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-5 mt-8"
               >
-                Forgot password?
-              </a>
-            </div>
-            <div className="flex justify-center">
-              <Button
-                className="w-full max-w-72 text-md py-6"
-                type="submit"
-                disabled={loginInProgress || isGoogleLoginInProgress}
-              >
-                Login
-              </Button>
-            </div>
-          </form>
-        </Form>
+                <div>
+                  <Label className="text-md">Email</Label>
+                  <Input
+                    {...register("email")}
+                    placeholder="youremail@gmail.com"
+                    type="email"
+                    autoComplete="email"
+                  ></Input>
+                  {errors.email && (
+                    <p className="text-sm font-medium text-destructive my-3">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label className="text-md">Password</Label>
+                  <Input
+                    {...register("password")}
+                    placeholder="*********"
+                    type="password"
+                    autoComplete="current-password"
+                  ></Input>
+
+                  {errors.password && (
+                    <p className="text-sm font-medium text-destructive my-3">
+                      {errors.password.message}
+                    </p>
+                  )}
+
+                  <a
+                    type="button"
+                    href="/reset-password"
+                    className="text-sm text-right ml-auto block mt-2 text-brand-primary-7 hover:underline"
+                    title="Click here to reset your password"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+                <div className="flex justify-center">
+                  <Button
+                    className="w-full max-w-72 text-md py-6"
+                    type="submit"
+                    disabled={loginInProgress || isGoogleLoginInProgress}
+                  >
+                    Login
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
+          <p className="my-4 text-center text-brand-neutral-7">OR</p>
+          <div className="flex justify-center">
+            <GoogleJoinButton
+              isOtherOptionsLoading={loginInProgress}
+              setGoogleAuthLoadingState={setIsGoogleLoginInProgress}
+            />
+          </div>
+        </>
       )}
-      <p className="my-4 text-center text-brand-neutral-7">OR</p>
-      <div className="flex justify-center">
-        <GoogleJoinButton
-          isOtherOptionsLoading={loginInProgress}
-          setGoogleAuthLoadingState={setIsGoogleLoginInProgress}
-        />
-      </div>
     </>
   );
 };

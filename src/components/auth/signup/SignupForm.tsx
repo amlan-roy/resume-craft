@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
@@ -16,6 +16,7 @@ import { useToast } from "@/components/ui/use-toast";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
 import { addUserData } from "@/lib/utils/firebase/database/users";
 import { logout } from "@/components/auth/LogoutButton";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 type SignupFormProps = {
   hideForm?: boolean;
@@ -123,7 +124,15 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
     }
   };
 
-  return (
+  const [componentLoading, setComponentLoading] = React.useState(true);
+
+  useEffect(() => {
+    setComponentLoading(false);
+  }, []);
+
+  return componentLoading ? (
+    <LoadingSkeleton inputCount={3} />
+  ) : (
     <>
       {!hideForm && (
         <>
