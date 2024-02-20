@@ -40,8 +40,8 @@ export async function middleware(req: NextRequest) {
     if (responseAPI.status !== 200) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-    return NextResponse.next();
   }
+
   if (authRoutes.includes(req.nextUrl.pathname)) {
     if (session) {
       const responseAPI = await fetch(
@@ -56,7 +56,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/home", req.url));
       }
     }
-    return NextResponse.next();
   }
 
   if (req.nextUrl.pathname.endsWith("/generate-resume")) {
