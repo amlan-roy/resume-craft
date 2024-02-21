@@ -40,4 +40,5 @@ next-env.d.ts
 /playwright/.cache/
 
 #env
-*.env
+*.env*
+*firebase-adminsdk.json

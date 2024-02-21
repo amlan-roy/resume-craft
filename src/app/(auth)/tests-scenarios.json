@@ -1,0 +1,88 @@
+{
+  "details": "This file is used to define the test scenarios for the authentication feature. These tests will be introduced when the tests are introduced for the authentication feature.",
+  "testScenarios": [
+    {
+      "name": "Sign in with email and password",
+      "cases": [
+        "When account exists, email password correct, and email verified",
+        "When account exists, email password correct, and email not verified",
+        "When account exists, email password incorrect",
+        "When account does not exist",
+        "When account exists but login method is google login",
+        "Email is not valid",
+        "Password is less than 8 characters",
+        "Password is more than 8 characters",
+        "When account exists, email password correct, and email verified but user is locked",
+        "When account exists, email password correct, and email verified but user is disabled",
+        "When account exists, email password correct, and email verified but user is expired",
+        "When account exists, email password correct, and email verified but user is deleted",
+        "When account exists, email password correct, and email verified but user is suspended"
+      ]
+    },
+    {
+      "name": "Sign in with Google",
+      "cases": [
+        "When account exists and email verified",
+        "When account exists and email not verified",
+        "When account does not exist",
+        "When account exists but login method is email password login",
+        "When google login fails",
+        "When click on reset",
+        "When account exists and email verified but user is locked",
+        "When account exists and email verified but user is disabled",
+        "When account exists and email verified but user is expired",
+        "When account exists and email verified but user is deleted",
+        "When account exists and email verified but user is suspended"
+      ]
+    },
+    {
+      "name": "Sign up with email and password",
+      "cases": [
+        "When account does not exist",
+        "When account exists",
+        "Email is not valid",
+        "Password is less than 8 characters",
+        "Password is more than 8 characters",
+        "Confirm password does not match password",
+        "When sign up fails",
+        "When account exists but user is locked",
+        "When account exists but user is disabled",
+        "When account exists but user is expired",
+        "When account exists but user is deleted",
+        "When account exists but user is suspended"
+      ]
+    },
+    {
+      "name": "Sign up with Google",
+      "cases": [
+        "When account exists and email verified",
+        "When account exists and email not verified",
+        "When account does not exist",
+        "When account exists but login method is email password login",
+        "When google login fails",
+        "When click on reset",
+        "When account exists and email verified but user is locked",
+        "When account exists and email verified but user is disabled",
+        "When account exists and email verified but user is expired",
+        "When account exists and email verified but user is deleted",
+        "When account exists and email verified but user is suspended"
+      ]
+    },
+    {
+      "name": "Reset password",
+      "cases": [
+        "When account exists and email verified",
+        "When account exists and email not verified",
+        "When account does not exist",
+        "When account exists but login method is gmail",
+        "When reset password fails",
+        "When click on cancel",
+        "When account exists and email verified but user is locked",
+        "When account exists and email verified but user is disabled",
+        "When account exists and email verified but user is expired",
+        "When account exists and email verified but user is deleted",
+        "When account exists and email verified but user is suspended"
+      ]
+    }
+  ]
+}

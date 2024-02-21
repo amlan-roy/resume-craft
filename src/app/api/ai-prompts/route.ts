@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     if (`${commandId}` === "0") {
       return new NextResponse(
         JSON.stringify({
-          command: process.env.COMMAND_1,
+          command: JSON.parse(process.env.COMMAND_1 || "{}").value,
         }),
         {
           headers: {

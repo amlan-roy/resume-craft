@@ -16,7 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { ToastAction } from "@radix-ui/react-toast";
+import { ToastAction } from "@/components/ui/toast";
 import axios from "axios";
 
 type GenerateResumeHomePageProps = {};

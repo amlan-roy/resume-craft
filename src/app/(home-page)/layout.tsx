@@ -1,5 +1,5 @@
 import Footer from "@/components/global/Footer";
-import Header from "@/components/global/Header";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 import React from "react";
 
 type HomePageLayoutProps = {
@@ -9,7 +9,7 @@ type HomePageLayoutProps = {
 const HomePageLayout: React.FC<HomePageLayoutProps> = ({ children }) => {
   return (
     <>
-      <Header />
+      <AuthenticatedHeader />
       <main className="flex-grow">{children}</main>
       <Footer />
     </>
