@@ -1,5 +1,6 @@
 import { formSchema } from "@/lib/types/form";
 import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,10 +24,22 @@ export async function POST(req: NextRequest) {
 
     const reqBody = await req.json();
 
-    const id = reqBody?.id;
+    const id = reqBody?.userId;
+    const fileName = reqBody?.fileName as string;
+    const authToken = headers().get("Authorization");
+    const bearerAuthToken =
+      authToken &&
+      (authToken.startsWith("Bearer ") ? authToken : `Bearer ${authToken}`);
 
     if (!id) {
       return new NextResponse("ID is Required", {
+        status: 400,
+        statusText: "Bad Request",
+      });
+    }
+
+    if (!fileName) {
+      return new NextResponse("File Name is Required", {
         status: 400,
         statusText: "Bad Request",
       });
@@ -56,8 +69,38 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const resp = await fetch(
+      `${process.env.FIREBASE_CLOUD_FUNCTION_RESUME_GEN_URL}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(bearerAuthToken && { Authorization: bearerAuthToken }),
+        },
+        body: JSON.stringify({
+          userId: id,
+          fileName,
+          resumeData,
+        }),
+      }
+    );
+
+    if (resp.status.toString().startsWith("2")) {
+      const { downloadUrl } = await resp.json();
+      return new NextResponse(
+        JSON.stringify({
+          message: "The resume has been created",
+          downloadUrl,
+        }),
+        {
+          status: 200,
+          statusText: "Resume Created",
+        }
+      );
+    }
+
     return new NextResponse(
-      "The backend is not supported yet. Please try again later.",
+      "An error occurred while generating the resume. Please try again later",
       {
         status: 500,
         statusText: "Internal Server Error",
@@ -74,6 +117,7 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
 export async function GET(req: NextRequest) {
   try {
     const requestUrl = new URL(req.url);

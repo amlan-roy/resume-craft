@@ -1,5 +1,5 @@
 "use client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import React, { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,11 +13,12 @@ import { useTimeout } from "@/lib/hooks/useTimeout";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastAction } from "@/components/ui/toast";
-import axios from "axios";
+import { auth } from "@/lib/utils/firebase/config";
+import { makeGenerateResumeRequest } from "@/lib/services/resume-service";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type GenerateResumeHomePageProps = {};
 
@@ -49,12 +50,11 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
     try {
       setDownloadData((prev) => ({ ...prev, state: "in-progress" }));
 
-      const downloadState = await axios.post(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=generateResume${params.get("mockTrue") ? "&mockTrue=true" : ""}`,
-        {
-          resumeData: baseResumeData,
-          id: "base",
-        }
+      const downloadState = await makeGenerateResumeRequest(
+        baseResumeData,
+        auth.currentUser?.uid || "",
+        "base-resume",
+        !!params.get("mockTrue")
       );
 
       if (
@@ -66,23 +66,12 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
       }
 
       if (downloadState.status.toString().startsWith("2")) {
-        const downloadUrlRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=getDownloadLink&id=base${params.get("mockTrue") ? "&mockTrue=true" : ""}`
-        );
-
-        if (!downloadUrlRes?.data?.downloadUrl) {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: undefined,
-            state: "success",
-          }));
-        } else {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: downloadUrlRes.data.downloadUrl,
-            state: "success",
-          }));
-        }
+        const downloadUrl = downloadState.data.downloadUrl;
+        setDownloadData((prev) => ({
+          ...prev,
+          state: downloadUrl ? "success" : "failure",
+          downloadUrl,
+        }));
       }
     } catch (err) {
       console.error(err);
@@ -145,17 +134,16 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
                 : "Generate Resume"}
           </Button>
           {downloadData.state === "success" && (
-            <>
-              <div className="my-8">
-                <h4 className="text-xl font-bold text-center">
-                  Your resume has been generated and saved
-                </h4>
+            <Alert className="w-fit bg-brand-secondary-blue-2">
+              <AlertTitle className="text-xl font-bold text-center">
+                Your resume has been generated and saved
+              </AlertTitle>
+              <AlertDescription>
                 <p className="text-brand-neutral-11 text-md text-center my-8 mt-4">
-                  Your Resume has been generated and saved to your google drive.
-                  <br />
+                  Your Resume has been generated and saved securely.
                   {downloadData.downloadUrl && (
                     <>
-                      Click{" "}
+                      {" Click "}
                       <a
                         className="font-bold"
                         href={downloadData.downloadUrl}
@@ -168,15 +156,8 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
                     </>
                   )}
                 </p>
-              </div>
-              <Alert className="w-fit bg-brand-secondary-blue-2">
-                <AlertDescription>
-                  <strong>Note:</strong> Your resume has been saved to your
-                  google drive. If you feel the need to edit it, please feel
-                  free to do so.
-                </AlertDescription>
-              </Alert>
-            </>
+              </AlertDescription>
+            </Alert>
           )}
           <Toaster />
         </section>

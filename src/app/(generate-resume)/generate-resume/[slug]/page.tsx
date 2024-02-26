@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,8 +24,10 @@ import StepFour from "@/components/generate-resume/variant/StepFour";
 import { ToastAction } from "@/components/ui/toast";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Toaster } from "@/components/ui/toaster";
+import { auth } from "@/lib/utils/firebase/config";
+import { makeGenerateResumeRequest } from "@/lib/services/resume-service";
 
 type GenerateVariantHomePageProps = { params: { slug: string } };
 
@@ -45,7 +46,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
     resolver: zodResolver(resumeVariantGenerationFormSchema),
   });
 
-  const { trigger, getValues } = form;
+  const { getValues } = form;
 
   const [downloadData, setDownloadData] = useState<{
     downloadUrl?: string;
@@ -73,55 +74,14 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
     }
   }, [baseResumeData]);
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    window.onbeforeunload = null;
-
-    if (resumeVariantData) {
-      const downloadState = await axios.post(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=generateResume${params.get("mockTrue") ? "&mockTrue=true" : ""}`,
-        {
-          resumeData: resumeVariantData,
-          id: getValues().customResumeName || id,
-          customName: getValues().customResumeName,
-        }
-      );
-
-      if (downloadState.status.toString().startsWith("2")) {
-        const downloadUrlRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=getDownloadLink&id=${getValues().customResumeName || id}${params.get("mockTrue") ? "&mockTrue=true" : ""}`
-        );
-
-        if (!downloadUrlRes?.data?.downloadUrl) {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: undefined,
-            state: "success",
-          }));
-        } else {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: downloadUrlRes.data.downloadUrl,
-            state: "success",
-          }));
-        }
-      }
-    } else {
-      trigger();
-      setDownloadData((prev) => ({ ...prev, state: "failure" }));
-    }
-  };
-
   const onGenerateClick = async () => {
     try {
       setDownloadData((prev) => ({ ...prev, state: "in-progress" }));
-      const downloadState = await axios.post(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=generateResume${params.get("mockTrue") ? "&mockTrue=true" : ""}`,
-        {
-          resumeData: baseResumeData,
-          id: "base",
-        }
+      const downloadState = await makeGenerateResumeRequest(
+        baseResumeData,
+        auth.currentUser?.uid || "",
+        getValues().customResumeName || id,
+        !!params.get("mockTrue")
       );
 
       if (
@@ -133,23 +93,12 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
       }
 
       if (downloadState.status.toString().startsWith("2")) {
-        const downloadUrlRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?action=getDownloadLink&id=base${params.get("mockTrue") ? "&mockTrue=true" : ""}`
-        );
-
-        if (!downloadUrlRes?.data?.downloadUrl) {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: undefined,
-            state: "success",
-          }));
-        } else {
-          setDownloadData((prev) => ({
-            ...prev,
-            downloadUrl: downloadUrlRes.data.downloadUrl,
-            state: "success",
-          }));
-        }
+        const downloadUrl = downloadState.data.downloadUrl;
+        setDownloadData((prev) => ({
+          ...prev,
+          downloadUrl,
+          state: downloadUrl ? "success" : "failure",
+        }));
       }
     } catch (err) {
       console.error(err);
@@ -176,8 +125,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
 
   return (
     <>
-      {/* Todo: Remove pb-32 after issue #48 is fixed */}
-      <div className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto pb-32">
+      <div className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto">
         <h1 className="text-brand-neutral-11 text-4xl font-bold text-center">
           Generate A Resume variant
         </h1>
@@ -187,7 +135,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
 
         <section className="flex flex-col items-center gap-4">
           <Form {...form}>
-            <form onSubmit={handleFormSubmit} className="space-y-8 w-full">
+            <form className="space-y-8 w-full">
               <StepOne />
               <StepTwo
                 baseResumeData={baseResumeData}
@@ -204,6 +152,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
                 <Button
                   className="max-w-80 w-full"
                   disabled={downloadData.state === "in-progress"}
+                  type="button"
                   onClick={onGenerateClick}
                 >
                   {downloadData.state === "in-progress"
@@ -230,34 +179,28 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
           </div>
           {downloadData.state === "success" && (
             <>
-              <div className="my-8">
-                <h4 className="text-xl font-bold text-center">
-                  Your resume has been generated and saved
-                </h4>
-                <p className="text-brand-neutral-11 text-md text-center my-8 mt-4">
-                  Your Resume has been generated and saved to your google drive.
-                  <br />
-                  {downloadData.downloadUrl && (
-                    <>
-                      Click{" "}
-                      <a
-                        className="font-bold"
-                        href={downloadData.downloadUrl}
-                        target="_blank"
-                        title="Download your resume"
-                      >
-                        here
-                      </a>{" "}
-                      to download a PDF of your resume.
-                    </>
-                  )}
-                </p>
-              </div>
               <Alert className="w-fit bg-brand-secondary-blue-2">
+                <AlertTitle className="text-xl font-bold text-center">
+                  Your resume has been generated and saved
+                </AlertTitle>
                 <AlertDescription>
-                  <strong>Note:</strong> Your resume has been saved to your
-                  google drive. If you feel the need to edit it, please feel
-                  free to do so.
+                  <p className="text-brand-neutral-11 text-md text-center my-8 mt-4">
+                    Your Resume has been generated and saved securely.
+                    {downloadData.downloadUrl && (
+                      <>
+                        {" Click "}
+                        <a
+                          className="font-bold"
+                          href={downloadData.downloadUrl}
+                          target="_blank"
+                          title="Download your resume"
+                        >
+                          here
+                        </a>{" "}
+                        to download a PDF of your resume.
+                      </>
+                    )}
+                  </p>
                 </AlertDescription>
               </Alert>
             </>
