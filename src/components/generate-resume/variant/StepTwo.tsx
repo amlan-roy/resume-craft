@@ -112,14 +112,13 @@ const StepTwo: React.FC<StepTwoProps> = ({
           `Command is required in the response, but did not receive it`
         );
 
-      navigator.clipboard.writeText(command);
-
       setCommandsState((prev) => {
         const res = [...prev];
         res[index].state = "success";
         res[index].command = command;
         return res;
       });
+      navigator.clipboard.writeText(command);
     } catch (e) {
       setCommandsState((prev) => {
         const res = [...prev];

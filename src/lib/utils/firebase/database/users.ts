@@ -1,22 +1,23 @@
 import { formType } from "@/lib/types/form";
-import { db } from "@/lib/utils/firebase/config";
+import { db, auth } from "@/lib/utils/firebase/config";
 import {
   collection,
-  addDoc,
+  setDoc,
   getDoc,
   getDocs,
   query,
   where,
   DocumentSnapshot,
+  doc,
 } from "firebase/firestore";
 
 /**
  * Adds user data to the Firestore database.
- * @param {Object} userData - The user data to be added.
- * @param {string | null} userData.name - The name of the user.
- * @param {string | null} userData.email - The email of the user.
- * @param {{ downloadUrl?: string; formData: formType }[]} [userData.documents] - Optional array of user documents.
- * @returns {Promise<DocumentSnapshot>} A promise that resolves to the document snapshot of the added user data.
+ * @param  userData - The user data to be added.
+ * @param userData.name - The name of the user.
+ * @param  userData.email - The email of the user.
+ * @param userData.documents - Optional array of user documents.
+ * @returns A promise that resolves to the document snapshot of the added user data, or undefined if the user is not authenticated.
  */
 export const addUserData = async ({
   name,
@@ -25,25 +26,36 @@ export const addUserData = async ({
 }: {
   name?: string | null;
   email: string | null;
-  documents?: { downloadUrl?: string; formData: formType }[];
-}): Promise<DocumentSnapshot> => {
+  documents?: {
+    downloadUrl?: string;
+    formData: formType;
+    downloadFileName?: string;
+    timeUpdated?: string;
+  }[];
+}): Promise<DocumentSnapshot | null> => {
   const usersRef = collection(db, "users");
   const newUser = {
     name,
     email,
   };
 
-  const docRef = await addDoc(usersRef, newUser);
+  const userId = auth.currentUser?.uid;
+  if (!userId) {
+    return null;
+  }
 
-  const docRefData = await getDoc(docRef);
+  const documentRef = doc(db, "users", userId);
+  await setDoc(documentRef, newUser);
+
+  const docRefData = await getDoc(documentRef);
 
   return docRefData;
 };
 
 /**
  * Retrieves a user document from the Firestore database based on the email.
- * @param {string} email - The email of the user to retrieve.
- * @returns {Promise<DocumentSnapshot>} A promise that resolves to the document snapshot of the retrieved user.
+ * @param email - The email of the user to retrieve.
+ * @returns A promise that resolves to the document snapshot of the retrieved user.
  */
 export const getUserFromEmail = async (
   email: string
