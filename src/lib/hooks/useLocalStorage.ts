@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 /**
  * A custom hook that returns the value of the data stored in local storage with the provided key
@@ -13,16 +13,11 @@ import { useState, useEffect } from "react";
  * @returns [value, setValue]: The value and the set value for the local storage record
  */
 const useLocalStorage = (key: string, initialValue?: string) => {
-  const [value, setValue] = useState(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const item = window.localStorage.getItem(key);
-        return item ? JSON.parse(item) : initialValue;
-      } else {
-        return initialValue;
-      }
-    } catch (error) {
-      console.error(error);
+  const [value, setValue] = useState<string | undefined>(() => {
+    if (typeof window !== "undefined") {
+      const item = window.localStorage.getItem(key);
+      return item || initialValue;
+    } else {
       return initialValue;
     }
   });
@@ -30,15 +25,17 @@ const useLocalStorage = (key: string, initialValue?: string) => {
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
-        if (value !== undefined)
-          window.localStorage.setItem(key, JSON.stringify(value));
+        if (value !== undefined) window.localStorage.setItem(key, value);
       }
     } catch (error) {
       console.error(error);
     }
   }, [key, value]);
 
-  return [value, setValue];
+  return [value, setValue] as [
+    string | undefined,
+    Dispatch<SetStateAction<string | undefined>>,
+  ];
 };
 
 export default useLocalStorage;
