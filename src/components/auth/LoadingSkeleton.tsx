@@ -1,5 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const InputSkeleton = () => {
   return (
@@ -12,12 +13,14 @@ const InputSkeleton = () => {
 
 type LoadingSkeletonProps = {
   inputCount?: number;
+  className?: string;
 };
 const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   inputCount = 2,
+  className,
 }) => {
   return (
-    <div className="flex flex-col space-y-3 my-6">
+    <div className={cn(["flex flex-col space-y-3 my-6", className])}>
       {[...Array(inputCount)].map((_, i) => (
         <InputSkeleton key={i} />
       ))}

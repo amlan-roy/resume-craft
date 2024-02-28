@@ -8,7 +8,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { useTimeout } from "@/lib/hooks/useTimeout";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 import Link from "next/link";
@@ -31,9 +30,6 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
   const router = useRouter();
   const params = useSearchParams();
   const [baseResumeData, setBaseResumeData] = useState<null | formType>(null);
-  const [resumeVariantData, setResumeVariantData] = useState<null | formType>(
-    null
-  );
   const [downloadData, setDownloadData] = useState<{
     downloadUrl?: string;
     state: "neutral" | "in-progress" | "success" | "failure";

@@ -32,7 +32,8 @@ import {
   makeGenerateResumeRequest,
   setResumeFormData,
 } from "@/lib/services/resume-service";
-import { get } from "http";
+import { DEFAULT_FORM_DATA } from "@/lib/const/generate-resume/generate-resume";
+import LoadingGenResumeForm from "@/components/generate-resume/variant/LoadingGenResumeForm";
 
 type GenerateVariantHomePageProps = { params: { slug: string } };
 
@@ -47,13 +48,16 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
   const [resumeVariantData, setResumeVariantData] = useState<null | formType>(
     null
   );
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useLocalStorage(`gen-resume-form-data-${id}`);
   const [uid, setUid] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof resumeVariantGenerationFormSchema>>({
     resolver: zodResolver(resumeVariantGenerationFormSchema),
+    defaultValues: formData ? JSON.parse(formData) : DEFAULT_FORM_DATA,
   });
 
-  const { getValues } = form;
+  const { getValues, watch } = form;
 
   const [downloadData, setDownloadData] = useState<{
     downloadUrl?: string;
@@ -83,6 +87,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
             if (resumeFormData) {
               setBaseResumeData(resumeFormData);
               setShowRedirectModal(false);
+              setLoading(false);
             } else {
               setShowRedirectModal(true);
             }
@@ -94,10 +99,18 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
           if (resumeVariantData) {
             setResumeVariantData(resumeVariantData);
           }
+          setLoading(false);
         });
       }
     });
   }, []);
+
+  React.useEffect(() => {
+    const subscription = watch((value) => {
+      setFormData(JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const onGenerateClick = async () => {
     try {
@@ -168,90 +181,96 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
           Follow the steps mentioned below to create your resume variant
         </p>
 
-        <section className="flex flex-col items-center gap-4">
-          <Form {...form}>
-            <form className="space-y-8 w-full">
-              <StepOne />
-              <StepTwo
-                baseResumeData={JSON.stringify(baseResumeData)}
-                setResumeVariantData={(data: formType) => {
-                  if (!uid) return;
-                  setResumeVariantData(data);
+        {loading ? (
+          <LoadingGenResumeForm />
+        ) : (
+          <section className="flex flex-col items-center gap-4">
+            <>
+              <Form {...form}>
+                <form className="space-y-8 w-full">
+                  <StepOne />
+                  <StepTwo
+                    baseResumeData={JSON.stringify(baseResumeData)}
+                    setResumeVariantData={(data: formType) => {
+                      if (!uid) return;
+                      setResumeVariantData(data);
 
-                  setResumeFormData(uid, id, data);
-                }}
-                resumeVariantData={JSON.stringify(resumeVariantData)}
-              />
-              <StepThree
-                id={id}
-                setResumeVariantData={(data: formType) => {
-                  if (!uid) return;
-                  setResumeVariantData(data);
+                      setResumeFormData(uid, id, data);
+                    }}
+                    resumeVariantData={JSON.stringify(resumeVariantData)}
+                  />
+                  <StepThree
+                    id={id}
+                    setResumeVariantData={(data: formType) => {
+                      if (!uid) return;
+                      setResumeVariantData(data);
 
-                  setResumeFormData(uid, id, data);
-                }}
-                resumeVariantData={JSON.stringify(resumeVariantData)}
-              />
-              <StepFour />
+                      setResumeFormData(uid, id, data);
+                    }}
+                    resumeVariantData={JSON.stringify(resumeVariantData)}
+                  />
+                  <StepFour />
+                  <div className="w-full flex justify-end">
+                    <Button
+                      className="max-w-80 w-full"
+                      disabled={downloadData.state === "in-progress"}
+                      type="button"
+                      onClick={onGenerateClick}
+                    >
+                      {downloadData.state === "in-progress"
+                        ? "Generating..."
+                        : downloadData.state === "success"
+                          ? "Re-generate Resume"
+                          : downloadData.state === "failure"
+                            ? "Resume Generation Failed"
+                            : "Generate Resume"}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
               <div className="w-full flex justify-end">
                 <Button
                   className="max-w-80 w-full"
                   disabled={downloadData.state === "in-progress"}
-                  type="button"
-                  onClick={onGenerateClick}
+                  onClick={() => {
+                    router.push("/home");
+                  }}
                 >
-                  {downloadData.state === "in-progress"
-                    ? "Generating..."
-                    : downloadData.state === "success"
-                      ? "Re-generate Resume"
-                      : downloadData.state === "failure"
-                        ? "Resume Generation Failed"
-                        : "Generate Resume"}
+                  Generate another resume
                 </Button>
               </div>
-            </form>
-          </Form>
-          <div className="w-full flex justify-end">
-            <Button
-              className="max-w-80 w-full"
-              disabled={downloadData.state === "in-progress"}
-              onClick={() => {
-                router.push("/home");
-              }}
-            >
-              Generate another resume
-            </Button>
-          </div>
-          {downloadData.state === "success" && (
-            <>
-              <Alert className="w-fit bg-brand-secondary-blue-2">
-                <AlertTitle className="text-xl font-bold text-center">
-                  Your resume has been generated and saved
-                </AlertTitle>
-                <AlertDescription>
-                  <p className="text-brand-neutral-11 text-md text-center my-8 mt-4">
-                    Your Resume has been generated and saved securely.
-                    {downloadData.downloadUrl && (
-                      <>
-                        {" Click "}
-                        <a
-                          className="font-bold"
-                          href={downloadData.downloadUrl}
-                          target="_blank"
-                          title="Download your resume"
-                        >
-                          here
-                        </a>{" "}
-                        to download a PDF of your resume.
-                      </>
-                    )}
-                  </p>
-                </AlertDescription>
-              </Alert>
+              {downloadData.state === "success" && (
+                <>
+                  <Alert className="w-fit bg-brand-secondary-blue-2">
+                    <AlertTitle className="text-xl font-bold text-center">
+                      Your resume has been generated and saved
+                    </AlertTitle>
+                    <AlertDescription>
+                      <p className="text-brand-neutral-11 text-md text-center my-8 mt-4">
+                        Your Resume has been generated and saved securely.
+                        {downloadData.downloadUrl && (
+                          <>
+                            {" Click "}
+                            <a
+                              className="font-bold"
+                              href={downloadData.downloadUrl}
+                              target="_blank"
+                              title="Download your resume"
+                            >
+                              here
+                            </a>{" "}
+                            to download a PDF of your resume.
+                          </>
+                        )}
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                </>
+              )}
+              <Toaster />
             </>
-          )}
-          <Toaster />
-        </section>
+          </section>
+        )}
       </div>
       <AlertDialog open={showRedirectModal}>
         <AlertDialogContent>
