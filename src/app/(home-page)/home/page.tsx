@@ -36,6 +36,11 @@ const page: React.FC<pageProps> = () => {
               Edit Base Resume
             </Button>
           </Link>
+          <Link href={"/my-resumes"}>
+            <Button title="View your generated resumes" variant={"outline"}>
+              View your generated resumes
+            </Button>
+          </Link>
         </div>
       </section>
       ;
