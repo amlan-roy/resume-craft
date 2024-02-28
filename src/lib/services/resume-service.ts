@@ -220,3 +220,34 @@ export const setResumeFormData = async (
 
   await setDoc(documentRef, partialDocDataToSet, { merge: true });
 };
+
+export const deleteResume = async (userId: string, formId: string) => {
+  const documentRef = doc(db, "users", userId);
+
+  if (!documentRef) {
+    throw new Error("User not found");
+  }
+
+  const resumeVariantData =
+    formId === "base" ? await getResumeVariantData(userId) : {};
+
+  delete resumeVariantData?.[formId];
+
+  await setDoc(
+    documentRef,
+    {
+      ...(formId === "base"
+        ? {
+            baseResumeData: {
+              downloadFileName: null,
+              downloadUrl: null,
+              timeUpdated: null,
+            },
+          }
+        : {
+            resumeVariantData,
+          }),
+    },
+    { merge: true }
+  );
+};
