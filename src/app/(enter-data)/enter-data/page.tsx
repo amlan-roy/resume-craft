@@ -10,10 +10,15 @@ import {
 } from "@/components/ui/hover-card";
 import Link from "next/link";
 import { cleanFormData } from "@/lib/utils/data-formatting";
-import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { DEFAULT_FORM_VALUE } from "@/lib/const/form/form-data";
 import DynamicForm from "@/components/global/form/DynamicForm";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  getResumeFormData,
+  setResumeFormData,
+} from "@/lib/services/resume-service";
+import { auth } from "@/lib/utils/firebase/config";
+import DynamicFormLoading from "@/components/global/form/DynamicFormLoading";
 
 type EnterDataPageProps = {};
 
@@ -24,32 +29,54 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
   const disclaimerVisible = searchParams.has("showDisclaimer");
   const formId = searchParams.get("id");
   const redirectToRoute = searchParams.get("redirectTo");
-
-  const [resumeData, setResumeData] = useLocalStorage(
-    `${formId || "base"}-resume-data-local`
-  );
+  const [resumeData, setResumeData] = useState<null | formType>(null);
 
   const onSubmit = async (values: formType) => {
-    const formDataString = JSON.stringify(cleanFormData(values));
-    setResumeData(formDataString);
-    const redirectionPath =
-      redirectToRoute === "base"
-        ? "/generate-resume/base"
-        : redirectToRoute
-          ? `/generate-resume/${redirectToRoute}`
-          : "/home";
+    const formDataString = cleanFormData(values);
+    const uid = auth.currentUser?.uid;
+    if (uid && formId) {
+      setResumeFormData(uid, formId, formDataString).then(() => {
+        setResumeData(formDataString);
+        const redirectionPath =
+          redirectToRoute === "base"
+            ? "/generate-resume/base"
+            : redirectToRoute
+              ? `/generate-resume/${redirectToRoute}`
+              : "/home";
 
-    router.push(redirectionPath);
+        router.push(redirectionPath);
+      });
+    }
   };
 
   const [loading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (formId !== "base" && !!!resumeData) router.push("/home");
-    else {
-      setIsLoading(false);
+    if (!formId) {
+      router.push("/home");
+      return;
     }
-  }, [formId, resumeData]);
+    auth.authStateReady().then(() => {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        getResumeFormData(userId, formId)
+          .then((resumeFormData) => {
+            if (formId === "base") {
+              if (resumeFormData) setResumeData(resumeFormData);
+              setIsLoading(false);
+            } else if (formId && !!resumeFormData) {
+              setResumeData(resumeFormData);
+              setIsLoading(false);
+            } else {
+              router.push("/home");
+            }
+          })
+          .catch(() => {
+            router.push("/home");
+          });
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -129,15 +156,18 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
         )}
       </section>
       <div className="max-w-screen-xl overflow-hidden p-4 sm:px-6 mt-10 mx-auto mb-28">
-        <DynamicForm
-          defaultValues={
-            resumeData
-              ? (JSON.parse(resumeData) as formType)
-              : (DEFAULT_FORM_VALUE as formType)
-          }
-          onSubmit={onSubmit}
-          loading={loading}
-        />
+        {loading ? (
+          <DynamicFormLoading />
+        ) : (
+          <DynamicForm
+            defaultValues={
+              (JSON.parse(JSON.stringify(resumeData)) ||
+                DEFAULT_FORM_VALUE) as formType
+            }
+            onSubmit={onSubmit}
+            loading={loading}
+          />
+        )}
       </div>
     </>
   );

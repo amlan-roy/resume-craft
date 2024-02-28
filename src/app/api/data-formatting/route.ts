@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
 
     const id = reqBody?.userId;
     const fileName = reqBody?.fileName as string;
+    const formId = reqBody?.formId as string;
+    const isBase = formId === "base";
     const authToken = headers().get("Authorization");
     const bearerAuthToken =
       authToken &&
@@ -81,6 +83,8 @@ export async function POST(req: NextRequest) {
           userId: id,
           fileName,
           resumeData,
+          formId,
+          isBase,
         }),
       }
     );

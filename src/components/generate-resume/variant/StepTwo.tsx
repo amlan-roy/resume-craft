@@ -253,9 +253,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
                   );
                 } else {
                   clearErrors("modifiedResumeJSON");
-                  setResumeVariantData(
-                    JSON.stringify(enteredDataObjWithSensitiveInfo)
-                  );
+                  setResumeVariantData(enteredDataObjWithSensitiveInfo);
                 }
               } catch (e) {
                 setEnteredDataIsValid(false);
