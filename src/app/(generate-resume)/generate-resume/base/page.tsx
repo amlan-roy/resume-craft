@@ -17,8 +17,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastAction } from "@/components/ui/toast";
 import { auth } from "@/lib/utils/firebase/config";
-import { makeGenerateResumeRequest } from "@/lib/services/resume-service";
+import {
+  getResumeFormData,
+  makeGenerateResumeRequest,
+} from "@/lib/services/resume-service";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { formType } from "@/lib/types/form";
 
 type GenerateResumeHomePageProps = {};
 
@@ -26,8 +30,10 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
   const [showRedirectModal, setShowRedirectModal] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
-  const [baseResumeData] = useLocalStorage("base-resume-data-local");
-
+  const [baseResumeData, setBaseResumeData] = useState<null | formType>(null);
+  const [resumeVariantData, setResumeVariantData] = useState<null | formType>(
+    null
+  );
   const [downloadData, setDownloadData] = useState<{
     downloadUrl?: string;
     state: "neutral" | "in-progress" | "success" | "failure";
@@ -54,6 +60,7 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
         baseResumeData,
         auth.currentUser?.uid || "",
         "base-resume",
+        "base",
         !!params.get("mockTrue")
       );
 
@@ -97,12 +104,24 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
   };
 
   useEffect(() => {
-    if (!!!baseResumeData) {
-      setShowRedirectModal(true);
-    } else {
-      setShowRedirectModal(false);
-    }
-  }, [baseResumeData]);
+    auth.authStateReady().then(() => {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        getResumeFormData(userId, "base")
+          .then((resumeFormData) => {
+            if (resumeFormData) {
+              setBaseResumeData(resumeFormData);
+              setShowRedirectModal(false);
+            } else {
+              setShowRedirectModal(true);
+            }
+          })
+          .catch(() => {
+            setShowRedirectModal(true);
+          });
+      }
+    });
+  }, []);
 
   return (
     <>

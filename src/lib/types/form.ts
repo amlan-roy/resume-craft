@@ -12,8 +12,12 @@ export enum SECTION {
 
 export const durationFieldSchema = z
   .object({
-    startDate: z.string().optional().nullish(),
-    endDate: z.string().optional().nullish(),
+    startDate: z
+      .string()
+      .optional()
+      .nullish()
+      .or(z.date().optional().nullish()),
+    endDate: z.string().optional().nullish().or(z.date().optional().nullish()),
     current: z.boolean().optional().nullish(),
   })
   .refine(

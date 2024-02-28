@@ -14,7 +14,7 @@ import {
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { useTimeout } from "@/lib/hooks/useTimeout";
 import { useToast } from "@/components/ui/use-toast";
-import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
+import { formType, resumeVariantGenerationFormSchema } from "@/lib/types/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import StepOne from "@/components/generate-resume/variant/StepOne";
@@ -27,7 +27,12 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Toaster } from "@/components/ui/toaster";
 import { auth } from "@/lib/utils/firebase/config";
-import { makeGenerateResumeRequest } from "@/lib/services/resume-service";
+import {
+  getResumeFormData,
+  makeGenerateResumeRequest,
+  setResumeFormData,
+} from "@/lib/services/resume-service";
+import { get } from "http";
 
 type GenerateVariantHomePageProps = { params: { slug: string } };
 
@@ -38,10 +43,12 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
   const router = useRouter();
   const params = useSearchParams();
   const id = dynamicParams.slug;
-  const [baseResumeData] = useLocalStorage("base-resume-data-local");
-  const [resumeVariantData, setResumeVariantData] = useLocalStorage(
-    `${id}-resume-data-local`
+  const [baseResumeData, setBaseResumeData] = useState<null | formType>(null);
+  const [resumeVariantData, setResumeVariantData] = useState<null | formType>(
+    null
   );
+  const [uid, setUid] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof resumeVariantGenerationFormSchema>>({
     resolver: zodResolver(resumeVariantGenerationFormSchema),
   });
@@ -67,20 +74,48 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
   );
 
   useEffect(() => {
-    if (!!!baseResumeData) {
-      setShowRedirectModal(true);
-    } else {
-      setShowRedirectModal(false);
-    }
-  }, [baseResumeData]);
+    auth.authStateReady().then(() => {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        setUid(userId);
+        getResumeFormData(userId, "base")
+          .then((resumeFormData) => {
+            if (resumeFormData) {
+              setBaseResumeData(resumeFormData);
+              setShowRedirectModal(false);
+            } else {
+              setShowRedirectModal(true);
+            }
+          })
+          .catch(() => {
+            setShowRedirectModal(true);
+          });
+        getResumeFormData(userId, id).then((resumeVariantData) => {
+          if (resumeVariantData) {
+            setResumeVariantData(resumeVariantData);
+          }
+        });
+      }
+    });
+  }, []);
 
   const onGenerateClick = async () => {
     try {
+      if (!resumeVariantData) {
+        displayToast({
+          title: "Please fill in the required fields",
+          description:
+            "You need to fill in the required fields to generate your resume",
+          variant: "destructive",
+        });
+        return;
+      }
       setDownloadData((prev) => ({ ...prev, state: "in-progress" }));
       const downloadState = await makeGenerateResumeRequest(
-        baseResumeData,
+        JSON.stringify(resumeVariantData),
         auth.currentUser?.uid || "",
         getValues().customResumeName || id,
+        id,
         !!params.get("mockTrue")
       );
 
@@ -138,14 +173,24 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
             <form className="space-y-8 w-full">
               <StepOne />
               <StepTwo
-                baseResumeData={baseResumeData}
-                setResumeVariantData={setResumeVariantData}
-                resumeVariantData={resumeVariantData}
+                baseResumeData={JSON.stringify(baseResumeData)}
+                setResumeVariantData={(data: formType) => {
+                  if (!uid) return;
+                  setResumeVariantData(data);
+
+                  setResumeFormData(uid, id, data);
+                }}
+                resumeVariantData={JSON.stringify(resumeVariantData)}
               />
               <StepThree
                 id={id}
-                setResumeVariantData={setResumeVariantData}
-                resumeVariantData={resumeVariantData}
+                setResumeVariantData={(data: formType) => {
+                  if (!uid) return;
+                  setResumeVariantData(data);
+
+                  setResumeFormData(uid, id, data);
+                }}
+                resumeVariantData={JSON.stringify(resumeVariantData)}
               />
               <StepFour />
               <div className="w-full flex justify-end">
