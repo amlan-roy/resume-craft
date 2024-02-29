@@ -43,7 +43,6 @@ const page: React.FC<pageProps> = () => {
           </Link>
         </div>
       </section>
-      ;
     </>
   );
 };
