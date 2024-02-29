@@ -101,6 +101,20 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
 
   const [focusOnLastSection, setFocusOnLastSection] = useState(false);
 
+  const hasValidationTrigerred = () => {
+    return !!Object.keys(form.formState.errors).length;
+  };
+
+  // This function is used to trigger validation when a section is deleted
+  // Need to manually trigger the validations because once a form field/section is deleted
+  // the error message of that deleted field is not cleared and it persists
+  // This can cause incorrect error message to be displayed for incorrect fields
+  const optionallyTriggerValidationOnDelete = () => {
+    if (hasValidationTrigerred()) {
+      trigger();
+    }
+  };
+
   const addSection = (sectionType: SECTION) => {
     switch (sectionType) {
       case SECTION.PROFESSIONAL_SUMMARY:
@@ -154,6 +168,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                         />
@@ -164,6 +179,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                           fieldErrors={errors?.optionalSections?.[sectionIndex]}
@@ -207,6 +223,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                 ...currentField,
                                 fields: updatedFields,
                               });
+                              optionallyTriggerValidationOnDelete();
                             }
                           }}
                         />
@@ -217,6 +234,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                           fieldErrors={errors?.optionalSections?.[sectionIndex]}
@@ -258,6 +276,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                 ...currentField,
                                 fields: updatedFields,
                               });
+                              optionallyTriggerValidationOnDelete();
                             }
                           }}
                         />
@@ -268,6 +287,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                           fieldErrors={errors?.optionalSections?.[sectionIndex]}
@@ -308,6 +328,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                 ...currentField,
                                 fields: updatedFields,
                               });
+                              optionallyTriggerValidationOnDelete();
                             }
                           }}
                         />
@@ -318,6 +339,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                           fieldErrors={errors?.optionalSections?.[sectionIndex]}
@@ -359,6 +381,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                 ...currentField,
                                 fields: updatedFields,
                               });
+                              optionallyTriggerValidationOnDelete();
                             }
                           }}
                         />
@@ -369,6 +392,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           key={field.id}
                           deleteSection={() => {
                             deleteSection(sectionIndex);
+                            optionallyTriggerValidationOnDelete();
                           }}
                           index={sectionIndex}
                         />

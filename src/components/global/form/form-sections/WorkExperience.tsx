@@ -153,7 +153,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   placeholder="Jethalal Gada"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.jobTitle?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.jobTitle?.message
                   }
                 />
                 <TextInput
@@ -167,7 +167,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   placeholder="Jethalal Gada"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.jobSubtitle?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.jobSubtitle?.message
                   }
                 />
                 <TextInput
@@ -182,7 +182,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   placeholder="Gada Electronics"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.companyName?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.companyName?.message
                   }
                 />
                 <TextInput
@@ -197,7 +197,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   placeholder="Gokuldham Society"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.location?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.location?.message
                   }
                 />
                 <DurationInput
@@ -227,7 +227,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
                   }
                   className="w-full"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.details?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.details?.message
                   }
                 />
               </CardContent>

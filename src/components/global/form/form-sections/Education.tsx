@@ -153,7 +153,7 @@ const Education: React.FC<EducationProps> = ({
                   placeholder="College of Delusion and Anxiety"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.universityName
+                    fieldErrors?.fields?.[subSectionIndex]?.universityName
                       ?.message
                   }
                 />
@@ -168,7 +168,7 @@ const Education: React.FC<EducationProps> = ({
                   placeholder="Bachelors of Exestential Crisis"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.degreeName?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.degreeName?.message
                   }
                 />
                 <TextInput
@@ -182,7 +182,7 @@ const Education: React.FC<EducationProps> = ({
                   placeholder="Panic Attack"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.majorName?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.majorName?.message
                   }
                 />
                 <TextInput
@@ -196,7 +196,7 @@ const Education: React.FC<EducationProps> = ({
                   placeholder="9.9/10"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.grade?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.grade?.message
                   }
                 />
                 <TextInput
@@ -211,7 +211,7 @@ const Education: React.FC<EducationProps> = ({
                   placeholder="Powder Gully, Mumbai"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.location?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.location?.message
                   }
                 />
 
