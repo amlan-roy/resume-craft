@@ -2,7 +2,11 @@
 
 A simple web app that automates the process of creating custom resume versions for different jobs using the job description.
 
-![Next.js](https://img.shields.io/badge/-NextJS-05122A?style=flat&logo=next.js) ![Typescript](https://img.shields.io/badge/-TypeScript-05122A?style=flat&logo=typescript) ![JavaScript](https://img.shields.io/badge/-JavaScript-05122A?style=flat&logo=javascript) ![React Hook Form](https://img.shields.io/badge/-React_Hook_Form-05122A?style=flat&logo=reacthookform&logoColor=white)
+This app uses Next.js 14 for frontend, Next js api routes for backend, Firebase auth for authentication, Firestore for database, Firebase Cloud Functions and Firestore Cloud Functions with pdfkit for Resume Generation, and firebase storage for storage.
+
+This project has ShadCN UI library, Tailwind CSS, React hook forms and zod as some of the main dependencies. The project has been deployed on Vercel
+
+![Next.js](https://img.shields.io/badge/-NextJS-05122A?style=flat&logo=next.js) ![Typescript](https://img.shields.io/badge/-TypeScript-05122A?style=flat&logo=typescript) ![JavaScript](https://img.shields.io/badge/-JavaScript-05122A?style=flat&logo=javascript) ![React Hook Form](https://img.shields.io/badge/-React_Hook_Form-05122A?style=flat&logo=reacthookform&logoColor=white) ![Firebase](https://img.shields.io/badge/-Firebase-05122A?style=flat&logo=firebase) ![pdfkit](https://img.shields.io/badge/-pdfkit-05122A?style=flat&logo=pdfkit)&nbsp;
 
 ## Getting Started
 
@@ -29,6 +33,16 @@ npm run dev
 
 You can run the tests once by using the command `npm run test`
 You can also run the tests in watch mode by using the following command `npm run test:watch`
+
+You can test the functionality related to firebase by running the firebase emulator locally (refer [here](https://firebase.google.com/docs/emulator-suite))
+
+### env variables
+
+- You can refer the `.env.example` file for the environment variables.
+- You will have to get the firebase environment variables from firebase by setting up a firebase project and following the steps mentioned there (refer [this](https://support.google.com/firebase/answer/7015592#zippy=%2Cin-this-article)).
+- For NEXT_PUBLIC_SITE_URL, you can have `http://localhost:3000` for development and `//$NEXT_PUBLIC_VERCEL_URL` if you are deploying in vercel.
+- COMMAND_1 contains the first command for generating the resumes. Kept it in environment variable so that I can change it without updating the code.
+- NOTE: COMMAND_1 and FIREBASE_ADMIN_PRIVATE_KEY should be stored in the format `{"value":"<the value of the env variable here>"}`
 
 ## Contribution
 
