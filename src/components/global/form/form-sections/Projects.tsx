@@ -152,7 +152,8 @@ const Projects: React.FC<ProjectsProps> = ({
                   placeholder="Jalebi Maker"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.projectTitle?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.projectTitle
+                      ?.message
                   }
                 />
                 <TextInput
@@ -166,7 +167,7 @@ const Projects: React.FC<ProjectsProps> = ({
                   placeholder="Food Tech, Electronics, Automation"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.projectSubtitle
+                    fieldErrors?.fields?.[subSectionIndex]?.projectSubtitle
                       ?.message
                   }
                 />
@@ -182,7 +183,7 @@ const Projects: React.FC<ProjectsProps> = ({
                   placeholder="www.jalebi-maker.com"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.projectUrl?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.projectUrl?.message
                   }
                 />
                 <TextInput
@@ -197,7 +198,7 @@ const Projects: React.FC<ProjectsProps> = ({
                   placeholder="Gada Electronics"
                   className="w-full lg:max-w-[30%] md:max-w-[45%]"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.associatedWith
+                    fieldErrors?.fields?.[subSectionIndex]?.associatedWith
                       ?.message
                   }
                 />
@@ -228,7 +229,7 @@ const Projects: React.FC<ProjectsProps> = ({
                   }
                   className="w-full"
                   errorMessage={
-                    fieldErrors?.fields[subSectionIndex]?.details?.message
+                    fieldErrors?.fields?.[subSectionIndex]?.details?.message
                   }
                 />
               </CardContent>

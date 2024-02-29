@@ -132,7 +132,7 @@ const Skills: React.FC<SkillsProps> = ({
                     placeholder="Finance"
                     className="w-full  md:max-w-[30%]"
                     errorMessage={
-                      fieldErrors?.fields[subSectionIndex]?.title?.message
+                      fieldErrors?.fields?.[subSectionIndex]?.title?.message
                     }
                   />
                   <TextInput
@@ -146,7 +146,7 @@ const Skills: React.FC<SkillsProps> = ({
                     placeholder="Accounting, Calculator Expert, Tax Calculations, Counting Money ..."
                     className="w-full lg:max-w-[60%] md:max-w-[55%]"
                     errorMessage={
-                      fieldErrors?.fields[subSectionIndex]?.skills?.message
+                      fieldErrors?.fields?.[subSectionIndex]?.skills?.message
                     }
                   />
                 </div>
