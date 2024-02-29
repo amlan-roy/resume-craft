@@ -12,16 +12,16 @@ type HeaderProps = {};
 const Header: React.FC<HeaderProps> = () => {
   const { setTheme, theme } = useTheme();
   return (
-    <header className="p-4 w-full flex">
+    <header data-testid="landing-page__header" className="p-4 w-full flex">
       <div className="flex justify-between items-center w-full max-w-2xl mx-auto">
         <Logo linkify />
         <div className="sm:flex gap-3 hidden">
-          {/* <Link href={"/generate-resume"} passHref> */}
-          <Button variant={"outline"} disabled title="Coming soon">
-            Generate Resume
-          </Button>
-          {/* </Link> */}
-          <Link href={"/generate-variants"} passHref>
+          <Link href={"/generate-resume"} passHref>
+            <Button variant={"outline"} title="Coming soon">
+              Generate Resume
+            </Button>
+          </Link>
+          <Link href={`/generate-resume/${new Date().getTime()}`} passHref>
             <Button>Generate Variants</Button>
           </Link>
         </div>

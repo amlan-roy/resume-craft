@@ -1,5 +1,5 @@
 import Footer from "@/components/global/Footer";
-import Header from "@/components/global/Header";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 import React from "react";
 
 type EnterDataPageLayoutProps = {
@@ -10,11 +10,11 @@ const EnterDataPageLayout: React.FC<EnterDataPageLayoutProps> = ({
   children,
 }) => {
   return (
-    <main>
-      <Header />
-      {children}
+    <>
+      <AuthenticatedHeader />
+      <main className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </>
   );
 };
 export default EnterDataPageLayout;

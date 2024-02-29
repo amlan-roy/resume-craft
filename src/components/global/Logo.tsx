@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import Icon from "../../../public/icon.png";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -19,13 +18,17 @@ const LogoContainer: React.FC<{
 }> = ({ linkify, children, className }) => {
   return linkify ? (
     <Link
-      href={"/"}
+      data-testid="global__logo-linkified"
+      href={"/home"}
       className={cn(["flex justify-center items-center", className])}
     >
       {children}
     </Link>
   ) : (
-    <div className={cn(["flex justify-center items-center", className])}>
+    <div
+      data-testid="global__logo"
+      className={cn(["flex justify-center items-center", className])}
+    >
       {children}
     </div>
   );
