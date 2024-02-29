@@ -222,6 +222,10 @@ export const setResumeFormData = async (
 };
 
 export const deleteResume = async (userId: string, formId: string) => {
+  const idToken = auth.currentUser && (await getIdToken(auth.currentUser));
+  if (!idToken) {
+    throw new Error("User not authenticated");
+  }
   const documentRef = doc(db, "users", userId);
 
   if (!documentRef) {
@@ -230,6 +234,18 @@ export const deleteResume = async (userId: string, formId: string) => {
 
   const resumeVariantData =
     formId === "base" ? await getResumeVariantData(userId) : {};
+
+  const fileName = resumeVariantData[formId]?.downloadFileName;
+
+  await axios.delete(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/data-formatting?formId=${formId}}${fileName ? `&fileName=${fileName}` : ""}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
 
   delete resumeVariantData?.[formId];
 
