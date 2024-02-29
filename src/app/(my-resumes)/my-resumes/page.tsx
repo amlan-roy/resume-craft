@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   deleteResume,
+  getBaseResumeData,
   getResumeVariantData,
 } from "@/lib/services/resume-service";
 import {
@@ -34,7 +35,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
       .then(async () => {
         const userId = auth.currentUser?.uid;
         if (userId) {
-          const baseResumeData = (await getResumeVariantData(
+          const baseResumeData = (await getBaseResumeData(
             userId
           )) as UserDocumentBaseResumeData;
           const resumeVariantData = (await getResumeVariantData(

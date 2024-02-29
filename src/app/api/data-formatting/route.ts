@@ -33,6 +33,13 @@ export async function POST(req: NextRequest) {
       authToken &&
       (authToken.startsWith("Bearer ") ? authToken : `Bearer ${authToken}`);
 
+    if (!authToken) {
+      return new NextResponse("Authorization is Required", {
+        status: 400,
+        statusText: "Bad Request",
+      });
+    }
+
     if (!id) {
       return new NextResponse("ID is Required", {
         status: 400,
@@ -160,6 +167,74 @@ export async function GET(req: NextRequest) {
       status: 400,
       statusText: "Bad Request",
     });
+  } catch (err: unknown) {
+    console.error(err);
+    return new NextResponse(
+      "An error occurred while generating the resume. Please try again later",
+      {
+        status: 500,
+        statusText: "Internal Server Error",
+      }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const requestUrl = new URL(req.url);
+
+    const authToken = headers().get("Authorization");
+    const bearerAuthToken =
+      authToken &&
+      (authToken.startsWith("Bearer ") ? authToken : `Bearer ${authToken}`);
+
+    if (!authToken) {
+      return new NextResponse("Authorization is Required", {
+        status: 400,
+        statusText: "Bad Request",
+      });
+    }
+
+    const searchParams = requestUrl.searchParams;
+    const formId = searchParams.get("formId");
+    const fileName = searchParams.get("fileName");
+
+    if (!formId) {
+      return new NextResponse("The form Id is required to delete the resume", {
+        status: 500,
+        statusText: "Internal Server Error",
+      });
+    }
+
+    const deleteReqResponse = await fetch(
+      `${process.env.FIREBASE_CLOUD_FUNCTION_RESUME_DEL_FROM_STORAGE_URL}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(bearerAuthToken && { Authorization: bearerAuthToken }),
+        },
+        body: JSON.stringify({
+          formId,
+          fileName,
+        }),
+      }
+    );
+
+    if (deleteReqResponse.status.toString().startsWith("2")) {
+      return new NextResponse("The resume has been deleted", {
+        status: 200,
+        statusText: "Resume Deleted",
+      });
+    }
+
+    return new NextResponse(
+      "An error occurred while deleting the resume. Please try again later",
+      {
+        status: 500,
+        statusText: "Internal Server Error",
+      }
+    );
   } catch (err: unknown) {
     console.error(err);
     return new NextResponse(

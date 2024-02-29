@@ -53,7 +53,7 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
       setDownloadData((prev) => ({ ...prev, state: "in-progress" }));
 
       const downloadState = await makeGenerateResumeRequest(
-        baseResumeData,
+        JSON.stringify(baseResumeData),
         auth.currentUser?.uid || "",
         "base-resume",
         "base",
