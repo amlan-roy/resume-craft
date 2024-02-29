@@ -124,7 +124,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                         deleteSection={() =>
                           setAlertDialogState({ index, open: true })
                         }
-                        index={index.toString()}
+                        index={index}
                       />
                     );
                 }
