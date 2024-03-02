@@ -62,13 +62,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/generate-resume/base", req.url));
   }
 
-  if (req.nextUrl.pathname.endsWith("/generate-resume/variant")) {
-    const randomFormId = getUniqueHashId(8);
-    return NextResponse.redirect(
-      new URL(`/generate-resume/${randomFormId}`, req.url)
-    );
-  }
-
   if (req.nextUrl.pathname.endsWith("/enter-data")) {
     if (!req.nextUrl.searchParams.get("id")) {
       // redirect to '/enter-data' route with all the params passed to the request, and for id query param, add/replace it with id = base
@@ -79,20 +72,4 @@ export async function middleware(req: NextRequest) {
     }
   }
   return res;
-}
-
-/**
- * Generates a unique hash id with the given length. Minimum length is 8.
- * Use the additional length to add more characters to the hash id.
- *
- * @param additionalLength - The additional length to be added to the hash id.
- * @returns A unique hash id.
- */
-export function getUniqueHashId(additionalLength: number): string {
-  const idChars: string = "ABCDEFGHJKMNPQRSTUVWXYZ";
-  const now: Date = new Date();
-  let id = now.getTime().toString().slice(-8);
-  for (let i = 0; i < additionalLength; i++)
-    id += idChars[Math.floor(Math.random() * idChars.length)];
-  return id;
 }
