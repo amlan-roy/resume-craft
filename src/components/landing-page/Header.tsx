@@ -17,12 +17,12 @@ const Header: React.FC<HeaderProps> = () => {
         <Logo linkify />
         <div className="sm:flex gap-3 hidden">
           <Link href={"/generate-resume"} passHref>
-            <Button variant={"outline"} title="Coming soon">
+            <Button variant={"outline"} title="Generate base resume">
               Generate Resume
             </Button>
           </Link>
           <Link href={`/generate-resume/${new Date().getTime()}`} passHref>
-            <Button>Generate Variants</Button>
+            <Button title="Generate resume variant">Generate Variants</Button>
           </Link>
         </div>
       </div>
