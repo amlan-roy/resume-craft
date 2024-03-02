@@ -1,6 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
+import { redirect } from "next/navigation";
 
 type pageProps = {};
 
@@ -26,11 +29,17 @@ const page: React.FC<pageProps> = () => {
             </Button>
           </Link>
 
-          <Link href={`/generate-resume/variant`}>
-            <Button variant={"outline"} title="Generate resume variant">
-              Generate Variant
-            </Button>
-          </Link>
+          <Button
+            variant={"outline"}
+            title="Generate resume variant"
+            onClick={(e) => {
+              e.preventDefault();
+              const randomFormId = fetchRandomId(8);
+              redirect(`/generate-resume/${randomFormId}`);
+            }}
+          >
+            Generate Variant
+          </Button>
           <Link href={"/enter-data"}>
             <Button title="Edit base resume data" variant={"outline"}>
               Edit Base Resume
@@ -46,4 +55,14 @@ const page: React.FC<pageProps> = () => {
     </>
   );
 };
+
+function fetchRandomId(additionalLength: number) {
+  const idChars: string = "ABCDEFGHJKMNPQRSTUVWXYZ";
+  const now: Date = new Date();
+  let id = now.getTime().toString().slice(-8);
+  for (let i = 0; i < additionalLength; i++)
+    id += idChars[Math.floor(Math.random() * idChars.length)];
+  return id;
+}
+
 export default page;
