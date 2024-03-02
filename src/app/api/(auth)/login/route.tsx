@@ -57,6 +57,7 @@ export async function GET(request: NextRequest) {
 
   //Validate if the cookie exist in the request
   if (!session) {
+    console.log("Session not found in login api route");
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
 
@@ -64,6 +65,7 @@ export async function GET(request: NextRequest) {
   const decodedClaims = await auth().verifySessionCookie(session, true);
 
   if (!decodedClaims) {
+    console.log("decodedClaims not found in login api route");
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
 
