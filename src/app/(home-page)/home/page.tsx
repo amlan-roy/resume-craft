@@ -26,7 +26,7 @@ const page: React.FC<pageProps> = () => {
             </Button>
           </Link>
 
-          <Link href={`/generate-resume/variant`}>
+          <Link href={`/generate-resume/${new Date().getTime()}`}>
             <Button variant={"outline"} title="Generate resume variant">
               Generate Variant
             </Button>
