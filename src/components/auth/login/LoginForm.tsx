@@ -99,7 +99,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
           },
         }
       );
-      debugger;
 
       if (response.status === 200) {
         router.push("/home");
@@ -112,7 +111,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
       );
     } catch (e: Error | any) {
       console.error(e);
-      debugger;
       await logout(router, undefined, true);
       let errorMessage = e.message || "Login unsuccessful";
 
