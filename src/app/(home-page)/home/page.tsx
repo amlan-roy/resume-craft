@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-type pageProps = {};
+type PageProps = {};
 
-const page: React.FC<pageProps> = () => {
+const Page: React.FC<PageProps> = () => {
+  const router = useRouter();
   return (
     <>
       <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
@@ -35,7 +36,7 @@ const page: React.FC<pageProps> = () => {
             onClick={(e) => {
               e.preventDefault();
               const randomFormId = fetchRandomId(8);
-              redirect(`/generate-resume/${randomFormId}`);
+              router.push(`/generate-resume/${randomFormId}`);
             }}
           >
             Generate Variant
@@ -65,4 +66,4 @@ function fetchRandomId(additionalLength: number) {
   return id;
 }
 
-export default page;
+export default Page;
