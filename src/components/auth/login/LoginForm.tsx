@@ -101,7 +101,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
       );
 
       if (response.status === 200) {
-        router.push("/home");
+        router.refresh();
         setLoginInProgress(false);
         return;
       }
