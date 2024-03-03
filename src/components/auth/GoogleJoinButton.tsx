@@ -82,7 +82,9 @@ const GoogleJoinButton: React.FC<GoogleJoinButtonProps> = ({
               name: res.user.displayName,
               email: res.user.email,
             }));
-          router.push("/home");
+          // Not using router.push("/home") due to a cookie issue in prod environment
+          // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
+          router.refresh();
         }
         return;
       }
