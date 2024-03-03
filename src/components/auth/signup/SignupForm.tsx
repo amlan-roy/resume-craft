@@ -108,6 +108,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
         );
 
         if (response.status === 200) {
+          // Not using router.push("/home") due to a cookie issue in prod environment
+          // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
           router.refresh();
           return;
         }
