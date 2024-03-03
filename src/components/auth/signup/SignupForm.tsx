@@ -108,7 +108,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
         );
 
         if (response.status === 200) {
-          router.push("/home");
+          router.refresh();
           return;
         }
       }

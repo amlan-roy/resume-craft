@@ -82,7 +82,8 @@ const GoogleJoinButton: React.FC<GoogleJoinButtonProps> = ({
               name: res.user.displayName,
               email: res.user.email,
             }));
-          router.push("/home");
+
+          router.refresh();
         }
         return;
       }
