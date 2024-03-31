@@ -1,7 +1,7 @@
-import { auth } from "firebase-admin";
-import { customInitApp } from "@/lib/utils/firebase/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "firebase-admin";
+import { customInitApp } from "@/lib/utils/firebase/firebase-admin-config";
 
 // Init the Firebase SDK every time the server is called
 customInitApp();

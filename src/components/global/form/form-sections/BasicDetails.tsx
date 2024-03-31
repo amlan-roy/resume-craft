@@ -1,9 +1,9 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
+import { SECTION, formType } from "@/lib/types/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import { SECTION, formType } from "@/lib/types/form";
-import { useFormContext } from "react-hook-form";
 
 type BasicDetailsProps = {
   sectionTitle?: string;

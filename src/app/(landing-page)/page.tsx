@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaRegClock, FaRegFileAlt, FaCodeBranch } from "react-icons/fa";
+import { FaCodeBranch, FaRegClock, FaRegFileAlt } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

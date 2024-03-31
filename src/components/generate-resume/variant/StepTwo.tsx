@@ -1,18 +1,14 @@
-import axios from "axios";
 import React, { useState } from "react";
+import Image from "next/image";
+import axios from "axios";
 import {
   CheckIcon,
   CircleDashedIcon,
   CircleSlashIcon,
   CopyIcon,
 } from "lucide-react";
-import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   formSchema,
   resumeVariantGenerationFormSchema,
@@ -22,6 +18,10 @@ import {
   removeSensitiveInformation,
 } from "@/lib/utils/data-formatting";
 import { mailToLinks } from "@/lib/utils/string-helpers";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const CopyCommandButtonIcon = ({
   state,

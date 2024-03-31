@@ -1,8 +1,7 @@
 "use client";
 
-import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useEffect, useState } from "react";
+import { DownloadIcon, TrashIcon } from "lucide-react";
 import {
   deleteResume,
   getBaseResumeData,
@@ -14,8 +13,9 @@ import {
   UserDocumentResumeVariantData,
 } from "@/lib/types/resume-response";
 import { auth } from "@/lib/utils/firebase/config";
-import { DownloadIcon, TrashIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type MyResumesPageProps = {};
 

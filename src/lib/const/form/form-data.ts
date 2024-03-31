@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   SECTION,
   additionalSectionSchema,
@@ -8,7 +9,6 @@ import {
   skillsSectionSchema,
   workExperienceSectionSchema,
 } from "@/lib/types/form";
-import { z } from "zod";
 
 export const DEFAULT_BASIC_DETAILS_FORM_VALUE: z.infer<
   typeof basicDetailsSectionSchema

@@ -5,8 +5,7 @@
  *
  * This config file is used for server-side operations that require administrative access to Firebase services.
  */
-
-import { initializeApp, getApps, cert } from "firebase-admin/app";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
 
 const firebaseAdminConfig = {
   credential: cert({

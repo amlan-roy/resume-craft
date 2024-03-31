@@ -1,9 +1,10 @@
 "use client";
+
 import React from "react";
-import Logo from "@/components/global/Logo";
 import { useTheme } from "next-themes";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import Logo from "@/components/global/Logo";
 
 type HeaderProps = {};
 

@@ -1,6 +1,6 @@
 import React from "react";
-import SignupForm from "@/components/auth/signup/SignupForm";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import SignupForm from "@/components/auth/signup/SignupForm";
 
 type SignupPageProps = {
   params: { slug: string };

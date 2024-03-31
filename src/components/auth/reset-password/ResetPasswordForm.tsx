@@ -1,18 +1,19 @@
 "use client";
+
 import React, { useEffect } from "react";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { useForm } from "react-hook-form";
 import {
   forgotPasswordFormSchema,
   forgotPasswordFormType,
 } from "@/lib/types/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/lib/utils/firebase/config";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingSkeleton from "../LoadingSkeleton";
 

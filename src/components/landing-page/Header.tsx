@@ -1,11 +1,12 @@
 "use client";
+
 import React from "react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import Logo from "@/components/global/Logo";
 import { Button } from "../ui/button";
-import { useTheme } from "next-themes";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
 
 type HeaderProps = {};
 

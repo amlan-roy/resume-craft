@@ -1,9 +1,9 @@
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/utils/firebase/config";
-import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { auth } from "@/lib/utils/firebase/config";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 type LogoutButtonProps = {};
 

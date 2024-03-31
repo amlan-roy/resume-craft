@@ -1,15 +1,16 @@
 "use client";
+
 import React, { useEffect } from "react";
-import axios from "axios";
-import { FaGoogle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { Button } from "@/components/ui/button";
+import { FaGoogle } from "react-icons/fa";
 import { auth } from "@/lib/utils/firebase/config";
 import {
   addUserData,
   getUserFromEmail,
 } from "@/lib/utils/firebase/database/users";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { logout } from "@/components/auth/LogoutButton";
 

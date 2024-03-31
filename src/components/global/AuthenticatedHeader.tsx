@@ -1,11 +1,9 @@
 "use client";
+
 import React from "react";
 import { CircleUserRoundIcon } from "lucide-react";
-import Logo from "@/components/global/Logo";
-import LogoutButton from "@/components/auth/LogoutButton";
 import { useTheme } from "next-themes";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { auth } from "@/lib/utils/firebase/config";
 import {
   DropdownMenu,
@@ -13,7 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import LogoutButton from "@/components/auth/LogoutButton";
+import Logo from "@/components/global/Logo";
 
 const ThemeSwitch = ({ className }: { className?: string }) => {
   const { setTheme, theme } = useTheme();

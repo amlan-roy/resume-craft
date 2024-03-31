@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.describe("Acceptance:enter-data", () => {
   test("test basic rendering", async ({ page }) => {

@@ -1,10 +1,10 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type StepFourProps = {} & React.HTMLAttributes<HTMLDivElement>;
 

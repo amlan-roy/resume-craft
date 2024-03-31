@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Trash2Icon } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import TextInput from "@/components/global/form/form-inputs/TextInput";
-import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
-import { SECTION, formType } from "@/lib/types/form";
 import { useFormContext } from "react-hook-form";
+import { SECTION, formType } from "@/lib/types/form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
+import TextInput from "@/components/global/form/form-inputs/TextInput";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
 
 type ProfessionalSummaryProps = {
