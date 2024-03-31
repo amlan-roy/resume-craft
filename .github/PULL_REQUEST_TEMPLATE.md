@@ -2,7 +2,7 @@ Issue:
 
 <!-- NOTE: Each PR should be associated with an issue. Create an issue if it does not already exists -->
 
-# Summary
+## Summary
 
 <!-- A small summary of the changes made. -->
 
@@ -10,7 +10,7 @@ Issue:
 
 <!-- Details of the changes made and things that the reviewer should focus on while reviewing the code -->
 
-## How Has This Been Tested?
+## Testing done
 
 <!-- Add details of how these changes have been tested -->
 
