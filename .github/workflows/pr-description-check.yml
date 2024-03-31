@@ -24,15 +24,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get last commit message
-        id: commit_message
+      - name: Get PR Details
+        id: pr_details
+        run: echo "::set-output name=commit_message::$(jq -r .pull_request.head.commit.message $GITHUB_EVENT_PATH)"
+        shell: bash
+
+      - name: Get latest commit message
+        id: latest_commit_message
         run: |
-          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
-          echo "::set-output name=commit_message::${commit_message}"
+          PR_NUMBER=$(jq -r ".pull_request.number" "$GITHUB_EVENT_PATH")
+          COMMIT_MESSAGE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                           "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/commits" | \
+                           jq -r '.[0].commit.message')
+          echo "::set-output name=message::$COMMIT_MESSAGE"
+
+      - name: Print latest commit message
+        run: |
+          echo "Latest commit message: ${{ steps.latest_commit_message.outputs.message }}"
 
       - name: Check PR Description
         run: |
-          if [[ ${{ !contains(steps.commit_message.outputs.commit_message ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
+          commit_message=$(git log --format=%B -n 1 .)
+          if [[ ${{ !contains('$commit_message' ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
               bash scripts/check_pr_description.sh "$PR_DESCRIPTION"
           else
               echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in last commit message"
