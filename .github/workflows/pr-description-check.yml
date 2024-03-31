@@ -19,21 +19,20 @@ jobs:
 
     env:
       PR_DESCRIPTION: ${{ github.event.pull_request.body }}
-      COMMIT_MESSAGE: $(git log --format=%B -n 1 ${{ github.sha }})
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Print the PR description
-        run: echo $PR_DESCRIPTION
-
-      - name: Print the commit message
-        run: echo $COMMIT_MESSAGE
+      - name: Get last commit message
+        id: commit_message
+        run: |
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "::set-output name=commit_message::${commit_message}"
 
       - name: Check PR Description
         run: |
-          if [[ ${{ !contains('$COMMIT_MESSAGE' ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
+          if [[ ${{ !contains(steps.commit_message.outputs.commit_message ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
               bash scripts/check_pr_description.sh "$PR_DESCRIPTION"
           else
               echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in last commit message"
