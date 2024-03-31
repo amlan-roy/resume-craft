@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Check if PR description contains required sections
-# - Summary
-# - Testing done
-# Summary and Testing done sections must have at least 5 characters
-
-# Get PR description
 description=$1
 
 if ! echo "$description" | grep -q '## Summary' || ! echo "$description" | grep -q '## Testing done'; then
