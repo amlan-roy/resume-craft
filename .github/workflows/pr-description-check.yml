@@ -1,0 +1,30 @@
+name: PR Description Check
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, labeled, unlabeled, ready_for_review]
+
+jobs:
+  check-pr-description:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get PR Description
+        id: pr_description
+        run: |
+          description=$(curl -sH "Accept: application/vnd.github.v3+json" \
+                       https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }} | \
+                       jq -r '.body')
+          echo "::set-output name=description::${description}"
+
+      - name: Check PR Description
+        run: |
+          if [[ ${{ github.event.head_commit && !contains(github.event.head_commit.message ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
+              description="${{ steps.pr_description.outputs.description }}"
+              bash check_pr_description.sh "$description"
+          else
+              echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in commit message"
+          fi
