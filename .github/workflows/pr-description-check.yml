@@ -2,29 +2,33 @@ name: PR Description Check
 
 on:
   pull_request:
-    types: [opened, edited, reopened, labeled, unlabeled, ready_for_review]
+    types:
+      [
+        opened,
+        edited,
+        reopened,
+        labeled,
+        unlabeled,
+        ready_for_review,
+        synchronize,
+      ]
 
 jobs:
   check-pr-description:
     runs-on: ubuntu-latest
 
+    env:
+      PR_DESCRIPTION: ${{ github.event.pull_request.body }}
+      COMMIT_MESSAGE: $(git log --format=%B -n 1 ${{ github.sha }})
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get PR Description
-        id: pr_description
-        run: |
-          description=$(curl -sH "Accept: application/vnd.github.v3+json" \
-                       https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }} | \
-                       jq -r '.body')
-          echo "::set-output name=description::${description}"
-
       - name: Check PR Description
         run: |
-          if [[ ${{ github.event.head_commit && !contains(github.event.head_commit.message ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
-              description="${{ steps.pr_description.outputs.description }}"
-              bash check_pr_description.sh "$description"
+          if [[ ${{ !contains('$COMMIT_MESSAGE' ,'PR_DESCRIPTION_CHECK_OVERRIDE') }} ]]; then
+              bash scripts/check_pr_description.sh "$PR_DESCRIPTION"
           else
-              echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in commit message"
+              echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in last commit message"
           fi
