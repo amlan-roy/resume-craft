@@ -2,8 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { DEFAULT_FORM_DATA } from "@/lib/const/generate-resume/generate-resume";
+import useLocalStorage from "@/lib/hooks/useLocalStorage";
+import { useTimeout } from "@/lib/hooks/useTimeout";
+import {
+  getResumeFormData,
+  makeGenerateResumeRequest,
+  setResumeFormData,
+} from "@/lib/services/resume-service";
+import { formType, resumeVariantGenerationFormSchema } from "@/lib/types/form";
+import { auth } from "@/lib/utils/firebase/config";
+import { mailToLinks } from "@/lib/utils/string-helpers";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,29 +24,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import useLocalStorage from "@/lib/hooks/useLocalStorage";
-import { useTimeout } from "@/lib/hooks/useTimeout";
-import { useToast } from "@/components/ui/use-toast";
-import { formType, resumeVariantGenerationFormSchema } from "@/lib/types/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-import StepOne from "@/components/generate-resume/variant/StepOne";
-import StepTwo from "@/components/generate-resume/variant/StepTwo";
-import StepThree from "@/components/generate-resume/variant/StepThree";
-import StepFour from "@/components/generate-resume/variant/StepFour";
-import { ToastAction } from "@/components/ui/toast";
-import { mailToLinks } from "@/lib/utils/string-helpers";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Form } from "@/components/ui/form";
+import { ToastAction } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
-import { auth } from "@/lib/utils/firebase/config";
-import {
-  getResumeFormData,
-  makeGenerateResumeRequest,
-  setResumeFormData,
-} from "@/lib/services/resume-service";
-import { DEFAULT_FORM_DATA } from "@/lib/const/generate-resume/generate-resume";
+import { useToast } from "@/components/ui/use-toast";
 import LoadingGenResumeForm from "@/components/generate-resume/variant/LoadingGenResumeForm";
+import StepFour from "@/components/generate-resume/variant/StepFour";
+import StepOne from "@/components/generate-resume/variant/StepOne";
+import StepThree from "@/components/generate-resume/variant/StepThree";
+import StepTwo from "@/components/generate-resume/variant/StepTwo";
 
 type GenerateVariantHomePageProps = { params: { slug: string } };
 

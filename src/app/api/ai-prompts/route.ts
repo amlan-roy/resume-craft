@@ -1,5 +1,5 @@
-import { formSchema } from "@/lib/types/form";
 import { NextRequest, NextResponse } from "next/server";
+import { formSchema } from "@/lib/types/form";
 
 export async function POST(req: NextRequest) {
   try {

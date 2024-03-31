@@ -1,8 +1,8 @@
 import React from "react";
-import Logo from "@/components/global/Logo";
-import { FaHeart } from "react-icons/fa";
 import Link from "next/link";
+import { FaHeart } from "react-icons/fa";
 import { LINKS } from "@/lib/const/components/global/footer";
+import Logo from "@/components/global/Logo";
 
 type FooterProps = {};
 

@@ -1,19 +1,20 @@
 "use client";
+
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
+import { loginFormSchema, loginFormType } from "@/lib/types/auth";
+import { auth } from "@/lib/utils/firebase/config";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginFormSchema, loginFormType } from "@/lib/types/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/utils/firebase/config";
 import { useToast } from "@/components/ui/use-toast";
-import { logout } from "@/components/auth/LogoutButton";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
+import { logout } from "@/components/auth/LogoutButton";
 import LoadingSkeleton from "../LoadingSkeleton";
 
 type LoginFormProps = {

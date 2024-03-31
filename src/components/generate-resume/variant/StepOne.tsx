@@ -1,9 +1,9 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
+import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
 
 type StepOneProps = {} & React.HTMLAttributes<HTMLDivElement>;
 

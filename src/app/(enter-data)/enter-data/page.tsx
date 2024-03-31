@@ -1,23 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_FORM_VALUE } from "@/lib/const/form/form-data";
+import {
+  getResumeFormData,
+  setResumeFormData,
+} from "@/lib/services/resume-service";
 import { formType } from "@/lib/types/form";
+import { cleanFormData } from "@/lib/utils/data-formatting";
+import { auth } from "@/lib/utils/firebase/config";
+import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import Link from "next/link";
-import { cleanFormData } from "@/lib/utils/data-formatting";
-import { DEFAULT_FORM_VALUE } from "@/lib/const/form/form-data";
 import DynamicForm from "@/components/global/form/DynamicForm";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  getResumeFormData,
-  setResumeFormData,
-} from "@/lib/services/resume-service";
-import { auth } from "@/lib/utils/firebase/config";
 import DynamicFormLoading from "@/components/global/form/DynamicFormLoading";
 
 type EnterDataPageProps = {};

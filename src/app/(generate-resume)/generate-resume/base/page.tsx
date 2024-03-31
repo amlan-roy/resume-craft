@@ -1,5 +1,17 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTimeout } from "@/lib/hooks/useTimeout";
+import {
+  getResumeFormData,
+  makeGenerateResumeRequest,
+} from "@/lib/services/resume-service";
+import { formType } from "@/lib/types/form";
+import { auth } from "@/lib/utils/firebase/config";
+import { mailToLinks } from "@/lib/utils/string-helpers";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,20 +20,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useTimeout } from "@/lib/hooks/useTimeout";
-import { mailToLinks } from "@/lib/utils/string-helpers";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { ToastAction } from "@/components/ui/toast";
-import { auth } from "@/lib/utils/firebase/config";
-import {
-  getResumeFormData,
-  makeGenerateResumeRequest,
-} from "@/lib/services/resume-service";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { formType } from "@/lib/types/form";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
 
 type GenerateResumeHomePageProps = {};
 

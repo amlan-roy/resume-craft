@@ -1,6 +1,6 @@
-import Footer from "@/components/global/Footer";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 import React from "react";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
+import Footer from "@/components/global/Footer";
 
 type EnterDataPageLayoutProps = {
   children: React.ReactNode;

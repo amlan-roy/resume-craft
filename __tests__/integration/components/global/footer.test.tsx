@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import Footer from "@/components/global/Footer";
 import { LINKS } from "@/lib/const/components/global/footer";
+import Footer from "@/components/global/Footer";
 
 describe("integration:components/global/footer", () => {
   it("snapshot", () => {

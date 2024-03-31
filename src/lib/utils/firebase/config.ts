@@ -4,8 +4,8 @@
  */
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { EmailAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 
 /**
  * Firebase configuration object.

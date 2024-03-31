@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
-import { render, screen, renderHook } from "@testing-library/react";
-import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
-import { SECTION } from "@/lib/types/form";
+import { render, renderHook, screen } from "@testing-library/react";
 import { useForm } from "react-hook-form";
+import { SECTION } from "@/lib/types/form";
 import { Form } from "@/components/ui/form";
+import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 
 describe("integration:components/global/form/form-sections/professional-summary", () => {
   beforeEach(() => {});

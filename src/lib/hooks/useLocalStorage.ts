@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 /**
  * A custom hook that returns the value of the data stored in local storage with the provided key

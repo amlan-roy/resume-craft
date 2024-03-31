@@ -1,20 +1,21 @@
 "use client";
+
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { signupFormSchema, signupFormType } from "@/lib/types/auth";
 import { auth } from "@/lib/utils/firebase/config";
+import { addUserData } from "@/lib/utils/firebase/database/users";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signupFormSchema, signupFormType } from "@/lib/types/auth";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
-import { addUserData } from "@/lib/utils/firebase/database/users";
 import { logout } from "@/components/auth/LogoutButton";
 import LoadingSkeleton from "../LoadingSkeleton";
 

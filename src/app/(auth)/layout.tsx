@@ -1,7 +1,7 @@
-import Footer from "@/components/global/Footer";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
-import { Toaster } from "@/components/ui/toaster";
 import React from "react";
+import { Toaster } from "@/components/ui/toaster";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
+import Footer from "@/components/global/Footer";
 
 type AuthPagesLayoutProps = {
   children: React.ReactNode;

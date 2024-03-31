@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { formType } from "@/lib/types/form";
 import { UseFormRegister } from "react-hook-form";
+import { formType } from "@/lib/types/form";
+import { Input } from "@/components/ui/input";
 
 type HiddenInputProps = {
   fieldName?: string;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
-import { auth, db } from "../utils/firebase/config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../utils/firebase/config";
 
 /**
  * Make a request to generate a resume
