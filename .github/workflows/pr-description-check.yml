@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PR_DESCRIPTION: ${{ github.event.pull_request.body }}
-      COMMIT_MESSAGE: $(git log --format=%B -n 1 ${{ github.sha }})
+      PR_DESCRIPTION: "${{ github.event.pull_request.body }}"
+      COMMIT_MESSAGE: "$(git log --format=%B -n 1 ${{ github.sha }})"
 
     steps:
       - name: Checkout code
