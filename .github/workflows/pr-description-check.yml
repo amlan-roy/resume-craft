@@ -26,8 +26,8 @@ jobs:
 
       - name: Check PR Description
         run: |
-          if [[ !contains('$PR_DESCRIPTION' ,'OVERRIDE=PR_DESCRIPTION_CHECK_OVERRIDE') ]]; then
-              bash scripts/check_pr_description.sh '$PR_DESCRIPTION'
+          if [[ ! $PR_DESCRIPTION =~ 'OVERRIDE=PR_DESCRIPTION_CHECK_OVERRIDE' ]]; then
+              bash scripts/check_pr_description.sh $PR_DESCRIPTION
           else
               echo "This check was overridden by PR_DESCRIPTION_CHECK_OVERRIDE in the PR description"
           fi
