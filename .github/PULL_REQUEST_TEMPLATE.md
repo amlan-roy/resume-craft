@@ -2,21 +2,21 @@ Issue:
 
 <!-- NOTE: Each PR should be associated with an issue. Create an issue if it does not already exists -->
 
-# Summary
+## Summary
 
-## Requirement:
+<!-- A small summary of the changes made. -->
 
-<!-- The Acceptance Criteria/ Requirements for which this PR is created -->
+## Details
 
-## Changes made:
+<!-- Details of the changes made and things that the reviewer should focus on while reviewing the code -->
 
-<!-- Details of the changes made -->
-
-## How Has This Been Tested?
+## Testing done
 
 <!-- Add details of how these changes have been tested -->
 
-### Screenshots / Videos <!-- (Optional but recommended) -->
+### Screenshots / Videos
+
+<!-- (Optional but recommended) -->
 
 ## Checklist:
 

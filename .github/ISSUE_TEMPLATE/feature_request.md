@@ -16,7 +16,8 @@ assignees: ""
 
 ## Are you willing to contribute to this issue?
 
-Yes/No
+- [ ] Yes
+- [ ] No
 
 ## Describe alternatives you've considered
 
