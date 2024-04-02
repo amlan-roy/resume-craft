@@ -14,9 +14,13 @@ const BoxLoader: React.FC<LoaderProps> = ({
   ...rest
 }) => {
   return (
-    <div className={className}>
-      <span className={cn(["box-loader", loaderClassName])}>
+    <div className={className} data-testid="box-loader-container">
+      <span
+        data-testid="box-loader"
+        className={cn(["box-loader", loaderClassName])}
+      >
         <span
+          data-testid="box-loader-inner"
           className={cn(["box-loader-inner", innerClassName])}
           {...rest}
         ></span>
