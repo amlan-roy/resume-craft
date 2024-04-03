@@ -7,6 +7,7 @@ import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
+import { logout } from "@/lib/services/auth/logout";
 import { signupFormSchema, signupFormType } from "@/lib/types/auth";
 import { auth } from "@/lib/utils/firebase/config";
 import { addUserData } from "@/lib/utils/firebase/database/users";
@@ -16,8 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
-import { logout } from "@/components/auth/LogoutButton";
-import LoadingSkeleton from "../LoadingSkeleton";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type SignupFormProps = {
   hideForm?: boolean;
@@ -91,7 +91,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
           email: user.email,
         });
         if (!user.emailVerified) {
-          await logout(router, undefined, true);
+          await logout(auth, router, undefined, false);
           router.replace("/signup?emailSent=true");
           return;
         }
@@ -123,7 +123,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
         description: errorMessage,
         variant: "destructive",
       });
-      await logout(router, undefined, true);
+      await logout(auth, router, undefined, false);
     }
   };
 

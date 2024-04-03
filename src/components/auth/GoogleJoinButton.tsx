@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { FaGoogle } from "react-icons/fa";
+import { logout } from "@/lib/services/auth/logout";
 import { auth } from "@/lib/utils/firebase/config";
 import {
   addUserData,
@@ -12,7 +13,6 @@ import {
 } from "@/lib/utils/firebase/database/users";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { logout } from "@/components/auth/LogoutButton";
 
 /**
  * Props for the GoogleJoinButton component.
@@ -97,7 +97,7 @@ const GoogleJoinButton: React.FC<GoogleJoinButtonProps> = ({
         description: errorMessage,
         variant: "destructive",
       });
-      logout(router);
+      logout(auth, router);
     }
   };
 

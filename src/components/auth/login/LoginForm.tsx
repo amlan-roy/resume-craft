@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
+import { logout } from "@/lib/services/auth/logout";
 import { loginFormSchema, loginFormType } from "@/lib/types/auth";
 import { auth } from "@/lib/utils/firebase/config";
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
-import { logout } from "@/components/auth/LogoutButton";
-import LoadingSkeleton from "../LoadingSkeleton";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type LoginFormProps = {
   hideForm?: boolean;
@@ -72,7 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
         {};
 
       if (!user.emailVerified) {
-        await logout(router, undefined, true);
+        await logout(auth, router, undefined, false);
         displayToast({
           title: "Email not verified",
           description: "Please verify your email before logging in.",
@@ -85,7 +85,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
       const token = await getIdToken(user);
 
       if (!token) {
-        await logout(router, undefined, true);
+        await logout(auth, router, undefined, false);
         throw new Error(
           "There was an error while logging in. Please try again."
         );
@@ -114,7 +114,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
       );
     } catch (e: Error | any) {
       console.error(e);
-      await logout(router, undefined, true);
+      await logout(auth, router, undefined, false);
       let errorMessage = e.message || "Login unsuccessful";
 
       if (e.code === "auth/invalid-credential") {
