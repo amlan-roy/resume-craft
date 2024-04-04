@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import assert from "assert";
 import axios from "axios";
 import { Auth } from "firebase/auth";
 
@@ -15,7 +16,7 @@ import { Auth } from "firebase/auth";
  */
 export const logout = async (
   auth: Auth,
-  router: ReturnType<typeof useRouter>,
+  router?: ReturnType<typeof useRouter>,
   onError?: Function,
   shouldRedirect = true,
   redirectPath = "/login"
@@ -25,7 +26,11 @@ export const logout = async (
     const response = await axios.post("/api/logout");
 
     if (shouldRedirect && response.status === 200) {
-      router.push(redirectPath);
+      assert(
+        router,
+        "Router object is not defined. Pass a router object if you want to redirect after logging out."
+      );
+      router?.push(redirectPath);
       return;
     }
   } catch (e: Error | any) {
