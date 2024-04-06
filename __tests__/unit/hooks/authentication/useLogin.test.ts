@@ -5,6 +5,10 @@ import { act } from "react-dom/test-utils";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useLogin } from "@/lib/hooks/authentication/useLogin";
 import { logout } from "@/lib/services/auth/logout";
+import {
+  getMockAuth,
+  getMockUser,
+} from "@/lib/utils/test-helpers/hooks/authentication/authHelpers";
 
 jest.mock("axios");
 
@@ -24,40 +28,17 @@ jest.mock("react-firebase-hooks/auth", () => ({
   useSignInWithGoogle: jest.fn(),
 }));
 
-const getMockAuth = ({ currentUser = null, ...rest } = {}) =>
-  ({
-    currentUser,
-    signOut: jest.fn(),
-    ...rest,
-  }) as any;
-
-const getMockUser = ({ emailVerified = false, ...rest } = {}) =>
-  ({
-    emailVerified,
-    ...rest,
-  }) as any;
-
-const getMockRouter = () =>
-  ({
-    push: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-  }) as any;
-
 describe("useLogin", () => {
   let signInWithGoogleMock: jest.Mock;
   beforeEach(() => {
     signInWithGoogleMock = jest.fn();
-    // Mock the axios post request
     (useSignInWithGoogle as jest.Mock).mockReturnValue([
       signInWithGoogleMock,
       false,
       false,
       null,
     ]);
+    // Mock the axios post request
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
   });
 
