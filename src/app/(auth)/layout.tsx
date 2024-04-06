@@ -17,7 +17,6 @@ const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = async ({
         {children}
         <Toaster />
       </main>
-      <Footer />
     </>
   );
 };
