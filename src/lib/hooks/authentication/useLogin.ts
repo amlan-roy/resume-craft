@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FirebaseError } from "firebase/app";
 import { Auth, getIdToken, signInWithEmailAndPassword } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  ERROR_CODE,
+  ERROR_MESSAGE,
+} from "@/lib/const/hooks/authentication/errorMessages";
 import { logout } from "@/lib/services/auth/logout";
 import { authStates } from "@/lib/types/hooks/authentication/auth";
 import {
@@ -14,6 +19,7 @@ type TUseLoginProps = {
   auth: Auth;
   router?: ReturnType<typeof useRouter>;
   onError?: Function;
+  onSuccess?: Function;
 };
 
 /**
@@ -22,17 +28,18 @@ type TUseLoginProps = {
  * @param auth - Firebase Auth object.
  * @param router - Next.js router object. (Optional)
  * @param onError - Function to handle errors. (Optional)
+ * @param onSuccess - Function to handle successful login. (Optional)
  * @returns Object containing the current authentication state, an error message and functions to log in with email and password and with Google.
  */
-export const useLogin = ({ auth, router, onError }: TUseLoginProps) => {
+export const useLogin = ({
+  auth,
+  router,
+  onError,
+  onSuccess,
+}: TUseLoginProps) => {
   const [authState, setAuthState] = useState<authStates>(() =>
     auth.currentUser ? "authenticated" : "unauthenticated"
   );
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
-  const [isEmailVerified, setIsEmailVerified] = useState(
-    () => !!auth.currentUser?.emailVerified
-  );
-
   const loginInProgress = authState === "loading";
 
   const [signInWithGoogle, , loadingGoogleAuth, errorGoogleAuth] =
@@ -41,24 +48,8 @@ export const useLogin = ({ auth, router, onError }: TUseLoginProps) => {
   useEffect(() => {
     if (errorGoogleAuth) {
       setAuthState("error");
-      let googleAuthErrorMessage =
-        "An error occurred while logging in. Please try again.";
-      switch (errorGoogleAuth.code) {
-        case "auth/account-exists-with-different-credential":
-          googleAuthErrorMessage =
-            "Account already exists with different credentials. Try logging in instead.";
-        case "auth/credential-already-in-use":
-          googleAuthErrorMessage =
-            "Account already exists. Try logging in instead.";
-      }
-      setErrorMessage(googleAuthErrorMessage);
     } else if (loadingGoogleAuth) {
-      setErrorMessage(null);
       setAuthState("loading");
-    } else if (["authenticated", "loading"].includes(authState)) {
-      setErrorMessage(null);
-    } else {
-      setErrorMessage("An error occurred while logging in. Please try again.");
     }
   }, [authState, errorGoogleAuth, loadingGoogleAuth]);
 
@@ -78,15 +69,11 @@ export const useLogin = ({ auth, router, onError }: TUseLoginProps) => {
     try {
       setAuthState("loading");
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      setIsEmailVerified(!!user?.emailVerified);
 
       const token = await getIdToken(user);
 
       if (!token) {
-        await logout(auth, undefined, undefined, false);
-        throw new Error(
-          "There was an error while logging in. Please try again."
-        );
+        throw new Error(ERROR_CODE.UNKNOWN);
       }
 
       const response = await axios.post(
@@ -101,14 +88,23 @@ export const useLogin = ({ auth, router, onError }: TUseLoginProps) => {
       if (response.status === 200) {
         setAuthState("authenticated");
       } else {
-        throw new Error("An error occurred while logging in");
+        throw new Error(ERROR_CODE.UNKNOWN);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      console.error("An error occurred while logging in: ", errorMessage);
+    } catch (error: Error | FirebaseError | any) {
+      const errorCode =
+        (Object.values(ERROR_CODE).includes(error.code) && error.code) ||
+        ERROR_CODE.UNKNOWN;
+
+      const errorTitle = ERROR_MESSAGE[errorCode].title;
+      const errorBody = ERROR_MESSAGE[errorCode].message;
+
+      console.error(
+        "An error occurred while logging in: ",
+        error.message || errorBody
+      );
+      onError?.(error, errorTitle, errorBody);
+      await logout(auth, router, undefined, false);
       setAuthState("error");
-      onError?.(error);
     }
   };
 
@@ -118,43 +114,50 @@ export const useLogin = ({ auth, router, onError }: TUseLoginProps) => {
   const useGoogleAuth = async () => {
     try {
       const res = await signInWithGoogle();
-      if (res && res.user) {
-        const response = await axios.post(
-          "/api/login",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${await res.user.getIdToken()}`,
-            },
-          }
-        );
+      if (!(res && res.user)) throw new Error(ERROR_CODE.UNKNOWN);
 
-        if (response.status === 200) {
-          const userExists = await getUserFromEmail(res.user.email || "");
-          !userExists &&
-            (await addUserData({
-              name: res.user.displayName,
-              email: res.user.email,
-            }));
-        } else {
-          throw new Error("An error occurred while logging in");
+      const response = await axios.post(
+        "/api/login",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${await res.user.getIdToken()}`,
+          },
         }
+      );
+
+      if (response.status === 200) {
+        const userExists = await getUserFromEmail(res.user.email || "");
+        !userExists &&
+          (await addUserData({
+            name: res.user.displayName,
+            email: res.user.email,
+          }));
+      } else {
+        throw new Error(ERROR_CODE.UNKNOWN);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      console.error("An error occurred while logging in: ", errorMessage);
-      logout(auth, router, undefined, false);
+      setAuthState("authenticated");
+      onSuccess?.();
+    } catch (error: Error | FirebaseError | any) {
+      const errorCode =
+        (Object.values(ERROR_CODE).includes(error.code) && error.code) ||
+        ERROR_CODE.UNKNOWN;
+
+      const errorTitle = ERROR_MESSAGE[errorCode].title;
+      const errorBody = ERROR_MESSAGE[errorCode].message;
+
+      console.error(
+        "An error occurred while logging in: ",
+        error.message || errorBody
+      );
+      onError?.(error, errorTitle, errorBody);
+      await logout(auth, router, undefined, false);
       setAuthState("error");
-      setErrorMessage(errorMessage);
-      onError?.(error);
     }
   };
 
   return {
     authState,
-    errorMessage,
-    isEmailVerified,
     useEmailAuth,
     useGoogleAuth,
   };

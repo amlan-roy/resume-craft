@@ -89,7 +89,6 @@ describe("useLogin", () => {
       );
     });
     expect(renderHookResponse.result.current.authState).toBe("authenticated");
-    expect(renderHookResponse.result.current.isEmailVerified).toBe(true);
   });
 
   it("should handle email authentication error [signInWithEmailAndPassword failure]", async () => {
@@ -117,8 +116,8 @@ describe("useLogin", () => {
     });
     expect(renderHookResponse.result.current.authState).toBe("error");
 
-    // Should not call logout when the first firebase signin step fails
-    expect(logout).toHaveBeenCalledTimes(0);
+    // Should call logout when the first firebase signin step fails
+    expect(logout).toHaveBeenCalledTimes(1);
   });
 
   it("should handle email authentication error [getIdToken failure]", async () => {
@@ -152,8 +151,8 @@ describe("useLogin", () => {
     });
     expect(renderHookResponse.result.current.authState).toBe("error");
 
-    // Should not call logout when the second firebase getIdToken step fails
-    expect(logout).toHaveBeenCalledTimes(0);
+    // Should call logout when the second firebase getIdToken step fails
+    expect(logout).toHaveBeenCalledTimes(1);
   });
 
   it("should handle email authentication error [getIdToken does not return valid value]", async () => {
@@ -185,7 +184,7 @@ describe("useLogin", () => {
     });
     expect(renderHookResponse.result.current.authState).toBe("error");
 
-    // Should not call logout when the second firebase getIdToken step fails
+    // Should call logout when the second firebase getIdToken step fails
     expect(logout).toHaveBeenCalledTimes(1);
   });
 
@@ -224,8 +223,8 @@ describe("useLogin", () => {
     });
     expect(renderHookResponse.result.current.authState).toBe("error");
 
-    // Should not call logout when the axios post request fails
-    expect(logout).toHaveBeenCalledTimes(0);
+    // Should call logout when the axios post request fails
+    expect(logout).toHaveBeenCalledTimes(1);
   });
 
   it("should call onError when an error occurs in email auth", async () => {

@@ -130,18 +130,6 @@ describe("useSignup", () => {
       await result.current.signupWithEmail(mockEmail, mockPassword);
     });
     expect(result.current.authState).toBe("authenticated");
-    expect(result.current.isEmailVerified).toBe(false);
-  });
-
-  it("should handle signup with email and logout if email is not verified and email not verified flag is passed", async () => {
-    const { result } = renderHook(() => useSignup({ auth: getMockAuth() }));
-
-    expect(result.current.authState).toBe("unauthenticated");
-    await act(async () => {
-      await result.current.signupWithEmail(mockEmail, mockPassword, true);
-    });
-    expect(result.current.authState).toBe("unauthenticated");
-    expect(logout).toHaveBeenCalledTimes(1);
   });
 
   it("should handle signup with email and not logout if email is not verified and email not verified flag is not passed", async () => {
@@ -251,31 +239,6 @@ describe("useSignup", () => {
       await result.current.signupWithGoogle();
     });
     expect(result.current.authState).toBe("authenticated");
-  });
-
-  it("should handle signup with google and logout if email is not verified and the flag is provided", async () => {
-    signInWithGoogleMock.mockResolvedValue(
-      new Promise((resolve) => {
-        resolve({
-          user: getMockUser({
-            emailVerified: false,
-            displayName: "test",
-            email: mockEmail,
-            getIdToken: userIdTokenMock,
-          }),
-        });
-      })
-    );
-
-    const { result } = renderHook(() => useSignup({ auth: getMockAuth() }));
-
-    expect(result.current.authState).toBe("unauthenticated");
-    await act(async () => {
-      await result.current.signupWithGoogle(true);
-    });
-    expect(result.current.authState).toBe("unauthenticated");
-    expect(logout).toHaveBeenCalledTimes(1);
-    expect(result.current.isEmailVerified).toBe(false);
   });
 
   it("should handle signup with google and not logout if email is not verified and the flag is not provided", async () => {

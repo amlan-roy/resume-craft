@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FirebaseError } from "firebase/app";
 import { Auth, getIdToken } from "firebase/auth";
 import {
   useCreateUserWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
+import {
+  ERROR_CODE,
+  ERROR_MESSAGE,
+} from "@/lib/const/hooks/authentication/errorMessages";
 import { logout } from "@/lib/services/auth/logout";
 import { authStates } from "@/lib/types/hooks/authentication/auth";
 import {
@@ -17,6 +22,7 @@ type TUseSignupProps = {
   auth: Auth;
   router?: ReturnType<typeof useRouter>;
   onError?: Function;
+  onSuccess?: Function;
 };
 
 /**
@@ -25,13 +31,18 @@ type TUseSignupProps = {
  * @param auth - Firebase Auth object.
  * @param router - Next.js router object. (Optional)
  * @param onError - Function to handle errors. (Optional)
+ * @param onSuccess - Function to handle successful signup. (Optional)
  * @returns Object containing the current authentication state, an error message and functions to sign up with email and password and with Google.
  */
-export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
+export const useSignup = ({
+  auth,
+  router,
+  onError,
+  onSuccess,
+}: TUseSignupProps) => {
   const [authState, setAuthState] = useState<authStates>(() =>
     auth.currentUser ? "authenticated" : "unauthenticated"
   );
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
 
   const signupInProgress = authState === "loading";
 
@@ -43,52 +54,13 @@ export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
       sendEmailVerification: true,
     });
 
-  const [isEmailVerified, setIsEmailVerified] = useState<boolean | null>(() =>
-    auth.currentUser ? !!auth.currentUser.emailVerified : null
-  );
-
   useEffect(() => {
     if (errorGoogleAuth) {
       setAuthState("error");
-      setIsEmailVerified(null);
-      let googleAuthErrorMessage =
-        "An error occurred while logging in. Please try again.";
-      switch (errorGoogleAuth.code) {
-        case "auth/account-exists-with-different-credential":
-          googleAuthErrorMessage =
-            "Account already exists with different credentials. Try logging in instead.";
-        case "auth/credential-already-in-use":
-          googleAuthErrorMessage =
-            "Account already exists. Try logging in instead.";
-      }
-      setErrorMessage(googleAuthErrorMessage);
     } else if (errorEmailAuth) {
       setAuthState("error");
-      setIsEmailVerified(null);
-
-      let emailAuthErrorMessage =
-        "An error occurred while signing up. Please try again.";
-
-      switch (errorEmailAuth.code) {
-        case "auth/email-already-in-use":
-          emailAuthErrorMessage = "Email already in use.";
-        case "auth/account-exists-with-different-credential":
-          emailAuthErrorMessage =
-            "Account already exists. Try logging in insteed.";
-        case "auth/credential-already-in-use":
-          emailAuthErrorMessage =
-            "Account already exists with a different sign in method.";
-        default:
-          emailAuthErrorMessage = "User not created. Please try again later.";
-      }
-      setErrorMessage(emailAuthErrorMessage);
     } else if (loadingGoogleAuth || loadingEmailAuth) {
-      setErrorMessage(null);
-      setIsEmailVerified(null);
       setAuthState("loading");
-    } else if (["authenticated", "loading"].includes(authState)) {
-      setErrorMessage(null);
-      authState == "loading" && setIsEmailVerified(null);
     }
   }, [
     authState,
@@ -104,11 +76,7 @@ export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
    * @param email - The user's email address.
    * @param password - The user's password.
    */
-  const signupWithEmail = async (
-    email: string,
-    password: string,
-    logoutIfEmailNotVerified?: boolean
-  ) => {
+  const signupWithEmail = async (email: string, password: string) => {
     if (signupInProgress) {
       console.info(
         "A signup request is already in progress. Please wait while making another request..."
@@ -126,19 +94,12 @@ export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
         );
       }
 
-      setIsEmailVerified(!!user?.emailVerified);
-
       const userExists = await getUserFromEmail(user.email || "");
       !userExists &&
         (await addUserData({
           name: user.displayName,
           email: user.email,
         }));
-      if (logoutIfEmailNotVerified && !user.emailVerified) {
-        await logout(auth, router, undefined, false);
-        setAuthState("unauthenticated");
-        return;
-      }
 
       const token = await getIdToken(user);
 
@@ -154,29 +115,39 @@ export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
 
       if (response.status === 200) {
         setAuthState("authenticated");
+        onSuccess?.();
         return;
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      console.error("An error occurred while logging in: ", errorMessage);
+
+      throw new Error("An error occurred while signing up. Please try again.");
+    } catch (error: Error | FirebaseError | any) {
+      const errorCode =
+        (Object.values(ERROR_CODE).includes(error.code) && error.code) ||
+        ERROR_CODE.UNKNOWN;
+
+      const errorTitle = ERROR_MESSAGE[errorCode].title;
+      const errorBody = ERROR_MESSAGE[errorCode].message;
+
+      console.error(
+        "An error occurred while logging in: ",
+        error.message || errorBody
+      );
+      onError?.(error, errorTitle, errorBody);
+      await logout(auth, router, undefined, false);
       setAuthState("error");
-      onError?.(error);
     }
   };
 
   /**
    * Authenticates the user using Google.
    */
-  const signupWithGoogle = async (logoutIfEmailNotVerified?: boolean) => {
+  const signupWithGoogle = async () => {
     try {
       const res = await signInWithGoogle();
 
       const { user } = res || {};
 
-      if (res && user) {
-        setIsEmailVerified(!!user?.emailVerified);
-
+      if (user) {
         const response = await axios.post(
           "/api/login",
           {},
@@ -194,36 +165,34 @@ export const useSignup = ({ auth, router, onError }: TUseSignupProps) => {
               name: user.displayName,
               email: user.email,
             }));
-
-          if (logoutIfEmailNotVerified && !user.emailVerified) {
-            await logout(auth, router, undefined, false);
-            setAuthState("unauthenticated");
-            setIsEmailVerified(false);
-            return;
-          }
-
           setAuthState("authenticated");
+          onSuccess?.();
         } else {
           throw new Error("An error occurred while logging in");
         }
       } else {
         throw new Error("An error occurred while logging in");
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      console.error("An error occurred while logging in: ", errorMessage);
-      logout(auth, router, undefined, false);
+    } catch (error: Error | FirebaseError | any) {
+      const errorCode =
+        (Object.values(ERROR_CODE).includes(error.code) && error.code) ||
+        ERROR_CODE.UNKNOWN;
+
+      const errorTitle = ERROR_MESSAGE[errorCode].title;
+      const errorBody = ERROR_MESSAGE[errorCode].message;
+
+      console.error(
+        "An error occurred while logging in: ",
+        error.message || errorBody
+      );
+      onError?.(error, errorTitle, errorBody);
+      await logout(auth, router, undefined, false);
       setAuthState("error");
-      setErrorMessage(errorMessage);
-      onError?.(error);
     }
   };
 
   return {
     authState,
-    errorMessage,
-    isEmailVerified,
     signupWithEmail,
     signupWithGoogle,
   };

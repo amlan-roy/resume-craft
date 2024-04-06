@@ -7,7 +7,9 @@ type AuthPagesLayoutProps = {
   children: React.ReactNode;
 };
 
-const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = ({ children }) => {
+const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = async ({
+  children,
+}) => {
   return (
     <>
       <AuthenticatedHeader hideLogout />

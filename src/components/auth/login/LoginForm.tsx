@@ -3,10 +3,9 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 import { useForm } from "react-hook-form";
-import { logout } from "@/lib/services/auth/logout";
+import { useLogin } from "@/lib/hooks/authentication/useLogin";
 import { loginFormSchema, loginFormType } from "@/lib/types/auth";
 import { auth } from "@/lib/utils/firebase/config";
 import { Button } from "@/components/ui/button";
@@ -38,9 +37,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
   });
   const router = useRouter();
   const { toast: displayToast } = useToast();
-  const [loginInProgress, setLoginInProgress] = React.useState(false);
-  const [isGoogleLoginInProgress, setIsGoogleLoginInProgress] =
-    React.useState(false);
+  const {
+    authState,
+    useEmailAuth: emailAuth,
+    useGoogleAuth: googleAuth,
+  } = useLogin({
+    auth,
+    router,
+    onError: (
+      error: Error | FirebaseError | any,
+      errorTitle = "An error occurred",
+      errorMessage = "Please try again later!"
+    ) => {
+      displayToast({
+        title: errorTitle,
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
 
   const {
     handleSubmit,
@@ -52,7 +67,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
 
   useEffect(() => {
     setComponentLoading(false);
-  }, []);
+    if (authState === "authenticated") {
+      // Not using router.push("/home") due to a cookie issue in prod environment
+      // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
+      router.refresh();
+    }
+  }, [authState, router]);
 
   /**
    * Handles the form submission for the login form.
@@ -64,69 +84,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
    * @param data - The login form data containing the email and password.
    */
   const onSubmit = async (data: loginFormType) => {
-    if (loginInProgress || isGoogleLoginInProgress) return;
-    try {
-      setLoginInProgress(true);
-      const { user } =
-        (await signInWithEmailAndPassword(auth, data.email, data.password)) ||
-        {};
-
-      if (!user.emailVerified) {
-        await logout(auth, router, undefined, false);
-        displayToast({
-          title: "Email not verified",
-          description: "Please verify your email before logging in.",
-          variant: "destructive",
-        });
-        setLoginInProgress(false);
-        return;
-      }
-
-      const token = await getIdToken(user);
-
-      if (!token) {
-        await logout(auth, router, undefined, false);
-        throw new Error(
-          "There was an error while logging in. Please try again."
-        );
-      }
-
-      const response = await axios.post(
-        "/api/login",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Not using router.push("/home") due to a cookie issue in prod environment
-        // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
-        router.refresh();
-        setLoginInProgress(false);
-        return;
-      }
-
-      throw new Error(
-        "An error has occurred while logging in to your account!"
-      );
-    } catch (e: Error | any) {
-      console.error(e);
-      await logout(auth, router, undefined, false);
-      let errorMessage = e.message || "Login unsuccessful";
-
-      if (e.code === "auth/invalid-credential") {
-        errorMessage = "Invalid email or password. Please try again.";
-      }
-      displayToast({
-        title: "An error has occurred while logging in to your account!",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      setLoginInProgress(false);
-    }
+    authState !== "loading" && emailAuth(data.email, data.password);
   };
 
   return (
@@ -183,7 +141,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
                   <Button
                     className="w-full max-w-72 text-md py-6"
                     type="submit"
-                    disabled={loginInProgress || isGoogleLoginInProgress}
+                    disabled={authState === "loading"}
                   >
                     Login
                   </Button>
@@ -194,8 +152,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
           <p className="my-4 text-center text-brand-neutral-7">OR</p>
           <div className="flex justify-center">
             <GoogleJoinButton
-              isOtherOptionsLoading={loginInProgress}
-              setGoogleAuthLoadingState={setIsGoogleLoginInProgress}
+              isAuthInProgress={authState === "loading"}
+              loginUsingGoogle={googleAuth}
             />
           </div>
         </>
