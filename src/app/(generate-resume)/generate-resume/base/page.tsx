@@ -51,6 +51,14 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
 
   const onGenerateClick = async () => {
     try {
+      if (!!!auth.currentUser?.emailVerified) {
+        displayToast({
+          title: "Your email is not verified!",
+          description: "Please verify your email to generate your resume.",
+          variant: "destructive",
+        });
+        return;
+      }
       setDownloadData((prev) => ({ ...prev, state: "in-progress" }));
 
       const downloadState = await makeGenerateResumeRequest(
