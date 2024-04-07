@@ -3,8 +3,7 @@
  * This file exports the Firebase app instance, authentication, providers, and Firestore database.
  */
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { EmailAuthProvider, GoogleAuthProvider } from "firebase/auth";
+import { EmailAuthProvider, GoogleAuthProvider, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 /**

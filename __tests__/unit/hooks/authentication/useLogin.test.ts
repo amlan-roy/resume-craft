@@ -5,6 +5,7 @@ import { act } from "react-dom/test-utils";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useLogin } from "@/lib/hooks/authentication/useLogin";
 import { logout } from "@/lib/services/auth/logout";
+import { configMocks } from "@/lib/utils/test-helpers/firebase/firebase-mocks";
 import {
   getMockAuth,
   getMockUser,
@@ -12,10 +13,23 @@ import {
 
 jest.mock("axios");
 
+configMocks();
+
 jest.mock("firebase/auth", () => ({
   ...jest.requireActual("firebase/auth"),
   signInWithEmailAndPassword: jest.fn(),
   getIdToken: jest.fn(),
+  EmailAuthProvider: jest.fn(),
+  GoogleAuthProvider: jest.fn(),
+  getAuth: jest.fn(),
+  sendPasswordResetEmail: jest.fn(),
+}));
+
+jest.mock("react-firebase-hooks/auth", () => ({
+  ...jest.requireActual("react-firebase-hooks/auth"),
+  useSignInWithEmailAndPassword: jest.fn(),
+  useSignInWithGoogle: jest.fn(),
+  useCreateUserWithEmailAndPassword: jest.fn(),
 }));
 
 jest.mock("@/lib/services/auth/logout", () => ({
@@ -23,22 +37,9 @@ jest.mock("@/lib/services/auth/logout", () => ({
   logout: jest.fn(),
 }));
 
-jest.mock("react-firebase-hooks/auth", () => ({
-  ...jest.requireActual("react-firebase-hooks/auth"),
-  useSignInWithGoogle: jest.fn(),
-}));
-
-jest.mock("@/lib/utils/firebase/config", () => ({
-  ...jest.requireActual("@/lib/utils/firebase/config"),
-  auth: jest.fn(),
-  app: jest.fn(),
-  googleProvider: jest.fn(),
-  emailProvider: jest.fn(),
-  db: jest.fn(),
-}));
-
 describe("useLogin", () => {
   let signInWithGoogleMock: jest.Mock;
+
   beforeEach(() => {
     jest.spyOn(console, "error");
     (console.error as jest.Mock).mockImplementation(() => null);
@@ -53,6 +54,7 @@ describe("useLogin", () => {
     // Mock the axios post request
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
   });
+
   afterEach(() => {
     (console.error as jest.Mock).mockRestore();
   });
