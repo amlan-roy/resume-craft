@@ -28,6 +28,15 @@ jest.mock("react-firebase-hooks/auth", () => ({
   useSignInWithGoogle: jest.fn(),
 }));
 
+jest.mock("@/lib/utils/firebase/config", () => ({
+  ...jest.requireActual("@/lib/utils/firebase/config"),
+  auth: jest.fn(),
+  app: jest.fn(),
+  googleProvider: jest.fn(),
+  emailProvider: jest.fn(),
+  db: jest.fn(),
+}));
+
 describe("useLogin", () => {
   let signInWithGoogleMock: jest.Mock;
   beforeEach(() => {
