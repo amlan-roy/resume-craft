@@ -26,18 +26,24 @@ jest.mock("@/lib/utils/firebase/database/users", () => ({
 
 jest.mock("firebase/auth", () => ({
   ...jest.requireActual("firebase/auth"),
+  signInWithEmailAndPassword: jest.fn(),
   getIdToken: jest.fn(),
+  EmailAuthProvider: jest.fn(),
+  GoogleAuthProvider: jest.fn(),
+  getAuth: jest.fn(),
+  sendPasswordResetEmail: jest.fn(),
+}));
+
+jest.mock("react-firebase-hooks/auth", () => ({
+  ...jest.requireActual("react-firebase-hooks/auth"),
+  useSignInWithEmailAndPassword: jest.fn(),
+  useSignInWithGoogle: jest.fn(),
+  useCreateUserWithEmailAndPassword: jest.fn(),
 }));
 
 jest.mock("@/lib/services/auth/logout", () => ({
   ...jest.requireActual("@/lib/services/auth/logout"),
   logout: jest.fn(),
-}));
-
-jest.mock("react-firebase-hooks/auth", () => ({
-  ...jest.requireActual("react-firebase-hooks/auth"),
-  useSignInWithGoogle: jest.fn(),
-  useCreateUserWithEmailAndPassword: jest.fn(),
 }));
 
 describe("useSignup", () => {
