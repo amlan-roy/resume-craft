@@ -143,7 +143,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
                 <Button
                   className="w-full max-w-72 text-md py-6"
                   type="submit"
-                  disabled={authState === "loading"}
+                  disabled={
+                    authState === "loading" || authState === "authenticated"
+                  }
                 >
                   Signup
                 </Button>
@@ -155,7 +157,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
       <p className="my-4 text-center text-brand-neutral-7">OR</p>
       <div className="flex justify-center">
         <GoogleJoinButton
-          isAuthInProgress={authState === "loading"}
+          isAuthInProgress={
+            authState === "loading" || authState === "authenticated"
+          }
           loginUsingGoogle={signupWithGoogle}
         />
       </div>
