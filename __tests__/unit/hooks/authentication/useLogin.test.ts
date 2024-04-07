@@ -5,15 +5,12 @@ import { act } from "react-dom/test-utils";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useLogin } from "@/lib/hooks/authentication/useLogin";
 import { logout } from "@/lib/services/auth/logout";
-import { configMocks } from "@/lib/utils/test-helpers/firebase/firebase-mocks";
 import {
   getMockAuth,
   getMockUser,
 } from "@/lib/utils/test-helpers/hooks/authentication/authHelpers";
 
 jest.mock("axios");
-
-configMocks();
 
 jest.mock("firebase/auth", () => ({
   ...jest.requireActual("firebase/auth"),
