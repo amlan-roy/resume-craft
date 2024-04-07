@@ -114,6 +114,14 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
 
   const onGenerateClick = async () => {
     try {
+      if (!!!auth.currentUser?.emailVerified) {
+        displayToast({
+          title: "Please verify your email",
+          description: "You need to verify your email to generate your resume",
+          variant: "destructive",
+        });
+        return;
+      }
       if (!resumeVariantData) {
         displayToast({
           title: "Please fill in the required fields",

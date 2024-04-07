@@ -1,6 +1,4 @@
 import React from "react";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
-import Footer from "@/components/global/Footer";
 import BoxLoader from "@/components/loading/BoxLoader";
 
 type LoadingPageProps = {
