@@ -13,7 +13,7 @@ const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = async ({
   return (
     <>
       <AuthenticatedHeader hideLogout />
-      <main className="flex-grow">
+      <main className="flex-grow flex flex-col">
         {children}
         <Toaster />
       </main>
