@@ -3,21 +3,18 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { getIdToken } from "firebase/auth";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { FirebaseError } from "firebase/app";
 import { useForm } from "react-hook-form";
+import { useSignup } from "@/lib/hooks/authentication/useSignup";
 import { signupFormSchema, signupFormType } from "@/lib/types/auth";
 import { auth } from "@/lib/utils/firebase/config";
-import { addUserData } from "@/lib/utils/firebase/database/users";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
-import { logout } from "@/components/auth/LogoutButton";
-import LoadingSkeleton from "../LoadingSkeleton";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type SignupFormProps = {
   hideForm?: boolean;
@@ -42,12 +39,21 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
   const router = useRouter();
   const { toast: displayToast } = useToast();
 
-  const [createUserWithEmailAndPassword, , loadingEmailAuth, errorEmailAuth] =
-    useCreateUserWithEmailAndPassword(auth, {
-      sendEmailVerification: true,
-    });
-  const [isGoogleLoginInProgress, setIsGoogleLoginInProgress] =
-    React.useState(false);
+  const { authState, signupWithEmail, signupWithGoogle } = useSignup({
+    auth,
+    router,
+    onError: (
+      error: Error | FirebaseError | any,
+      errorTitle = "An error occurred",
+      errorMessage = "Please try again later!"
+    ) => {
+      displayToast({
+        title: errorTitle,
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
 
   const {
     handleSubmit,
@@ -65,73 +71,19 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
    * @param data - The form data containing the email and password.
    */
   const onSubmit = async (data: signupFormType) => {
-    if (loadingEmailAuth || isGoogleLoginInProgress) return;
-    try {
-      const { user } =
-        (await createUserWithEmailAndPassword(data.email, data.password)) || {};
-
-      if (errorEmailAuth) {
-        switch (errorEmailAuth.code) {
-          case "auth/email-already-in-use":
-            throw new Error("Email already in use.");
-          case "auth/account-exists-with-different-credential":
-            throw new Error("Account already exists. Try logging in insteed.");
-          case "auth/credential-already-in-use":
-            throw new Error(
-              "Account already exists with a different sign in method."
-            );
-          default:
-            throw new Error("User not created. Please try again later.");
-        }
-      }
-
-      if (user) {
-        await addUserData({
-          name: user.displayName,
-          email: user.email,
-        });
-        if (!user.emailVerified) {
-          await logout(router, undefined, true);
-          router.replace("/signup?emailSent=true");
-          return;
-        }
-
-        const token = await getIdToken(user);
-
-        const response = await axios.post(
-          "/api/login",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          // Not using router.push("/home") due to a cookie issue in prod environment
-          // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
-          router.refresh();
-          return;
-        }
-      }
-      throw new Error("User not created");
-    } catch (e: Error | any) {
-      const errorMessage = e.message || "User not created";
-      displayToast({
-        title: "An error has occurred while creating your account!",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      await logout(router, undefined, true);
-    }
+    authState !== "loading" && signupWithEmail(data.email, data.password);
   };
 
   const [componentLoading, setComponentLoading] = React.useState(true);
 
   useEffect(() => {
     setComponentLoading(false);
-  }, []);
+    if (authState === "authenticated") {
+      // Not using router.push("/home") due to a cookie issue in prod environment
+      // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
+      router.refresh();
+    }
+  }, [authState, router]);
 
   return componentLoading ? (
     <LoadingSkeleton inputCount={3} />
@@ -191,7 +143,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
                 <Button
                   className="w-full max-w-72 text-md py-6"
                   type="submit"
-                  disabled={loadingEmailAuth || isGoogleLoginInProgress}
+                  disabled={authState === "loading"}
                 >
                   Signup
                 </Button>
@@ -203,8 +155,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ hideForm }) => {
       <p className="my-4 text-center text-brand-neutral-7">OR</p>
       <div className="flex justify-center">
         <GoogleJoinButton
-          isOtherOptionsLoading={loadingEmailAuth}
-          setGoogleAuthLoadingState={setIsGoogleLoginInProgress}
+          isAuthInProgress={authState === "loading"}
+          loginUsingGoogle={signupWithGoogle}
         />
       </div>
     </>
