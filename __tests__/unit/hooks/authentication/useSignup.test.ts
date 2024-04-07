@@ -49,6 +49,9 @@ describe("useSignup", () => {
   const mockPassword = "password";
 
   beforeEach(() => {
+    jest.spyOn(console, "error");
+    (console.error as jest.Mock).mockImplementation(() => null);
+
     signInWithGoogleMock = jest.fn();
     createUserWithEmailAndPasswordMock = jest.fn();
     userIdTokenMock = jest.fn();
@@ -111,6 +114,10 @@ describe("useSignup", () => {
       })
     );
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
+  });
+
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   it("should start unauthenticated", () => {

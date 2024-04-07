@@ -15,6 +15,9 @@ describe("logout", () => {
   let mockOnError: jest.Mock;
 
   beforeEach(() => {
+    jest.spyOn(console, "error");
+    (console.error as jest.Mock).mockImplementation(() => {});
+
     mockAuth = {
       currentUser: {
         isEmailVerified: true,
@@ -32,6 +35,10 @@ describe("logout", () => {
     mockOnError = jest.fn();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
+  });
+
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   it("should sign out the current user and make a logout request", async () => {

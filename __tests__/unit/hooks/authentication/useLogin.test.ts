@@ -31,6 +31,9 @@ jest.mock("react-firebase-hooks/auth", () => ({
 describe("useLogin", () => {
   let signInWithGoogleMock: jest.Mock;
   beforeEach(() => {
+    jest.spyOn(console, "error");
+    (console.error as jest.Mock).mockImplementation(() => null);
+
     signInWithGoogleMock = jest.fn();
     (useSignInWithGoogle as jest.Mock).mockReturnValue([
       signInWithGoogleMock,
@@ -40,6 +43,9 @@ describe("useLogin", () => {
     ]);
     // Mock the axios post request
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
+  });
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   it("should start unauthenticated", () => {
