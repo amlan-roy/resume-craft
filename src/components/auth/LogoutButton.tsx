@@ -5,18 +5,23 @@ import { auth } from "@/lib/utils/firebase/config";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-type LogoutButtonProps = {};
+type LogoutButtonProps = {
+  buttonClass?: string;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * LogoutButton component.
  * @component
  */
-const LogoutButton: React.FC<LogoutButtonProps> = () => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({
+  buttonClass,
+  ...rest
+}) => {
   const router = useRouter();
   const { toast: displayToast } = useToast();
 
   return (
-    <div className="flex items-center space-x-2 mx-2 mt-4">
+    <div className="flex items-center space-x-2 mx-2 mt-4" {...rest}>
       <Button
         variant={"outline"}
         onClick={() =>
@@ -29,6 +34,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = () => {
             });
           })
         }
+        className={buttonClass}
       >
         Logout
       </Button>
