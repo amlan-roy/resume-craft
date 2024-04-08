@@ -1,6 +1,8 @@
-import Footer from "@/components/global/Footer";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
 import React from "react";
+import { auth } from "@/lib/utils/firebase/config";
+import { Toaster } from "@/components/ui/toaster";
+import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
+import Footer from "@/components/global/Footer";
 
 type HomePageLayoutProps = {
   children: React.ReactNode;
@@ -9,8 +11,13 @@ type HomePageLayoutProps = {
 const HomePageLayout: React.FC<HomePageLayoutProps> = ({ children }) => {
   return (
     <>
-      <AuthenticatedHeader />
-      <main className="flex-grow">{children}</main>
+      <AuthenticatedHeader
+        isEmailVerified={!!auth.currentUser?.emailVerified}
+      />
+      <main className="flex-grow">
+        {children}
+        <Toaster />
+      </main>
       <Footer />
     </>
   );

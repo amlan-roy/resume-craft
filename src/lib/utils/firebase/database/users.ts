@@ -1,15 +1,15 @@
-import { formType } from "@/lib/types/form";
-import { db, auth } from "@/lib/utils/firebase/config";
 import {
+  DocumentSnapshot,
   collection,
-  setDoc,
+  doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
-  DocumentSnapshot,
-  doc,
 } from "firebase/firestore";
+import { formType } from "@/lib/types/form";
+import { auth, db } from "@/lib/utils/firebase/config";
 
 /**
  * Adds user data to the Firestore database.

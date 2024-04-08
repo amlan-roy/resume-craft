@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import { SECTION } from "@/lib/types/form";
+import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 
 describe("integration:components/global/form/form-sections/basic-details", () => {
   it.skip("snapshot", () => {

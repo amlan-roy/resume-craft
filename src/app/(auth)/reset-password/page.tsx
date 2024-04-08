@@ -1,8 +1,6 @@
 import React from "react";
-import { FaGoogle } from "react-icons/fa";
-import SignupForm from "@/components/auth/signup/SignupForm";
-import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import ResetPasswordForm from "@/components/auth/reset-password/ResetPasswordForm";
 
 type ResetPasswordPageProps = {

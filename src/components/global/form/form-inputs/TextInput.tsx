@@ -1,10 +1,10 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { formType } from "@/lib/types/form";
 import { UseFormRegister } from "react-hook-form";
+import { formType } from "@/lib/types/form";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type TextInputProps = {
   autoComplete?: string;

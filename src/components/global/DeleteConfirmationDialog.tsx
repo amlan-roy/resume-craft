@@ -1,17 +1,15 @@
+import React from "react";
+import { AlertDialogProps } from "@radix-ui/react-alert-dialog";
 import {
   AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import React from "react";
-import {
-  AlertDialogHeader,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogProps } from "@radix-ui/react-alert-dialog";
 
 type DeleteConfirmationDialogProps = {
   onCancel?: () => void;

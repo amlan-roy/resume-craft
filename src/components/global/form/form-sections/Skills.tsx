@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import { z } from "zod";
+import { SECTION, formType, skillsFieldSchema } from "@/lib/types/form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import { SECTION, formType, skillsFieldSchema } from "@/lib/types/form";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
 
 const fieldName = "optionalSections";

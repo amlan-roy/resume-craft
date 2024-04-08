@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import DeleteConfirmationDialog from "@/components/global/DeleteConfirmationDialog";
 import userEvent from "@testing-library/user-event";
+import DeleteConfirmationDialog from "@/components/global/DeleteConfirmationDialog";
 
 describe("integration:components/global/DeleteConfirmationDialog", () => {
   it("snapshot", () => {

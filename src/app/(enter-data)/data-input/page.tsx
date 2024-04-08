@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import * as z from "zod";
-import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
 import { SECTION, formSchema } from "@/lib/types/form";
-import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
-import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +15,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
+import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
 
 type EnterDataPageProps = {};
 

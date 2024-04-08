@@ -1,21 +1,21 @@
-import Footer from "@/components/global/Footer";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
-import { Toaster } from "@/components/ui/toaster";
 import React from "react";
+import { Toaster } from "@/components/ui/toaster";
+import Header from "@/components/global/Header";
 
 type AuthPagesLayoutProps = {
   children: React.ReactNode;
 };
 
-const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = ({ children }) => {
+const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = async ({
+  children,
+}) => {
   return (
     <>
-      <AuthenticatedHeader hideLogout />
-      <main className="flex-grow">
+      <Header />
+      <main className="flex-grow flex flex-col">
         {children}
         <Toaster />
       </main>
-      <Footer />
     </>
   );
 };

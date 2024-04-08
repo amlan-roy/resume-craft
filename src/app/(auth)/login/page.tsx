@@ -1,6 +1,6 @@
 import React from "react";
-import LoginForm from "@/components/auth/login/LoginForm";
 import { Card } from "@/components/ui/card";
+import LoginForm from "@/components/auth/login/LoginForm";
 
 type LoginPageProps = {
   params: { slug: string };

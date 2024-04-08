@@ -1,37 +1,9 @@
 "use client";
 
-import {
-  SECTION,
-  workExperienceSectionSchema,
-  projectsSectionSchema,
-  skillsSectionSchema,
-  educationSectionSchema,
-  formSchema,
-  formType,
-} from "@/lib/types/form";
-import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import Additional from "@/components/global/form/form-sections/Additional";
-import Education from "@/components/global/form/form-sections/Education";
-import Loading from "@/components/global/form/form-sections/Loading";
-import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
-import Projects from "@/components/global/form/form-sections/Projects";
-import Skills from "@/components/global/form/form-sections/Skills";
-import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
-import { Form } from "@/components/ui/form";
 import {
   DEFAULT_ADDITIONAL_FORM_VALUE,
   DEFAULT_EDUCATION_FORM_VALUE,
@@ -41,6 +13,34 @@ import {
   DEFAULT_SKILLS_FORM_VALUE,
   DEFAULT_WORK_EXPERIENCE_FORM_VALUE,
 } from "@/lib/const/form/form-data";
+import {
+  SECTION,
+  educationSectionSchema,
+  formSchema,
+  formType,
+  projectsSectionSchema,
+  skillsSectionSchema,
+  workExperienceSectionSchema,
+} from "@/lib/types/form";
+import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Form } from "@/components/ui/form";
+import Additional from "@/components/global/form/form-sections/Additional";
+import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
+import Education from "@/components/global/form/form-sections/Education";
+import Loading from "@/components/global/form/form-sections/Loading";
+import ProfessionalSummary from "@/components/global/form/form-sections/ProfessionalSummary";
+import Projects from "@/components/global/form/form-sections/Projects";
+import Skills from "@/components/global/form/form-sections/Skills";
+import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
 import DeleteConfirmationDialog from "../DeleteConfirmationDialog";
 
 type DynamicFormProps = {

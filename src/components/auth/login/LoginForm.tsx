@@ -1,20 +1,20 @@
 "use client";
+
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FirebaseError } from "firebase/app";
 import { useForm } from "react-hook-form";
+import { useLogin } from "@/lib/hooks/authentication/useLogin";
+import { loginFormSchema, loginFormType } from "@/lib/types/auth";
+import { auth } from "@/lib/utils/firebase/config";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginFormSchema, loginFormType } from "@/lib/types/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { getIdToken, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/utils/firebase/config";
 import { useToast } from "@/components/ui/use-toast";
-import { logout } from "@/components/auth/LogoutButton";
 import GoogleJoinButton from "@/components/auth/GoogleJoinButton";
-import LoadingSkeleton from "../LoadingSkeleton";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type LoginFormProps = {
   hideForm?: boolean;
@@ -37,9 +37,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
   });
   const router = useRouter();
   const { toast: displayToast } = useToast();
-  const [loginInProgress, setLoginInProgress] = React.useState(false);
-  const [isGoogleLoginInProgress, setIsGoogleLoginInProgress] =
-    React.useState(false);
+  const {
+    authState,
+    useEmailAuth: emailAuth,
+    useGoogleAuth: googleAuth,
+  } = useLogin({
+    auth,
+    router,
+    onError: (
+      error: Error | FirebaseError | any,
+      errorTitle = "An error occurred",
+      errorMessage = "Please try again later!"
+    ) => {
+      displayToast({
+        title: errorTitle,
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
 
   const {
     handleSubmit,
@@ -51,7 +67,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
 
   useEffect(() => {
     setComponentLoading(false);
-  }, []);
+    if (authState === "authenticated") {
+      // Not using router.push("/home") due to a cookie issue in prod environment
+      // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
+      router.refresh();
+    }
+  }, [authState, router]);
 
   /**
    * Handles the form submission for the login form.
@@ -63,69 +84,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
    * @param data - The login form data containing the email and password.
    */
   const onSubmit = async (data: loginFormType) => {
-    if (loginInProgress || isGoogleLoginInProgress) return;
-    try {
-      setLoginInProgress(true);
-      const { user } =
-        (await signInWithEmailAndPassword(auth, data.email, data.password)) ||
-        {};
-
-      if (!user.emailVerified) {
-        await logout(router, undefined, true);
-        displayToast({
-          title: "Email not verified",
-          description: "Please verify your email before logging in.",
-          variant: "destructive",
-        });
-        setLoginInProgress(false);
-        return;
-      }
-
-      const token = await getIdToken(user);
-
-      if (!token) {
-        await logout(router, undefined, true);
-        throw new Error(
-          "There was an error while logging in. Please try again."
-        );
-      }
-
-      const response = await axios.post(
-        "/api/login",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Not using router.push("/home") due to a cookie issue in prod environment
-        // Refer: https://github.com/amlan-roy/resume-craft/issues/91 for more context
-        router.refresh();
-        setLoginInProgress(false);
-        return;
-      }
-
-      throw new Error(
-        "An error has occurred while logging in to your account!"
-      );
-    } catch (e: Error | any) {
-      console.error(e);
-      await logout(router, undefined, true);
-      let errorMessage = e.message || "Login unsuccessful";
-
-      if (e.code === "auth/invalid-credential") {
-        errorMessage = "Invalid email or password. Please try again.";
-      }
-      displayToast({
-        title: "An error has occurred while logging in to your account!",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      setLoginInProgress(false);
-    }
+    authState !== "loading" && emailAuth(data.email, data.password);
   };
 
   return (
@@ -182,7 +141,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
                   <Button
                     className="w-full max-w-72 text-md py-6"
                     type="submit"
-                    disabled={loginInProgress || isGoogleLoginInProgress}
+                    disabled={
+                      authState === "loading" || authState === "authenticated"
+                    }
                   >
                     Login
                   </Button>
@@ -193,8 +154,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ hideForm }) => {
           <p className="my-4 text-center text-brand-neutral-7">OR</p>
           <div className="flex justify-center">
             <GoogleJoinButton
-              isOtherOptionsLoading={loginInProgress}
-              setGoogleAuthLoadingState={setIsGoogleLoginInProgress}
+              isAuthInProgress={
+                authState === "loading" || authState === "authenticated"
+              }
+              loginUsingGoogle={googleAuth}
             />
           </div>
         </>

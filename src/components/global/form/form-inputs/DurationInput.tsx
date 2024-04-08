@@ -1,7 +1,8 @@
 "use client";
+
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import DateInput from "./DateInput";
+import { formType } from "@/lib/types/form";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { formType } from "@/lib/types/form";
+import DateInput from "./DateInput";
 
 type DurationInputProps = {
   fieldName: string;

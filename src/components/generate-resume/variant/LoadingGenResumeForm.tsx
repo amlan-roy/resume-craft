@@ -1,5 +1,5 @@
-import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 import React from "react";
+import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
 type LoadingGenResumeFormProps = {};
 

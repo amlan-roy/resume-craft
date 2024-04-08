@@ -2,9 +2,9 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { resumeVariantGenerationFormSchema } from "@/lib/types/form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type StepThreeProps = {
   id: string;
