@@ -1,7 +1,6 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import AuthenticatedHeader from "@/components/global/AuthenticatedHeader";
-import Footer from "@/components/global/Footer";
+import Header from "@/components/global/Header";
 
 type AuthPagesLayoutProps = {
   children: React.ReactNode;
@@ -12,7 +11,7 @@ const AuthPagesLayout: React.FC<AuthPagesLayoutProps> = async ({
 }) => {
   return (
     <>
-      <AuthenticatedHeader hideLogout />
+      <Header />
       <main className="flex-grow flex flex-col">
         {children}
         <Toaster />
