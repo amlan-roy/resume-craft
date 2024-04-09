@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { sendEmailVerification } from "firebase/auth";
 import { CircleUserRoundIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -44,8 +44,19 @@ type AuthenticatedHeaderProps = {
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
   hideLogout,
 }) => {
-  const [displayEmailVerificationBanner, setDisplayEmailVerificationBanner] =
-    React.useState(!!!auth.currentUser?.emailVerified);
+  const [emailVerified, setEmailVerified] = React.useState(
+    auth.currentUser?.emailVerified
+  );
+
+  const bannerDismissed = useRef<{ clicked: boolean }>({ clicked: false });
+
+  useEffect(() => {
+    setEmailVerified(auth.currentUser?.emailVerified);
+  }, [auth.currentUser]);
+
+  useEffect(() => {
+    bannerDismissed.current.clicked = false;
+  }, [bannerDismissed]);
 
   const { toast: displayToast } = useToast();
 
@@ -86,10 +97,10 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
 
   return (
     <>
-      {displayEmailVerificationBanner && (
+      {!emailVerified && !bannerDismissed && (
         <EmailVerificationBanner
           onDismiss={() => {
-            setDisplayEmailVerificationBanner(false);
+            bannerDismissed.current.clicked = true;
           }}
         />
       )}
@@ -110,7 +121,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
                 </div>
                 <DropdownMenuSeparator className="my-4" />
                 <ThemeSwitch />
-                {!!!auth.currentUser?.emailVerified && (
+                {emailVerified === false && (
                   <>
                     <DropdownMenuSeparator className="my-4" />
                     <Button
