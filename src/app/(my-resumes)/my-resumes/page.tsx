@@ -42,7 +42,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
             userId
           )) as ResumeVariantData;
           setBaseResumeData(baseResumeData);
-          Object.values(resumeVariantData).length &&
+          Object.values(resumeVariantData || {}).length &&
             setResumeVariantData(Object.values(resumeVariantData));
         }
       })
@@ -55,10 +55,12 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
     <>
       <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
         <h1 className="md:text-6xl text-5xl font-bold text-brand-neutral-11 text-center">
-          My Resumes
+          My Generated Resumes
         </h1>
         <p className="md:text-2xl text-base text-brand-neutral-8 mt-14 text-center">
-          These are your past generated resumes
+          {!baseResumeData?.downloadUrl && !resumeVariantData?.length
+            ? "No resumes found. Generate a new resume to view here."
+            : "These are your past generated resumes"}
         </p>
 
         {isLoading ? (
