@@ -39,7 +39,6 @@ const ThemeSwitch = ({ className }: { className?: string }) => {
 
 type AuthenticatedHeaderProps = {
   hideLogout?: boolean;
-  isEmailVerified?: boolean;
 };
 
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({

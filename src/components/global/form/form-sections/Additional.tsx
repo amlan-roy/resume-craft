@@ -3,6 +3,7 @@ import { Trash2Icon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { SECTION, formType } from "@/lib/types/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
@@ -49,6 +50,7 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
         />
         <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
           <CardTitle className="w-full max-w-[75%]">
+            <Label>Section Title:</Label>
             <TextInput
               fieldName={
                 index !== undefined && index !== null
@@ -75,11 +77,13 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
             }}
             type="button"
             data-testid="form-sections__delete-icon"
+            title="Delete this section"
           >
             <Trash2Icon />
           </button>
         </CardHeader>
-        <CardContent className="flex flex-wrap w-full gap-5">
+        <CardContent className="flex flex-wrap w-full">
+          <Label>Details:</Label>
           <TextInput
             fieldName={
               index !== undefined && index !== null
