@@ -75,7 +75,10 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
 
   return (
     <>
-      <Card data-card-type={SECTION.WORK_EXPERIENCE}>
+      <Card
+        data-card-type={SECTION.WORK_EXPERIENCE}
+        className="bg-brand-secondary-blue-1"
+      >
         <HiddenInput
           fieldName={
             fieldName && (index !== undefined || index !== null)

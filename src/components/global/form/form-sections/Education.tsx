@@ -75,7 +75,10 @@ const Education: React.FC<EducationProps> = ({
 
   return (
     <>
-      <Card data-card-type={SECTION.EDUCATION}>
+      <Card
+        data-card-type={SECTION.EDUCATION}
+        className="bg-brand-secondary-blue-1"
+      >
         <HiddenInput
           fieldName={
             fieldName && (index !== undefined || index !== null)

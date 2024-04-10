@@ -38,7 +38,10 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
   });
   return (
     <>
-      <Card data-card-type={SECTION.ADDITIONAL}>
+      <Card
+        data-card-type={SECTION.ADDITIONAL}
+        className="bg-brand-secondary-blue-1"
+      >
         <HiddenInput
           fieldName={
             index !== undefined && index !== null

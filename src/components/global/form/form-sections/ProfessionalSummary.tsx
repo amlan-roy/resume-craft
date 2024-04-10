@@ -44,6 +44,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
       <Card
         data-testid="form-sections__professional-summary"
         data-card-type={SECTION.PROFESSIONAL_SUMMARY}
+        className="bg-brand-secondary-blue-1"
       >
         <HiddenInput
           fieldName={

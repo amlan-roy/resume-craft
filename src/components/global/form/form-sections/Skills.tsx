@@ -74,7 +74,10 @@ const Skills: React.FC<SkillsProps> = ({
 
   return (
     <>
-      <Card data-card-type={SECTION.PROJECTS}>
+      <Card
+        data-card-type={SECTION.PROJECTS}
+        className="bg-brand-secondary-blue-1"
+      >
         <HiddenInput
           fieldName={
             fieldName && (index !== undefined || index !== null)
