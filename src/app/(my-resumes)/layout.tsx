@@ -12,7 +12,7 @@ const MyResumesPageLayout: React.FC<MyResumesPageLayoutProps> = ({
   return (
     <>
       <AuthenticatedHeader />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow flex flex-col">{children}</main>
       <Footer />
     </>
   );

@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
@@ -74,7 +75,10 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
 
   return (
     <>
-      <Card data-card-type={SECTION.WORK_EXPERIENCE}>
+      <Card
+        data-card-type={SECTION.WORK_EXPERIENCE}
+        className="bg-brand-secondary-blue-1"
+      >
         <HiddenInput
           fieldName={
             fieldName && (index !== undefined || index !== null)
@@ -86,6 +90,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
         />
         <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
           <CardTitle className="w-full max-w-[75%]">
+            <Label>Section Title:</Label>
             <TextInput
               fieldName={
                 fieldName && (index !== undefined || index !== null)

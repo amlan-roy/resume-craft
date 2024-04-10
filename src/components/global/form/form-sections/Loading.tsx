@@ -12,7 +12,10 @@ const TEXT_COPIES = {
  */
 const Loading: React.FC<LoadingProps> = ({}) => {
   return (
-    <Card data-testid="form-sections__loading">
+    <Card
+      data-testid="form-sections__loading"
+      className="bg-brand-secondary-blue-1"
+    >
       <CardHeader>
         <CardTitle className="animate-pulse text-brand-neutral-5">
           {TEXT_COPIES.loading}
