@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { sendEmailVerification } from "firebase/auth";
 import { CircleUserRoundIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -48,15 +48,11 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
     auth.currentUser?.emailVerified
   );
 
-  const bannerDismissed = useRef<{ clicked: boolean }>({ clicked: false });
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     setEmailVerified(auth.currentUser?.emailVerified);
   }, [auth.currentUser]);
-
-  useEffect(() => {
-    bannerDismissed.current.clicked = false;
-  }, [bannerDismissed]);
 
   const { toast: displayToast } = useToast();
 
@@ -100,7 +96,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
       {!emailVerified && !bannerDismissed && (
         <EmailVerificationBanner
           onDismiss={() => {
-            bannerDismissed.current.clicked = true;
+            setBannerDismissed(true);
           }}
         />
       )}
