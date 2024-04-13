@@ -177,6 +177,17 @@ const GenerateResumeHomePage: React.FC<GenerateResumeHomePageProps> = () => {
                         here
                       </a>{" "}
                       to download a PDF of your resume.
+                      <br />
+                      <br />
+                      Click{" "}
+                      <a
+                        className="font-bold"
+                        href="/my-resumes"
+                        title="View all your generated resumes"
+                      >
+                        here
+                      </a>{" "}
+                      to view all your generated resumes.
                     </>
                   )}
                 </p>
