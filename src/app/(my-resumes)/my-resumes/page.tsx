@@ -23,6 +23,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
 
+// Todo: Move this to a separate component, and add tests for it as well
 const ResumeCard = ({
   title = "Resume",
   subtitle,
