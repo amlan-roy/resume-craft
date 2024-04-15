@@ -14,6 +14,7 @@ import {
 import { auth } from "@/lib/utils/firebase/config";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
+import PopupDialog from "@/components/global/dialog/PopupDialog";
 import ResumeCard from "@/components/my-resumes/ResumeCard";
 
 type MyResumesPageProps = {};
@@ -21,6 +22,7 @@ type MyResumesPageProps = {};
 const MyResumesPage: React.FC<MyResumesPageProps> = () => {
   const [baseResumeData, setBaseResumeData] =
     useState<null | UserDocumentBaseResumeData>(null);
+
   const [resumeVariantData, setResumeVariantData] = useState<
     null | UserDocumentResumeVariantData[]
   >(null);
@@ -28,6 +30,47 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { toast: displayToast } = useToast();
+
+  const [dialogState, setDialogState] = useState<{
+    open: boolean;
+    title: string;
+    description: string;
+    confirmText: string;
+    cancelText: string;
+    resolve?: (value: unknown) => void;
+  }>({
+    open: false,
+    title: "",
+    description: "",
+    confirmText: "",
+    cancelText: "",
+    resolve: (value: unknown) => {},
+  });
+
+  const downloadResume = (url: string) => {
+    window.open(url, "_blank");
+  };
+
+  const displayErrorToast = (errorMessage: string) => {
+    displayToast({
+      title: "An error occurred!",
+      description: errorMessage,
+      variant: "destructive",
+    });
+    console.error(e);
+  };
+
+  const resetDialogState = () => {
+    setDialogState(() => {
+      return {
+        open: false,
+        title: "",
+        description: "",
+        confirmText: "",
+        cancelText: "",
+      };
+    });
+  };
 
   useEffect(() => {
     // Fetch the user's resume data
@@ -57,9 +100,11 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
       <section className="container mx-auto p-8">
         <h1 className="text-3xl tex font-bold mb-4">My Generated Resumes</h1>
         <p className="text-xl text-gray-600 mb-8">
-          {!baseResumeData?.downloadUrl && !resumeVariantData?.length
-            ? "No resumes found. Generate a new resume to view here."
-            : "These are your past generated resumes"}
+          {isLoading
+            ? "Loading your resumes..."
+            : !baseResumeData?.downloadUrl && !resumeVariantData?.length
+              ? "No resumes found. Generate a new resume to view here."
+              : "These are your past generated resumes"}
         </p>
 
         {isLoading ? (
@@ -83,21 +128,32 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                   callbacks={{
                     download: {
                       onClick: () => {
-                        window.open(baseResumeData.downloadUrl, "_blank");
+                        downloadResume(baseResumeData.downloadUrl || "");
                       },
                       onError: (e: Error) => {
                         const errorMessage =
                           e.message ||
                           "An error occurred while downloading the resume!";
-                        displayToast({
-                          title: "An error occurred!",
-                          description: errorMessage,
-                          variant: "destructive",
-                        });
+                        displayErrorToast(errorMessage);
+                        dialogState.resolve?.(false);
+                        resetDialogState();
                       },
                     },
                     delete: {
                       onClick: async () => {
+                        if (dialogState.open) return;
+                        const proceed = await new Promise((resolve) => {
+                          setDialogState({
+                            open: true,
+                            title: "Delete Resume",
+                            description:
+                              "Are you sure you want to delete the resume?",
+                            confirmText: "Delete",
+                            cancelText: "Cancel",
+                            resolve,
+                          });
+                        });
+                        if (!proceed) return;
                         await deleteResume(auth.currentUser?.uid || "", "base");
                         setBaseResumeData(null);
                         displayToast({
@@ -110,11 +166,9 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                         const errorMessage =
                           e.message ||
                           "An error occurred while deleting the resume!";
-                        displayToast({
-                          title: "An error occurred!",
-                          description: errorMessage,
-                          variant: "destructive",
-                        });
+                        displayErrorToast(errorMessage);
+                        dialogState.resolve?.(false);
+                        resetDialogState();
                       },
                     },
                   }}
@@ -143,21 +197,33 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                           callbacks={{
                             download: {
                               onClick: () => {
-                                window.open(value.downloadUrl, "_blank");
+                                downloadResume(value.downloadUrl || "");
                               },
                               onError: (e: Error) => {
                                 const errorMessage =
                                   e.message ||
                                   "An error occurred while downloading the resume!";
-                                displayToast({
-                                  title: "An error occurred!",
-                                  description: errorMessage,
-                                  variant: "destructive",
-                                });
+                                displayErrorToast(errorMessage);
+                                dialogState.resolve?.(false);
+                                resetDialogState();
                               },
                             },
                             delete: {
                               onClick: async () => {
+                                if (dialogState.open) return;
+                                const proceed = await new Promise((resolve) => {
+                                  setDialogState({
+                                    open: true,
+                                    title: "Delete Resume",
+                                    description:
+                                      "Are you sure you want to delete the resume?",
+                                    confirmText: "Delete",
+                                    cancelText: "Cancel",
+                                    resolve,
+                                  });
+                                });
+                                if (!proceed) return;
+
                                 await deleteResume(
                                   auth.currentUser?.uid || "",
                                   value.formId
@@ -180,11 +246,9 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                                 const errorMessage =
                                   e.message ||
                                   "An error occurred while deleting the resume!";
-                                displayToast({
-                                  title: "An error occurred!",
-                                  description: errorMessage,
-                                  variant: "destructive",
-                                });
+                                displayErrorToast(errorMessage);
+                                dialogState.resolve?.(false);
+                                resetDialogState();
                               },
                             },
                           }}
@@ -197,6 +261,21 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
             )}
           </div>
         )}
+        <PopupDialog
+          open={dialogState.open}
+          title={dialogState.title}
+          description={dialogState.description}
+          confirmText={dialogState.confirmText}
+          cancelText={dialogState.cancelText}
+          onConfirm={() => {
+            dialogState.resolve?.(true);
+            resetDialogState();
+          }}
+          onCancel={() => {
+            dialogState.resolve?.(false);
+            resetDialogState();
+          }}
+        />
       </section>
     </>
   );
