@@ -11,23 +11,23 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-type DeleteConfirmationDialogProps = {
+type PopupDialogProps = {
   onCancel?: () => void;
   onConfirm?: () => void;
   cancelText?: string;
   confirmText?: string;
-  description?: string;
+  description: string;
   open?: boolean;
-  title?: string;
+  title: string;
 } & AlertDialogProps;
 
-const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
+const PopupDialog: React.FC<PopupDialogProps> = ({
   onCancel,
   onConfirm,
   cancelText = "Cancel",
   confirmText = "Continue",
-  description = "This action cannot be undone. This will permanently the data that you have entered for this section.",
-  title = "Do you want to delete this section?",
+  description,
+  title,
   open,
   ...rest
 }) => {
@@ -60,4 +60,4 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
     </AlertDialog>
   );
 };
-export default DeleteConfirmationDialog;
+export default PopupDialog;

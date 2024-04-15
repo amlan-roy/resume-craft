@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DownloadIcon, TrashIcon } from "lucide-react";
 import {
   deleteResume,
   getBaseResumeData,
@@ -13,87 +12,9 @@ import {
   UserDocumentResumeVariantData,
 } from "@/lib/types/resume-response";
 import { auth } from "@/lib/utils/firebase/config";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingSkeleton from "@/components/auth/LoadingSkeleton";
-
-// Todo: Move this to a separate component, and add tests for it as well
-const ResumeCard = ({
-  title = "Resume",
-  subtitle,
-  onDownload,
-  onDelete,
-  onError,
-}: {
-  title?: string;
-  subtitle?: string;
-  onDownload?: Function;
-  onDelete?: Function;
-  onError?: Function;
-}) => {
-  const [loadingState, setLoadingState] = useState(false);
-
-  return (
-    <Card className="w-full max-w-xl bg-brand-secondary-green-1 rounded-lg p-4">
-      <CardTitle className="text-2xl font-bold text-brand-neutral-11 break-words">
-        {title}
-      </CardTitle>
-      {subtitle && (
-        <CardDescription className="text-base text-brand-neutral-8 break-words">
-          {subtitle}
-        </CardDescription>
-      )}
-      <CardFooter className="w-full justify-end mt-4 flex-wrap px-6 py-0">
-        <Button
-          variant={"ghost"}
-          type="button"
-          title="Download the resume"
-          aria-label="Download the resume"
-          disabled={loadingState}
-          onClick={async () => {
-            try {
-              setLoadingState(() => true);
-              !loadingState && (await onDownload?.());
-              setLoadingState(() => false);
-            } catch (e) {
-              console.error(e);
-              onError?.(e);
-              setLoadingState(() => false);
-            }
-          }}
-        >
-          <DownloadIcon size={24} />
-        </Button>
-        <Button
-          variant={"ghost"}
-          type="button"
-          title="Delete the resume"
-          disabled={loadingState}
-          aria-label="Delete the resume"
-          onClick={async () => {
-            try {
-              setLoadingState(() => true);
-              !loadingState && (await onDelete?.());
-              setLoadingState(() => false);
-            } catch (e) {
-              console.error(e);
-              onError?.(e);
-              setLoadingState(() => false);
-            }
-          }}
-        >
-          <TrashIcon size={24} />
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-};
+import ResumeCard from "@/components/my-resumes/ResumeCard";
 
 type MyResumesPageProps = {};
 
@@ -159,20 +80,43 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                     baseResumeData?.timeUpdated &&
                     `Last updated: ${new Date(baseResumeData.timeUpdated).toLocaleString()}`
                   }
-                  onDownload={() => {
-                    window.open(baseResumeData.downloadUrl, "_blank");
-                  }}
-                  onDelete={async () => {
-                    await deleteResume(auth.currentUser?.uid || "", "base");
-                    setBaseResumeData(null);
-                  }}
-                  onError={(e: Error) => {
-                    const errorMessage = e.message || "An error occurred!";
-                    displayToast({
-                      title: "Error",
-                      description: errorMessage,
-                      variant: "destructive",
-                    });
+                  callbacks={{
+                    download: {
+                      onClick: () => {
+                        window.open(baseResumeData.downloadUrl, "_blank");
+                      },
+                      onError: (e: Error) => {
+                        const errorMessage =
+                          e.message ||
+                          "An error occurred while downloading the resume!";
+                        displayToast({
+                          title: "An error occurred!",
+                          description: errorMessage,
+                          variant: "destructive",
+                        });
+                      },
+                    },
+                    delete: {
+                      onClick: async () => {
+                        await deleteResume(auth.currentUser?.uid || "", "base");
+                        setBaseResumeData(null);
+                        displayToast({
+                          title: "Deleted Successfully!",
+                          description: "Deleted the resume successfully!",
+                          variant: "default",
+                        });
+                      },
+                      onError: (e: Error) => {
+                        const errorMessage =
+                          e.message ||
+                          "An error occurred while deleting the resume!";
+                        displayToast({
+                          title: "An error occurred!",
+                          description: errorMessage,
+                          variant: "destructive",
+                        });
+                      },
+                    },
                   }}
                 />
               </>
@@ -196,71 +140,24 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                             value?.timeUpdated &&
                             `Last updated: ${new Date(value.timeUpdated).toLocaleString()}`
                           }
-                          onDownload={() => {
-                            window.open(value.downloadUrl, "_blank");
-                          }}
-                          onDelete={async () => {
-                            await deleteResume(
-                              auth.currentUser?.uid || "",
-                              value.formId
-                            );
-                            setResumeVariantData((prev) => {
-                              return (
-                                prev?.filter((_, i) => {
-                                  return i !== index;
-                                }) || []
-                              );
-                            });
-                            displayToast({
-                              title: "Deleted Successfully!",
-                              description: "Deleted the resume successfully!",
-                              variant: "default",
-                            });
-                          }}
-                          onError={(e: Error) => {
-                            const errorMessage =
-                              e.message || "An error occurred!";
-                            displayToast({
-                              title: "Error",
-                              description: errorMessage,
-                              variant: "destructive",
-                            });
-                          }}
-                        />
-                        {/* <Card
-                      key={index}
-                      className="w-full bg-brand-primary-brown-3 rounded-lg"
-                    >
-                      <CardContent>
-                        <div className="w-full my-6 flex items-center justify-between flex-wrap">
-                          <div>
-                            <h3 className="text-2xl font-bold text-brand-neutral-11">
-                              {value?.downloadFileName ||
-                                `Resume Variant ${value.formId}`}
-                            </h3>
-                            {value?.timeUpdated && (
-                              <p className="text-base text-brand-neutral-8">
-                                {"Last updated: "}
-                                {new Date(value.timeUpdated).toLocaleString()}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <Button
-                              variant={"ghost"}
-                              type="button"
-                              title="Download variant resume"
-                              onClick={() => {
+                          callbacks={{
+                            download: {
+                              onClick: () => {
                                 window.open(value.downloadUrl, "_blank");
-                              }}
-                            >
-                              <DownloadIcon size={24} />
-                            </Button>
-                            <Button
-                              variant={"ghost"}
-                              type="button"
-                              title="Delete variant resume"
-                              onClick={async () => {
+                              },
+                              onError: (e: Error) => {
+                                const errorMessage =
+                                  e.message ||
+                                  "An error occurred while downloading the resume!";
+                                displayToast({
+                                  title: "An error occurred!",
+                                  description: errorMessage,
+                                  variant: "destructive",
+                                });
+                              },
+                            },
+                            delete: {
+                              onClick: async () => {
                                 await deleteResume(
                                   auth.currentUser?.uid || "",
                                   value.formId
@@ -272,14 +169,26 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                                     }) || []
                                   );
                                 });
-                              }}
-                            >
-                              <TrashIcon size={24} />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card> */}
+                                displayToast({
+                                  title: "Deleted Successfully!",
+                                  description:
+                                    "Deleted the resume successfully!",
+                                  variant: "default",
+                                });
+                              },
+                              onError: (e: Error) => {
+                                const errorMessage =
+                                  e.message ||
+                                  "An error occurred while deleting the resume!";
+                                displayToast({
+                                  title: "An error occurred!",
+                                  description: errorMessage,
+                                  variant: "destructive",
+                                });
+                              },
+                            },
+                          }}
+                        />
                       </>
                     );
                   })}

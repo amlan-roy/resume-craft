@@ -14,7 +14,7 @@ import {
 import { Label } from "@/components/ui/label";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
+import PopupDialog from "../../dialog/PopupDialog";
 import DurationInput from "../form-inputs/DurationInput";
 
 const fieldName = "optionalSections";
@@ -249,7 +249,7 @@ const Education: React.FC<EducationProps> = ({
           </Button>
         </CardFooter>
       </Card>
-      <DeleteConfirmationDialog
+      <PopupDialog
         open={modalState.open}
         onCancel={() => {
           setModalState((prev) => ({

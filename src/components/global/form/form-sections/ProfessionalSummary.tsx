@@ -4,9 +4,9 @@ import { useFormContext } from "react-hook-form";
 import { SECTION, formType } from "@/lib/types/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import PopupDialog from "@/components/global/dialog/PopupDialog";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
 
 type ProfessionalSummaryProps = {
   deleteSection: () => void;
@@ -112,7 +112,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
         </CardContent>
       </Card>
 
-      <DeleteConfirmationDialog
+      <PopupDialog
         open={modalState.open}
         onCancel={() => {
           setModalState({ open: false });

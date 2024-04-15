@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Form } from "@/components/ui/form";
+import PopupDialog from "@/components/global/dialog/PopupDialog";
 import Additional from "@/components/global/form/form-sections/Additional";
 import BasicDetails from "@/components/global/form/form-sections/BasicDetails";
 import Education from "@/components/global/form/form-sections/Education";
@@ -41,7 +42,6 @@ import ProfessionalSummary from "@/components/global/form/form-sections/Professi
 import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
-import DeleteConfirmationDialog from "../DeleteConfirmationDialog";
 
 type DynamicFormProps = {
   defaultValues?: formType;
@@ -486,7 +486,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           )}
         </form>
       </Form>
-      <DeleteConfirmationDialog
+      <PopupDialog
         open={modalState.open}
         cancelText={
           confirmationModalTextCopies?.cancelText ||

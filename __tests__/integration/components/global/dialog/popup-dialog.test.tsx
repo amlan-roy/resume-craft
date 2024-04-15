@@ -1,17 +1,23 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import DeleteConfirmationDialog from "@/components/global/DeleteConfirmationDialog";
+import PopupDialog from "@/components/global/dialog/PopupDialog";
 
-describe("integration:components/global/DeleteConfirmationDialog", () => {
+describe("integration:components/global/PopupDialog", () => {
   it("snapshot", () => {
-    const tree = render(<DeleteConfirmationDialog open />);
+    const tree = render(
+      <PopupDialog
+        open
+        title="Tu Tu hai wahi dil ne jise apna kaha"
+        description="Tu hai jaha mai hu waha ab yeh jeena tere bin hai saza"
+      />
+    );
     expect(tree.container).toMatchSnapshot();
   });
 
   it("Passed in text copies render correctly", () => {
     const tree = render(
-      <DeleteConfirmationDialog
+      <PopupDialog
         title="Tu Tu hai wahi dil ne jise apna kaha"
         description="Tu hai jaha mai hu waha ab yeh jeena tere bin hai saza"
         cancelText="Ho mil jaayein is tarah"
@@ -33,7 +39,7 @@ describe("integration:components/global/DeleteConfirmationDialog", () => {
 
   it("Does not render when open prop is not provided", () => {
     const tree = render(
-      <DeleteConfirmationDialog
+      <PopupDialog
         title="Tu Tu hai wahi dil ne jise apna kaha"
         description="Tu hai jaha mai hu waha ab yeh jeena tere bin hai saza"
         cancelText="Ho mil jaayein is tarah"
@@ -59,7 +65,14 @@ describe("integration:components/global/DeleteConfirmationDialog", () => {
   it("Calls the passed onCancel callback on click of the cancel button", async () => {
     const onCancel = jest.fn();
     const user = userEvent.setup();
-    render(<DeleteConfirmationDialog open onCancel={onCancel} />);
+    render(
+      <PopupDialog
+        open
+        onCancel={onCancel}
+        title="Tu Tu hai wahi dil ne jise apna kaha"
+        description="Tu hai jaha mai hu waha ab yeh jeena tere bin hai saza"
+      />
+    );
     await user.click(screen.getByRole("button", { name: /Cancel/i }));
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
@@ -67,7 +80,14 @@ describe("integration:components/global/DeleteConfirmationDialog", () => {
   it("Calls the passed onConfirm callback on click of the cancel button", async () => {
     const onConfirm = jest.fn();
     const user = userEvent.setup();
-    render(<DeleteConfirmationDialog open onConfirm={onConfirm} />);
+    render(
+      <PopupDialog
+        open
+        onConfirm={onConfirm}
+        title="Tu Tu hai wahi dil ne jise apna kaha"
+        description="Tu hai jaha mai hu waha ab yeh jeena tere bin hai saza"
+      />
+    );
     await user.click(screen.getByRole("button", { name: /Continue/i }));
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
