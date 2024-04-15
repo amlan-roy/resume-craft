@@ -57,7 +57,6 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
       description: errorMessage,
       variant: "destructive",
     });
-    console.error(e);
   };
 
   const resetDialogState = () => {
@@ -135,6 +134,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                           e.message ||
                           "An error occurred while downloading the resume!";
                         displayErrorToast(errorMessage);
+                        console.error(e);
                         dialogState.resolve?.(false);
                         resetDialogState();
                       },
@@ -167,6 +167,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                           e.message ||
                           "An error occurred while deleting the resume!";
                         displayErrorToast(errorMessage);
+                        console.error(e);
                         dialogState.resolve?.(false);
                         resetDialogState();
                       },
@@ -204,6 +205,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                                   e.message ||
                                   "An error occurred while downloading the resume!";
                                 displayErrorToast(errorMessage);
+                                console.error(e);
                                 dialogState.resolve?.(false);
                                 resetDialogState();
                               },
@@ -247,6 +249,7 @@ const MyResumesPage: React.FC<MyResumesPageProps> = () => {
                                   e.message ||
                                   "An error occurred while deleting the resume!";
                                 displayErrorToast(errorMessage);
+                                console.error(e);
                                 dialogState.resolve?.(false);
                                 resetDialogState();
                               },
