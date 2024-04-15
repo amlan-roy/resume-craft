@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration:components/global/PopupDialog Does not render when open prop is not provided 1`] = `<div />`;
+
+exports[`integration:components/global/PopupDialog Passed in text copies render correctly 1`] = `
+<div
+  aria-hidden="true"
+  data-aria-hidden="true"
+/>
+`;
+
+exports[`integration:components/global/PopupDialog snapshot 1`] = `
+<div
+  aria-hidden="true"
+  data-aria-hidden="true"
+/>
+`;

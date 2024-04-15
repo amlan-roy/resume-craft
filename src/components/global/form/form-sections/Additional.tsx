@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
+import PopupDialog from "../../dialog/PopupDialog";
 
 type AdditionalProps = {
   deleteSection: () => void;
@@ -110,7 +110,7 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
         </CardContent>
       </Card>
 
-      <DeleteConfirmationDialog
+      <PopupDialog
         open={modalState.open}
         onCancel={() => {
           setModalState({ open: false });
