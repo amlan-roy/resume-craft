@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { sendEmailVerification } from "firebase/auth";
 import { CircleUserRoundIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useShallow } from "zustand/react/shallow";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { cn } from "@/lib/utils";
 import { auth } from "@/lib/utils/firebase/config";
@@ -17,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import LogoutButton from "@/components/auth/LogoutButton";
 import Logo from "@/components/global/Logo";
+import { useUserDataStore } from "@/components/providers/user-data-store-provider";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import EmailVerificationBanner from "./EmailVerificationBanner";
@@ -44,15 +46,16 @@ type AuthenticatedHeaderProps = {
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
   hideLogout,
 }) => {
-  const [emailVerified, setEmailVerified] = React.useState(
-    auth.currentUser?.emailVerified
+  const isAuthenticated = useUserDataStore((state) => state.isAuthenticated);
+  const isEmailVerified = useUserDataStore((state) => state.isEmailVerified);
+  const verifyAndSetEmailVerified = useUserDataStore(
+    (state) => state.verifyAndSetEmailVerified
   );
-
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
-    setEmailVerified(auth.currentUser?.emailVerified);
-  }, [auth.currentUser]);
+    verifyAndSetEmailVerified(isEmailVerified);
+  }, [verifyAndSetEmailVerified]);
 
   const { toast: displayToast } = useToast();
 
@@ -73,7 +76,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
         });
         return;
       }
-      if (auth.currentUser && !auth.currentUser?.emailVerified) {
+      if (auth.currentUser && !isEmailVerified) {
         await sendEmailVerification(auth.currentUser);
         setLastAuthRequestSent(Date.now().toString());
         displayToast({
@@ -93,7 +96,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
 
   return (
     <>
-      {!emailVerified && !bannerDismissed && (
+      {isAuthenticated && !isEmailVerified && !bannerDismissed && (
         <EmailVerificationBanner
           onDismiss={() => {
             setBannerDismissed(true);
@@ -117,7 +120,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
                 </div>
                 <DropdownMenuSeparator className="my-4" />
                 <ThemeSwitch />
-                {emailVerified === false && (
+                {isAuthenticated && !isEmailVerified && (
                   <>
                     <DropdownMenuSeparator className="my-4" />
                     <Button
@@ -130,7 +133,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
                   </>
                 )}
                 <DropdownMenuSeparator className="my-4" />
-                <LogoutButton buttonClass="w-full" />
+                {isAuthenticated && <LogoutButton buttonClass="w-full" />}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
