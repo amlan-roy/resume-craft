@@ -21,8 +21,12 @@ type ModalStateContextType = {
   setModalState: (newState: ModalState) => void;
 };
 
-export const ModalStateContext =
-  React.createContext<ModalStateContextType | null>(null);
+export const ModalStateContext = React.createContext<ModalStateContextType>({
+  modalState: {
+    isOpen: false,
+  },
+  setModalState: () => console.warn("No modal state provider"),
+});
 
 const ModalStateProvider: React.FC<ModalStateProviderProps> = ({
   children,
@@ -31,19 +35,16 @@ const ModalStateProvider: React.FC<ModalStateProviderProps> = ({
     isOpen: false,
   });
 
-  const setModalStateHandler = useCallback(
-    (newState: ModalState) => {
-      setModalState(() => newState);
-    },
-    [modalState]
-  );
+  const setModalStateHandler = useCallback((newState: ModalState) => {
+    setModalState(() => newState);
+  }, []);
 
   const modalStateContextValue = React.useMemo(() => {
     return {
       modalState,
       setModalState: setModalStateHandler,
     };
-  }, [modalState]);
+  }, [modalState, setModalStateHandler]);
 
   return (
     <ModalStateContext.Provider value={modalStateContextValue}>

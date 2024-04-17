@@ -68,7 +68,7 @@ const Skills: React.FC<SkillsProps> = ({
 
   if (!modalStateContext) {
     throw new Error(
-      "Additional section component must be used within a DynamicForm component"
+      "Skills section component must be used within a DynamicForm component"
     );
   }
 

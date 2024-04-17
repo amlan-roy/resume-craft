@@ -68,7 +68,7 @@ const Education: React.FC<EducationProps> = ({
   const modalStateContext = useContext(ModalStateContext);
   if (!modalStateContext) {
     throw new Error(
-      "Additional section component must be used within a DynamicForm component"
+      "Education section component must be used within a DynamicForm component"
     );
   }
 

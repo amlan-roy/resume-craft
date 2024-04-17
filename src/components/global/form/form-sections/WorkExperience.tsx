@@ -69,7 +69,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({
 
   if (!modalStateContext) {
     throw new Error(
-      "Additional section component must be used within a DynamicForm component"
+      "WorkExperience section component must be used within a DynamicForm component"
     );
   }
 

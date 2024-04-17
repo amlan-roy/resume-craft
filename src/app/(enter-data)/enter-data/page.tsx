@@ -76,7 +76,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           });
       }
     });
-  }, []);
+  });
 
   return (
     <>

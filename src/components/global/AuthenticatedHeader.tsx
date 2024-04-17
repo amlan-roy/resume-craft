@@ -55,7 +55,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
 
   useEffect(() => {
     verifyAndSetEmailVerified(isEmailVerified);
-  }, [verifyAndSetEmailVerified]);
+  });
 
   const { toast: displayToast } = useToast();
 

@@ -68,7 +68,7 @@ const Projects: React.FC<ProjectsProps> = ({
   const modalStateContext = useContext(ModalStateContext);
   if (!modalStateContext) {
     throw new Error(
-      "Additional section component must be used within a DynamicForm component"
+      "Projects section component must be used within a DynamicForm component"
     );
   }
 

@@ -37,7 +37,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
   const modalStateContext = useContext(ModalStateContext);
   if (!modalStateContext) {
     throw new Error(
-      "Additional section component must be used within a DynamicForm component"
+      "ProfessionalSummary section component must be used within a DynamicForm component"
     );
   }
 
