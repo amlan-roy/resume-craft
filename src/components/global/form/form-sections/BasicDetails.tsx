@@ -1,9 +1,10 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { SECTION, formType } from "@/lib/types/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
+import SectionTemplate from "@/components/global/form/form-sections/SectionTemplate";
 
 type BasicDetailsProps = {
   sectionTitle?: string;
@@ -26,15 +27,11 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
   } = useFormContext<formType>();
 
   return (
-    <Card
-      data-testid="form-sections__basic-details"
-      className="bg-brand-secondary-blue-1"
+    <SectionTemplate
+      sectionType={SECTION.BASIC_DETAILS}
+      fieldName={fieldName}
+      register={register}
     >
-      <HiddenInput
-        fieldName={fieldName && `${fieldName}.type`}
-        value={SECTION.BASIC_DETAILS}
-        register={register}
-      />
       <CardHeader className="text-brand-neutral-11 text-3xl md:text-4xl">
         {sectionTitle && <CardTitle>{sectionTitle}</CardTitle>}
       </CardHeader>
@@ -126,7 +123,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
           errorMessage={errors?.[fieldName]?.fields?.blogUrl?.message}
         />
       </CardContent>
-    </Card>
+    </SectionTemplate>
   );
 };
 export default BasicDetails;
