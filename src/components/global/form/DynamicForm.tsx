@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -42,6 +42,7 @@ import ProfessionalSummary from "@/components/global/form/form-sections/Professi
 import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
+import ModalStateProvider, { ModalStateContext } from "./modal-state-provider";
 
 type DynamicFormProps = {
   defaultValues?: formType;
@@ -65,6 +66,14 @@ const TEXT_COPIES = {
   },
 };
 
+const WrappedDynamicForm: React.FC<DynamicFormProps> = ({ ...props }) => {
+  return (
+    <ModalStateProvider>
+      <DynamicForm {...props} />
+    </ModalStateProvider>
+  );
+};
+
 const DynamicForm: React.FC<DynamicFormProps> = ({
   defaultValues = DEFAULT_FORM_VALUE as formType,
   onSubmit,
@@ -74,12 +83,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const form = useForm<formType>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
-  });
-
-  const [modalState, setModalState] = useState<{
-    open: boolean;
-  }>({
-    open: false,
   });
 
   const {
@@ -138,14 +141,53 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     }
   };
 
+  const modalStateContext = useContext(ModalStateContext);
+
+  if (!modalStateContext) {
+    throw new Error(
+      "DynamicForm component must be used within a ModalStateProvider"
+    );
+  }
+
+  const {
+    isOpen: modalOpen,
+    title: modalTitle,
+    message: modalMessage,
+    confirmText: modalConfirmText,
+    cancelText: modalCancelText,
+    onConfirm: modalOnConfirm,
+    onCancel: modalOnCancel,
+  } = modalStateContext.modalState;
+
   return (
-    <>
+    <ModalStateProvider>
       <Form {...form}>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             const fieldsValid = await trigger(undefined, { shouldFocus: true });
-            fieldsValid && setModalState({ open: true });
+            fieldsValid &&
+              modalStateContext.setModalState({
+                isOpen: true,
+                title:
+                  confirmationModalTextCopies?.title || TEXT_COPIES.MODAL.title,
+                message:
+                  confirmationModalTextCopies?.description ||
+                  TEXT_COPIES.MODAL.description,
+                confirmText:
+                  confirmationModalTextCopies?.confirmText ||
+                  TEXT_COPIES.MODAL.confirmText,
+                cancelText:
+                  confirmationModalTextCopies?.cancelText ||
+                  TEXT_COPIES.MODAL.cancelText,
+                onConfirm: () => {
+                  handleSubmit(onSubmit)();
+                  modalStateContext.setModalState({ isOpen: false });
+                },
+                onCancel: () => {
+                  modalStateContext.setModalState({ isOpen: false });
+                },
+              });
           }}
           className="space-y-8"
         >
@@ -157,9 +199,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               </>
             ) : (
               <>
-                {/* Todo: Fix This Later */}
-                {/* @ts-ignore */}
-                <BasicDetails fieldName={"basicDetails"} />
+                <BasicDetails fieldName={"basicDetails" as const} />
                 {fields.map((field, sectionIndex) => {
                   switch (field.type) {
                     case SECTION.PROFESSIONAL_SUMMARY:
@@ -487,27 +527,19 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         </form>
       </Form>
       <PopupDialog
-        open={modalState.open}
-        cancelText={
-          confirmationModalTextCopies?.cancelText ||
-          TEXT_COPIES.MODAL.cancelText
-        }
-        confirmText={
-          confirmationModalTextCopies?.confirmText ||
-          TEXT_COPIES.MODAL.confirmText
-        }
-        description={
-          confirmationModalTextCopies?.description ||
-          TEXT_COPIES.MODAL.description
-        }
-        title={confirmationModalTextCopies?.title || TEXT_COPIES.MODAL.title}
-        onCancel={() => setModalState({ open: false })}
+        open={modalOpen}
+        cancelText={modalCancelText || TEXT_COPIES.MODAL.cancelText}
+        confirmText={modalConfirmText || TEXT_COPIES.MODAL.confirmText}
+        description={modalMessage || TEXT_COPIES.MODAL.description}
+        title={modalTitle || TEXT_COPIES.MODAL.title}
+        onCancel={() => {
+          modalOnCancel?.();
+        }}
         onConfirm={() => {
-          handleSubmit(onSubmit)();
-          setModalState({ open: false });
+          modalOnConfirm?.();
         }}
       />
-    </>
+    </ModalStateProvider>
   );
 };
-export default DynamicForm;
+export default WrappedDynamicForm;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
@@ -12,10 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import DurationInput from "@/components/global/form/form-inputs/DurationInput";
 import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
-import PopupDialog from "../../dialog/PopupDialog";
-import DurationInput from "../form-inputs/DurationInput";
+import { ModalStateContext } from "@/components/global/form/modal-state-provider";
 
 const fieldName = "optionalSections";
 
@@ -64,220 +64,216 @@ const Projects: React.FC<ProjectsProps> = ({
   updateFields,
 }) => {
   const { register } = useFormContext<formType>();
-  const [modalState, setModalState] = useState<{
-    open: boolean;
-    type: "DELETE_SECTION" | "DELETE_SUBSECTION" | "DELETE_LAST_SUBSECTION";
-    subsectionToDeleteIndex?: number;
-  }>({
-    open: false,
-    type: "DELETE_SECTION",
-  });
+
+  const modalStateContext = useContext(ModalStateContext);
+  if (!modalStateContext) {
+    throw new Error(
+      "Additional section component must be used within a DynamicForm component"
+    );
+  }
+
+  const handleDelete = (
+    subSectionIndex?: number,
+    isLastSubsection?: boolean
+  ) => {
+    const modalTextKey = subSectionIndex
+      ? isLastSubsection
+        ? "DELETE_LAST_SUBSECTION"
+        : "DELETE_SUBSECTION"
+      : "DELETE_SECTION";
+
+    const onConfirm = () => {
+      if (subSectionIndex && !isLastSubsection) {
+        updateFields?.(false, subSectionIndex);
+      } else {
+        deleteSection?.();
+      }
+      modalStateContext.setModalState({ isOpen: false });
+    };
+
+    const onCancel = () => {
+      modalStateContext.setModalState({ isOpen: false });
+    };
+
+    modalStateContext.setModalState({
+      title: TEXT_COPIES.MODAL?.[modalTextKey].title,
+      message: TEXT_COPIES.MODAL?.[modalTextKey].description,
+      isOpen: true,
+      confirmText: TEXT_COPIES.MODAL?.[modalTextKey].confirmText,
+      cancelText: TEXT_COPIES.MODAL?.[modalTextKey].cancelText,
+      onConfirm,
+      onCancel,
+    });
+  };
 
   return (
-    <>
-      <Card
-        data-card-type={SECTION.PROJECTS}
-        className="bg-brand-secondary-blue-1"
-      >
-        <HiddenInput
-          fieldName={
-            fieldName && (index !== undefined || index !== null)
-              ? `${fieldName}.${index}.type`
-              : undefined
-          }
-          value={SECTION.PROJECTS}
-          register={register}
-        />
-        <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
-          <CardTitle className="w-full max-w-[75%]">
-            <Label>Section Title:</Label>
-            <TextInput
-              fieldName={
-                fieldName && (index !== undefined || index !== null)
-                  ? `${fieldName}.${index}.sectionTitle`
-                  : undefined
-              }
-              register={register}
-              inputClassName="text-xl md:text-2xl py-6"
-              placeholder="Relevant Projects"
-              errorMessage={fieldErrors?.sectionTitle?.message}
-            />
-          </CardTitle>
-
-          <Button
-            className="ml-auto"
-            onClick={() => {
-              setModalState({
-                open: true,
-                type: "DELETE_SECTION",
-              });
-            }}
-            type="button"
-            variant={"ghost"}
-            title="Delete this section"
-          >
-            <Trash2Icon />
-          </Button>
-        </CardHeader>
-        <CardContent className="flex flex-wrap w-full gap-5">
-          {fields?.map((field, subSectionIndex) => (
-            <Card
-              className="w-full"
-              key={`projects-${index}-subsection-${subSectionIndex}`}
-            >
-              <CardHeader className="items-end">
-                <Button
-                  type="button"
-                  variant={"ghost"}
-                  className="w-fit"
-                  onClick={() =>
-                    setModalState({
-                      open: true,
-                      type:
-                        fields.length > 1
-                          ? "DELETE_SUBSECTION"
-                          : "DELETE_LAST_SUBSECTION",
-                      subsectionToDeleteIndex: subSectionIndex,
-                    })
-                  }
-                  title="Delete this sub-section"
-                >
-                  <Trash2Icon className=" w-5 h-5" />
-                </Button>
-              </CardHeader>
-              <CardContent className="flex flex-row flex-wrap gap-10">
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectTitle`
-                      : undefined
-                  }
-                  register={register}
-                  label="Project Title"
-                  placeholder="Jalebi Maker"
-                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
-                  errorMessage={
-                    fieldErrors?.fields?.[subSectionIndex]?.projectTitle
-                      ?.message
-                  }
-                />
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectSubtitle`
-                      : undefined
-                  }
-                  label="Project Subtitle"
-                  register={register}
-                  placeholder="Food Tech, Electronics, Automation"
-                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
-                  errorMessage={
-                    fieldErrors?.fields?.[subSectionIndex]?.projectSubtitle
-                      ?.message
-                  }
-                />
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectUrl`
-                      : undefined
-                  }
-                  register={register}
-                  label="Project Url"
-                  autoComplete="url"
-                  placeholder="www.jalebi-maker.com"
-                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
-                  errorMessage={
-                    fieldErrors?.fields?.[subSectionIndex]?.projectUrl?.message
-                  }
-                />
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].associatedWith`
-                      : undefined
-                  }
-                  register={register}
-                  label="Associated with"
-                  autoComplete="organization"
-                  placeholder="Gada Electronics"
-                  className="w-full lg:max-w-[30%] md:max-w-[45%]"
-                  errorMessage={
-                    fieldErrors?.fields?.[subSectionIndex]?.associatedWith
-                      ?.message
-                  }
-                />
-                <DurationInput
-                  fieldName={`${fieldName}.[${index}].fields.[${subSectionIndex}].duration`}
-                  subFieldNames={{
-                    startDate: "startDate",
-                    endDate: "endDate",
-                    current: "current",
-                  }}
-                  labels={{
-                    startDate: "Start Date",
-                    endDate: "End Date",
-                    current: "I am currently working on this project",
-                  }}
-                />
-                <TextInput
-                  fieldName={
-                    fieldName && (index !== undefined || index !== null)
-                      ? `${fieldName}.[${index}].fields.[${subSectionIndex}].details`
-                      : undefined
-                  }
-                  label="Description"
-                  multiline
-                  register={register}
-                  placeholder={
-                    '- Created Jalebi Maker Machine- Goes well with "Chi Piyo, Biscuit Khao"\n-Got Funding from Gada Electronics'
-                  }
-                  className="w-full"
-                  errorMessage={
-                    fieldErrors?.fields?.[subSectionIndex]?.details?.message
-                  }
-                />
-              </CardContent>
-            </Card>
-          ))}
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="button"
-            variant={"outline"}
-            onClick={() => updateFields?.(true)}
-            className="py-6"
-          >
-            <PlusCircleIcon className="w-8 h-8 mr-4" />
-            <span className="text-base">Add Sub Section</span>
-          </Button>
-        </CardFooter>
-      </Card>
-      <PopupDialog
-        open={modalState.open}
-        onCancel={() => {
-          setModalState((prev) => ({
-            ...prev,
-            open: false,
-            subsectionToDeleteIndex: undefined,
-          }));
-        }}
-        onConfirm={() => {
-          ["DELETE_SECTION", "DELETE_LAST_SUBSECTION"].includes(modalState.type)
-            ? deleteSection?.()
-            : updateFields?.(false, modalState.subsectionToDeleteIndex);
-          setModalState((prev) => ({
-            ...prev,
-            open: false,
-            subsectionToDeleteIndex: undefined,
-          }));
-        }}
-        title={TEXT_COPIES.MODAL?.[modalState.type].title}
-        description={TEXT_COPIES.MODAL?.[modalState.type].description}
-        cancelText={TEXT_COPIES.MODAL?.[modalState.type].cancelText}
-        confirmText={TEXT_COPIES.MODAL?.[modalState.type].confirmText}
+    <Card
+      data-card-type={SECTION.PROJECTS}
+      className="bg-brand-secondary-blue-1"
+    >
+      <HiddenInput
+        fieldName={
+          fieldName && (index !== undefined || index !== null)
+            ? `${fieldName}.${index}.type`
+            : undefined
+        }
+        value={SECTION.PROJECTS}
+        register={register}
       />
-    </>
+      <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
+        <CardTitle className="w-full max-w-[75%]">
+          <Label>Section Title:</Label>
+          <TextInput
+            fieldName={
+              fieldName && (index !== undefined || index !== null)
+                ? `${fieldName}.${index}.sectionTitle`
+                : undefined
+            }
+            register={register}
+            inputClassName="text-xl md:text-2xl py-6"
+            placeholder="Relevant Projects"
+            errorMessage={fieldErrors?.sectionTitle?.message}
+          />
+        </CardTitle>
+
+        <Button
+          className="ml-auto"
+          onClick={() => {
+            handleDelete();
+          }}
+          type="button"
+          variant={"ghost"}
+          title="Delete this section"
+        >
+          <Trash2Icon />
+        </Button>
+      </CardHeader>
+      <CardContent className="flex flex-wrap w-full gap-5">
+        {fields?.map((field, subSectionIndex) => (
+          <Card
+            className="w-full"
+            key={`projects-${index}-subsection-${subSectionIndex}`}
+          >
+            <CardHeader className="items-end">
+              <Button
+                type="button"
+                variant={"ghost"}
+                className="w-fit"
+                onClick={() =>
+                  handleDelete(subSectionIndex, fields.length === 1)
+                }
+                title="Delete this sub-section"
+              >
+                <Trash2Icon className=" w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="flex flex-row flex-wrap gap-10">
+              <TextInput
+                fieldName={
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectTitle`
+                    : undefined
+                }
+                register={register}
+                label="Project Title"
+                placeholder="Jalebi Maker"
+                className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                errorMessage={
+                  fieldErrors?.fields?.[subSectionIndex]?.projectTitle?.message
+                }
+              />
+              <TextInput
+                fieldName={
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectSubtitle`
+                    : undefined
+                }
+                label="Project Subtitle"
+                register={register}
+                placeholder="Food Tech, Electronics, Automation"
+                className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                errorMessage={
+                  fieldErrors?.fields?.[subSectionIndex]?.projectSubtitle
+                    ?.message
+                }
+              />
+              <TextInput
+                fieldName={
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].projectUrl`
+                    : undefined
+                }
+                register={register}
+                label="Project Url"
+                autoComplete="url"
+                placeholder="www.jalebi-maker.com"
+                className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                errorMessage={
+                  fieldErrors?.fields?.[subSectionIndex]?.projectUrl?.message
+                }
+              />
+              <TextInput
+                fieldName={
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].associatedWith`
+                    : undefined
+                }
+                register={register}
+                label="Associated with"
+                autoComplete="organization"
+                placeholder="Gada Electronics"
+                className="w-full lg:max-w-[30%] md:max-w-[45%]"
+                errorMessage={
+                  fieldErrors?.fields?.[subSectionIndex]?.associatedWith
+                    ?.message
+                }
+              />
+              <DurationInput
+                fieldName={`${fieldName}.[${index}].fields.[${subSectionIndex}].duration`}
+                subFieldNames={{
+                  startDate: "startDate",
+                  endDate: "endDate",
+                  current: "current",
+                }}
+                labels={{
+                  startDate: "Start Date",
+                  endDate: "End Date",
+                  current: "I am currently working on this project",
+                }}
+              />
+              <TextInput
+                fieldName={
+                  fieldName && (index !== undefined || index !== null)
+                    ? `${fieldName}.[${index}].fields.[${subSectionIndex}].details`
+                    : undefined
+                }
+                label="Description"
+                multiline
+                register={register}
+                placeholder={
+                  '- Created Jalebi Maker Machine- Goes well with "Chi Piyo, Biscuit Khao"\n-Got Funding from Gada Electronics'
+                }
+                className="w-full"
+                errorMessage={
+                  fieldErrors?.fields?.[subSectionIndex]?.details?.message
+                }
+              />
+            </CardContent>
+          </Card>
+        ))}
+      </CardContent>
+      <CardFooter>
+        <Button
+          type="button"
+          variant={"outline"}
+          onClick={() => updateFields?.(true)}
+          className="py-6"
+        >
+          <PlusCircleIcon className="w-8 h-8 mr-4" />
+          <span className="text-base">Add Sub Section</span>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 export default Projects;
