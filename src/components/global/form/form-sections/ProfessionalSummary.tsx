@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { Trash2Icon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { SECTION, formType } from "@/lib/types/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
+import SectionTemplate from "@/components/global/form/form-sections/SectionTemplate";
 import { ModalStateContext } from "@/components/global/form/modal-state-provider";
 
 type ProfessionalSummaryProps = {
@@ -59,20 +59,12 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
   };
 
   return (
-    <Card
-      data-testid="form-sections__professional-summary"
-      data-card-type={SECTION.PROFESSIONAL_SUMMARY}
-      className="bg-brand-secondary-blue-1"
+    <SectionTemplate
+      sectionType={SECTION.PROFESSIONAL_SUMMARY}
+      fieldName={fieldName}
+      register={register}
+      sectionIndex={index}
     >
-      <HiddenInput
-        fieldName={
-          index !== undefined && index !== null
-            ? `${fieldName}.${index}.type`
-            : undefined
-        }
-        value={SECTION.PROFESSIONAL_SUMMARY}
-        register={register}
-      />
       <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
         <CardTitle className="w-full max-w-[75%]">
           <Label>Section Title:</Label>
@@ -124,7 +116,7 @@ const ProfessionalSummary: React.FC<ProfessionalSummaryProps> = ({
           }
         />
       </CardContent>
-    </Card>
+    </SectionTemplate>
   );
 };
 export default ProfessionalSummary;

@@ -5,10 +5,10 @@ import { Trash2Icon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { SECTION, formType } from "@/lib/types/form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
+import SectionTemplate from "@/components/global/form/form-sections/SectionTemplate";
 import { ModalStateContext } from "../modal-state-provider";
 
 type AdditionalProps = {
@@ -59,19 +59,12 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
   };
 
   return (
-    <Card
-      data-card-type={SECTION.ADDITIONAL}
-      className="bg-brand-secondary-blue-1"
+    <SectionTemplate
+      sectionType={SECTION.ADDITIONAL}
+      fieldName={fieldName}
+      register={register}
+      sectionIndex={index}
     >
-      <HiddenInput
-        fieldName={
-          index !== undefined && index !== null
-            ? `${fieldName}.${index}.type`
-            : undefined
-        }
-        value={SECTION.ADDITIONAL}
-        register={register}
-      />
       <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
         <CardTitle className="w-full max-w-[75%]">
           <Label>Section Title:</Label>
@@ -126,7 +119,7 @@ const Additional: React.FC<AdditionalProps> = ({ deleteSection, index }) => {
           }
         />
       </CardContent>
-    </Card>
+    </SectionTemplate>
   );
 };
 export default Additional;

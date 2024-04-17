@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import DurationInput from "@/components/global/form/form-inputs/DurationInput";
-import HiddenInput from "@/components/global/form/form-inputs/HiddenInput";
 import TextInput from "@/components/global/form/form-inputs/TextInput";
+import SectionTemplate from "@/components/global/form/form-sections/SectionTemplate";
 import { ModalStateContext } from "@/components/global/form/modal-state-provider";
 
 const fieldName = "optionalSections";
@@ -107,19 +107,12 @@ const Education: React.FC<EducationProps> = ({
   };
 
   return (
-    <Card
-      data-card-type={SECTION.EDUCATION}
-      className="bg-brand-secondary-blue-1"
+    <SectionTemplate
+      sectionType={SECTION.EDUCATION}
+      fieldName={fieldName}
+      register={register}
+      sectionIndex={index}
     >
-      <HiddenInput
-        fieldName={
-          fieldName && (index !== undefined || index !== null)
-            ? `${fieldName}.${index}.type`
-            : undefined
-        }
-        value={SECTION.EDUCATION}
-        register={register}
-      />
       <CardHeader className="text-brand-neutral-11 flex flex-row flex-wrap w-full justify-between">
         <CardTitle className="w-full max-w-[75%]">
           <Label>Section Title:</Label>
@@ -268,7 +261,7 @@ const Education: React.FC<EducationProps> = ({
           <span className="text-base">Add Sub Section</span>
         </Button>
       </CardFooter>
-    </Card>
+    </SectionTemplate>
   );
 };
 export default Education;
