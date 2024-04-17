@@ -103,7 +103,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
         });
       }
     });
-  }, []);
+  });
 
   React.useEffect(() => {
     const subscription = watch((value) => {
