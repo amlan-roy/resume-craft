@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/providers/components/theme-provider";
-import { UserDataStoreProvider } from "@/components/providers/user-data-store-provider";
+import RootWrapper from "@/components/global/wrappers/root/RootWrapper";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,9 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={cn(inter.className, "min-h-screen flex flex-col")}>
-        <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
-          <UserDataStoreProvider>{children}</UserDataStoreProvider>
-        </ThemeProvider>
+        <RootWrapper>{children}</RootWrapper>
       </body>
     </html>
   );
