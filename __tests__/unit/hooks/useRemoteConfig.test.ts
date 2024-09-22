@@ -1,10 +1,20 @@
 import { act, renderHook } from "@testing-library/react";
+import * as firebaseAuth from "firebase/auth";
 import { fetchAndActivate, getRemoteConfig } from "firebase/remote-config";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import { expectError } from "@/lib/utils/test-helpers/console-mocks";
 import { remoteConfigMock } from "@/lib/utils/test-helpers/hooks/remoteConfigHelpers";
 
 jest.mock("firebase/remote-config");
+jest.mock("firebase/auth", () => ({
+  ...jest.requireActual("firebase/auth"),
+  signInWithEmailAndPassword: jest.fn(),
+  getIdToken: jest.fn(),
+  EmailAuthProvider: jest.fn(),
+  GoogleAuthProvider: jest.fn(),
+  getAuth: jest.fn(),
+  sendPasswordResetEmail: jest.fn(),
+}));
 
 describe("useRemoteConfig", () => {
   beforeEach(() => {
