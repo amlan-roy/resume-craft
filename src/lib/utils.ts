@@ -1,3 +1,6 @@
+/**
+ * Util file used by shad cn components
+ */
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
