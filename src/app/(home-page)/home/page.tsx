@@ -25,7 +25,7 @@ const Page: React.FC<PageProps> = () => {
         {isExperimentEnabled(EXPERIMENT_NAMES.TEST_EXPERIMENT_NAME) ? (
           <p>Experiment is enabled</p>
         ) : (
-          <></>
+          <>Experiment is not enabled</>
         )}
         <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12">
           <Link href={"/generate-resume"}>
