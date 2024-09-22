@@ -18,19 +18,20 @@ const Page: React.FC<PageProps> = () => {
         <p className="md:text-2xl text-base text-brand-neutral-8 mt-14 text-center">
           Select what you want to do today?
         </p>
-        <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12">
-          <Link href={"/generate-resume"}>
+        <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12 max-w-64 mx-auto">
+          <Link href={"/generate-resume"} className="w-full">
             <Button
-              className="w-fit"
+              className="w-full text-wrap"
               variant={"outline"}
               title="Generate Base Resume"
             >
-              <span className="max-w-64">Generate Base Resume</span>
+              Generate Base Resume
             </Button>
           </Link>
 
           <Button
             variant={"outline"}
+            className="w-full text-wrap"
             title="Generate resume variant"
             onClick={(e) => {
               e.preventDefault();
@@ -40,13 +41,21 @@ const Page: React.FC<PageProps> = () => {
           >
             Generate Variant
           </Button>
-          <Link href={"/enter-data"}>
-            <Button title="Edit base resume data" variant={"outline"}>
+          <Link href={"/enter-data"} className="w-full">
+            <Button
+              title="Edit base resume data"
+              variant={"outline"}
+              className="w-full text-wrap"
+            >
               Edit Base Resume
             </Button>
           </Link>
-          <Link href={"/my-resumes"}>
-            <Button title="View your generated resumes" variant={"outline"}>
+          <Link href={"/my-resumes"} className="w-full">
+            <Button
+              title="View your generated resumes"
+              variant={"outline"}
+              className="w-full text-wrap"
+            >
               View your generated resumes
             </Button>
           </Link>
