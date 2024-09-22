@@ -3,15 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
-import { EXPERIMENT_NAMES } from "@/lib/utils/firebase/constants/experiments";
 import { Button } from "@/components/ui/button";
 
 type PageProps = {};
 
 const Page: React.FC<PageProps> = () => {
   const router = useRouter();
-  const [, isExperimentEnabled] = useRemoteConfig();
   return (
     <>
       <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">
@@ -21,12 +18,6 @@ const Page: React.FC<PageProps> = () => {
         <p className="md:text-2xl text-base text-brand-neutral-8 mt-14 text-center">
           Select what you want to do today?
         </p>
-
-        {isExperimentEnabled(EXPERIMENT_NAMES.TEST_EXPERIMENT_NAME) ? (
-          <p>Experiment is enabled</p>
-        ) : (
-          <>Experiment is not enabled</>
-        )}
         <div className="flex w-full flex-wrap items-center flex-col gap-6 mt-12">
           <Link href={"/generate-resume"}>
             <Button
