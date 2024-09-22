@@ -1,10 +1,13 @@
-// RootWrapper.test.tsx
 import React from "react";
 import "@testing-library/jest-dom";
 import { render, waitFor } from "@testing-library/react";
 import { fetchAndActivate } from "firebase/remote-config";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import { expectError } from "@/lib/utils/test-helpers/console-mocks";
+import {
+  getMockAuth,
+  getMockUser,
+} from "@/lib/utils/test-helpers/hooks/authentication/authHelpers";
 import RootWrapper from "@/components/global/wrappers/root/RootWrapper";
 
 jest.mock("@/lib/hooks/useRemoteConfig");
@@ -28,6 +31,12 @@ Object.defineProperty(window, "matchMedia", {
 describe("RootWrapper", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mock("@/lib/utils/firebase/config", () => ({
+      auth: getMockAuth({
+        user: getMockUser(),
+        authStateReady: () => Promise.resolve(true),
+      }),
+    }));
   });
 
   it("should render children when remote config is loaded", async () => {

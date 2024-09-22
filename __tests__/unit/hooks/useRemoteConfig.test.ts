@@ -8,12 +8,8 @@ import { remoteConfigMock } from "@/lib/utils/test-helpers/hooks/remoteConfigHel
 jest.mock("firebase/remote-config");
 jest.mock("firebase/auth", () => ({
   ...jest.requireActual("firebase/auth"),
-  signInWithEmailAndPassword: jest.fn(),
-  getIdToken: jest.fn(),
-  EmailAuthProvider: jest.fn(),
   GoogleAuthProvider: jest.fn(),
   getAuth: jest.fn(),
-  sendPasswordResetEmail: jest.fn(),
 }));
 
 describe("useRemoteConfig", () => {
