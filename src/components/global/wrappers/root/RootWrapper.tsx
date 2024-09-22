@@ -39,12 +39,6 @@ const RootWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         setError(err);
       });
 
-    // remoteConfigPromise &&
-    //   remoteConfigPromise.then(() => {
-    //     setIsLoading(false);
-    //     setError(undefined);
-    //   });
-
     return () => {};
   }, [remoteConfig, remoteConfigPromise]);
 
