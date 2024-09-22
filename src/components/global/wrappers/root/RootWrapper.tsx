@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchAndActivate } from "firebase/remote-config";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import { mailToLinks } from "@/lib/utils/string-helpers";
@@ -26,22 +26,26 @@ const RootWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   };
 
   useEffect(() => {
-    loadApp().catch((err) => {
-      const errorMessage =
-        err.message || "An error occurred while loading the app";
-      console.error(new Error(errorMessage));
-      setIsLoading(false);
-      setError(err);
-    });
-
-    if (
-      remoteConfigPromise &&
-      remoteConfigPromise.then(() => {
+    loadApp()
+      .then(() => {
         setIsLoading(false);
         setError(undefined);
       })
-    )
-      return () => {};
+      .catch((err) => {
+        const errorMessage =
+          err.message || "An error occurred while loading the app";
+        console.error(new Error(errorMessage));
+        setIsLoading(false);
+        setError(err);
+      });
+
+    // remoteConfigPromise &&
+    //   remoteConfigPromise.then(() => {
+    //     setIsLoading(false);
+    //     setError(undefined);
+    //   });
+
+    return () => {};
   }, [remoteConfig, remoteConfigPromise]);
 
   return (
@@ -55,7 +59,7 @@ const RootWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           <div className="flex-grow flex w-full h-full justify-center items-center mt-9">
             <span>
               <h1 className="text-red-700 text-lg">
-                An error occurred while loading the app. Please try again later
+                An error occurred while loading the app. Please try again later.
               </h1>
               <p className="text-gray-400 text-sm">
                 If the issue persists, please contact{" "}
@@ -70,6 +74,7 @@ const RootWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
                 >
                   support
                 </a>
+                !
               </p>
             </span>
           </div>

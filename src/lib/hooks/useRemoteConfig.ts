@@ -26,18 +26,22 @@ function useRemoteConfig() {
     useState<Promise<void> | null>(null);
 
   useEffect(() => {
-    const remoteConfig = getRemoteConfig(app);
-    remoteConfig.settings.minimumFetchIntervalMillis = 3000;
-    remoteConfig.defaultConfig = EXPERIMENTS;
+    try {
+      const remoteConfig = getRemoteConfig(app);
+      remoteConfig.settings.minimumFetchIntervalMillis = 3000;
+      remoteConfig.defaultConfig = EXPERIMENTS;
 
-    const promise = fetchAndActivate(remoteConfig)
-      .then(() => {
-        setRemoteConfig(remoteConfig);
-      })
-      .catch((error) => {
-        console.error("Error fetching remote config:", error);
-      });
-    setRemoteConfigPromise(promise);
+      const promise = fetchAndActivate(remoteConfig)
+        .then(() => {
+          setRemoteConfig(remoteConfig);
+        })
+        .catch((error) => {
+          console.error("Error fetching remote config:", error);
+        });
+      setRemoteConfigPromise(promise);
+    } catch (error) {
+      console.error("Error fetching remote config:", error);
+    }
   }, []);
 
   const getExperimentValue = (experimentName: string): string => {
