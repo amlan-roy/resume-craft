@@ -9,6 +9,7 @@ type PageProps = {};
 
 const Page: React.FC<PageProps> = () => {
   const router = useRouter();
+
   return (
     <>
       <section className="max-w-screen-xl overflow-hidden px-4 sm:px-6 mt-10 mx-auto mb-28">

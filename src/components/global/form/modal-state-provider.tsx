@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 
 type ModalStateProviderProps = {
   children: React.ReactNode;
