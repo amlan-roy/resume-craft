@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { addCreditsToUsers } from "@/lib/utils/firebase/database/users";
 import { Button } from "@/components/ui/button";
 
 type PageProps = {};

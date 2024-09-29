@@ -140,7 +140,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
         });
         return;
       }
-      if (userData.credits <= 0) {
+      if (!userData?.credits || userData.credits <= 0) {
         displayToast({
           title: "You have no credits left",
           description: "You need to get more credits to generate your resume",
