@@ -20,7 +20,7 @@ const ParentComponent: React.FC<React.PropsWithChildren<{}>> = ({ children }) =>
 
     useEffect(() => {
         remoteConfigPromise && fetchAndActivate(remoteConfig)
-    }).then(() => {...}).catch((e)=> {...})
+    },[]).then(() => {...}).catch((e)=> {...})
 }
 
 export default ParentComponent;

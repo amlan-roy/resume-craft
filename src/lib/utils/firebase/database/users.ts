@@ -8,7 +8,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { formType } from "@/lib/types/form";
+import { UserDocumentData } from "@/lib/types/resume-response";
 import { auth, db } from "@/lib/utils/firebase/config";
 
 /**
@@ -22,21 +22,16 @@ import { auth, db } from "@/lib/utils/firebase/config";
 export const addUserData = async ({
   name,
   email,
-  documents,
+  credits = 3,
 }: {
   name?: string | null;
   email: string | null;
-  documents?: {
-    downloadUrl?: string;
-    formData: formType;
-    downloadFileName?: string;
-    timeUpdated?: string;
-  }[];
+  credits?: number;
 }): Promise<DocumentSnapshot | null> => {
-  const usersRef = collection(db, "users");
   const newUser = {
     name,
     email,
+    credits,
   };
 
   const userId = auth.currentUser?.uid;
@@ -64,4 +59,15 @@ export const getUserFromEmail = async (
   const queryRef = query(usersRef, where("email", "==", email));
   const snapshot = await getDocs(queryRef);
   return snapshot.docs[0];
+};
+
+export const getUserData = async (userId: string) => {
+  const documentRef = doc(db, "users", userId);
+  const documentSnapshot = await getDoc(documentRef);
+
+  if (!documentSnapshot.exists()) {
+    throw new Error("User not found");
+  }
+
+  return documentSnapshot.data() as UserDocumentData;
 };

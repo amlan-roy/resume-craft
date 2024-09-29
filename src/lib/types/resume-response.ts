@@ -5,6 +5,7 @@ export type UserDocumentData = {
   email: string;
   baseResumeData: UserDocumentBaseResumeData;
   resumeVariantData: ResumeVariantData;
+  credits?: number;
 };
 
 export type UserDocumentBaseResumeData = {

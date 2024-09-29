@@ -14,7 +14,9 @@ import {
   setResumeFormData,
 } from "@/lib/services/resume-service";
 import { formType, resumeVariantGenerationFormSchema } from "@/lib/types/form";
+import { UserDocumentData } from "@/lib/types/resume-response";
 import { auth } from "@/lib/utils/firebase/config";
+import { getUserData } from "@/lib/utils/firebase/database/users";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -44,6 +46,7 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
   const router = useRouter();
   const params = useSearchParams();
   const id = dynamicParams.slug;
+  const [userData, setUserData] = useState<null | UserDocumentData>(null);
   const [baseResumeData, setBaseResumeData] = useState<null | formType>(null);
   const [resumeVariantData, setResumeVariantData] = useState<null | formType>(
     null
@@ -82,30 +85,36 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
       const userId = auth.currentUser?.uid;
       if (userId) {
         setUid(userId);
-        getResumeFormData(userId, "base")
-          .then((resumeFormData) => {
-            if (resumeFormData) {
-              setBaseResumeData(resumeFormData);
-              setShowRedirectModal(false);
-              setLoading(false);
-            } else {
-              setShowRedirectModal(true);
-            }
-          })
-          .catch(() => {
-            setShowRedirectModal(true);
-          });
-        getResumeFormData(userId, id).then((resumeVariantData) => {
-          if (resumeVariantData) {
-            setResumeVariantData(resumeVariantData);
+        getUserData(userId).then((userData) => {
+          if (!userData) {
+            throw new Error("User not found");
           }
-          setLoading(false);
+          setUserData(userData);
+          getResumeFormData(userId, "base", userData)
+            .then((resumeFormData) => {
+              if (resumeFormData) {
+                setBaseResumeData(resumeFormData);
+                setShowRedirectModal(false);
+                setLoading(false);
+              } else {
+                setShowRedirectModal(true);
+              }
+            })
+            .catch(() => {
+              setShowRedirectModal(true);
+            });
+          getResumeFormData(userId, id, userData).then((resumeVariantData) => {
+            if (resumeVariantData) {
+              setResumeVariantData(resumeVariantData);
+            }
+            setLoading(false);
+          });
         });
       }
     });
-  });
+  }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = watch((value) => {
       setFormData(JSON.stringify(value));
     });
@@ -127,6 +136,14 @@ const GenerateVariantHomePage: React.FC<GenerateVariantHomePageProps> = ({
           title: "Please fill in the required fields",
           description:
             "You need to fill in the required fields to generate your resume",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (userData.credits <= 0) {
+        displayToast({
+          title: "You have no credits left",
+          description: "You need to get more credits to generate your resume",
           variant: "destructive",
         });
         return;

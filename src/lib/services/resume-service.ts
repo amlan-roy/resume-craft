@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "../utils/firebase/config";
+import { UserDocumentData } from "@/lib/types/resume-response";
+import { auth, db } from "@/lib/utils/firebase/config";
 
 /**
  * Make a request to generate a resume
@@ -161,9 +162,19 @@ export const getResumeVariantData = async (userId: string) => {
  * Get the resume form data
  * @param userId - The user id
  * @param formId - The form id (use "base" for the base resume, or the form id for a variant resume)
+ * @param userData - Optional user data. If this is passed, the extra api call is not made
  * @returns A promise that resolves to the resume form data
  */
-export const getResumeFormData = async (userId: string, formId: string) => {
+export const getResumeFormData = async (
+  userId: string,
+  formId: string,
+  userData: UserDocumentData | undefined = undefined
+) => {
+  if (userData) {
+    return formId === "base"
+      ? userData.baseResumeData?.formData
+      : userData.resumeVariantData?.[formId]?.formData;
+  }
   const documentRef = doc(db, "users", userId);
 
   if (!documentRef) {

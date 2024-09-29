@@ -11,6 +11,7 @@ import {
 import { formType } from "@/lib/types/form";
 import { cleanFormData } from "@/lib/utils/data-formatting";
 import { auth } from "@/lib/utils/firebase/config";
+import { getUserData } from "@/lib/utils/firebase/database/users";
 import { Button } from "@/components/ui/button";
 import {
   HoverCard,
@@ -59,24 +60,26 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
     auth.authStateReady().then(() => {
       const userId = auth.currentUser?.uid;
       if (userId) {
-        getResumeFormData(userId, formId)
-          .then((resumeFormData) => {
-            if (formId === "base") {
-              if (resumeFormData) setResumeData(resumeFormData);
-              setIsLoading(false);
-            } else if (formId && !!resumeFormData) {
-              setResumeData(resumeFormData);
-              setIsLoading(false);
-            } else {
+        getUserData(userId).then((userData) => {
+          getResumeFormData(userId, formId, userData)
+            .then((resumeFormData) => {
+              if (formId === "base") {
+                if (resumeFormData) setResumeData(resumeFormData);
+                setIsLoading(false);
+              } else if (formId && !!resumeFormData) {
+                setResumeData(resumeFormData);
+                setIsLoading(false);
+              } else {
+                router.push("/home");
+              }
+            })
+            .catch(() => {
               router.push("/home");
-            }
-          })
-          .catch(() => {
-            router.push("/home");
-          });
+            });
+        });
       }
     });
-  });
+  }, []);
 
   return (
     <>
