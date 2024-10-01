@@ -2,7 +2,7 @@
  * Names for the experiments that are available to be run in the app.
  */
 export const EXPERIMENT_NAMES = {
-  TEST_EXPERIMENT_NAME: "test_experiment_name",
+  RESUME_GEN_USING_GPT: "experiment_resume_gen_using_gpt",
 };
 
 /**
@@ -11,5 +11,5 @@ export const EXPERIMENT_NAMES = {
  * This object will be set as the default config for the Firebase Remote Config object
  */
 export const EXPERIMENTS = {
-  [EXPERIMENT_NAMES.TEST_EXPERIMENT_NAME]: "test_experiment_value",
+  [EXPERIMENT_NAMES.RESUME_GEN_USING_GPT]: "enabled",
 };
