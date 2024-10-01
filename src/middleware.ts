@@ -4,7 +4,6 @@ const authenticatedRoutes = [
   "/generate-resume",
   "/enter-data",
   "/home",
-  "/api/ai-prompts",
   "/api/data-formatting",
 ];
 

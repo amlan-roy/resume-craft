@@ -7,6 +7,8 @@ We are currently using firebase remote config to implement the support to have e
 
 Fetch and activate the configs somewhere before guarding the changes under these experiments. We are fetching these configs at the root level using a RootWrapper component.
 
+First add an entry for the experiment key in EXPERIMENTS in the `src\lib\utils\firebase\constants\experiments.ts` file.
+
 Eg
 
 ```
