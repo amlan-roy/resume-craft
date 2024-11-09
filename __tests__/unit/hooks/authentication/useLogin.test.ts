@@ -50,6 +50,7 @@ describe("useLogin", () => {
     ]);
     // Mock the axios post request
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
+    (axios.get as jest.Mock).mockResolvedValue({ status: 200 });
   });
 
   afterEach(() => {
