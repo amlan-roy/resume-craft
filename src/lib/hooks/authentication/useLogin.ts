@@ -37,7 +37,7 @@ export const useLogin = ({
   onError,
   onSuccess,
 }: TUseLoginProps) => {
-  const [authState, setAuthState] = useState<authStates>(() =>
+  const [authState, setAuthState] = useState<authStates>(
     auth.currentUser ? "authenticated" : "unauthenticated"
   );
   const loginInProgress = authState === "loading";
@@ -52,6 +52,27 @@ export const useLogin = ({
       setAuthState("loading");
     }
   }, [authState, errorGoogleAuth, loadingGoogleAuth]);
+
+  // In case of expired session cookies, the get request to login api will return 401 with isLogged as false.
+  //In such case, logout the user and set auth state as unauthenticated
+  useEffect(() => {
+    axios
+      .get("/api/login")
+      .then((res) => {
+        if (auth.currentUser && !res.data?.isLogged) {
+          setAuthState("loading");
+          logout(auth, router, undefined, false).then(() =>
+            setAuthState("unauthenticated")
+          );
+        }
+      })
+      .catch(() => {
+        setAuthState("loading");
+        logout(auth, router, undefined, false).then(() =>
+          setAuthState("unauthenticated")
+        );
+      });
+  }, []);
 
   /**
    * Authenticates the user using email and password.

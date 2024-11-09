@@ -17,31 +17,20 @@ customInitApp();
  * @returns The response with the session cookie
  */
 export async function POST(request: NextRequest, response: NextResponse) {
-  const authorization = headers().get("Authorization");
-  if (authorization?.startsWith("Bearer ")) {
-    const idToken = authorization.split("Bearer ")[1];
-    const decodedToken = await auth().verifyIdToken(idToken);
+  try {
+    const authorization = headers().get("Authorization");
 
-    if (decodedToken) {
-      //Generate session cookie
-      const expiresIn = 60 * 60 * 24 * 5 * 1000;
-      const sessionCookie = await auth().createSessionCookie(idToken, {
-        expiresIn,
-      });
-      const options = {
-        name: "session",
-        value: sessionCookie,
-        maxAge: expiresIn,
-        httpOnly: true,
-        secure: true,
-      };
-
+    const sessionCookiesOptions =
+      await verifyAuthorizationAndGenerateSessionCookieOptions(authorization);
+    if (sessionCookiesOptions) {
       //Add the cookie to the browser
-      cookies().set(options);
+      cookies().set(sessionCookiesOptions);
     }
-  }
 
-  return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({}, { status: 200 });
+  } catch (err: any) {
+    return NextResponse.json({}, { status: 401 });
+  }
 }
 
 /**
@@ -53,19 +42,77 @@ export async function POST(request: NextRequest, response: NextResponse) {
  * @returns The response with the user status
  */
 export async function GET(request: NextRequest) {
-  const session = cookies().get("session")?.value || "";
+  try {
+    const session = cookies().get("session")?.value || "";
 
-  //Validate if the cookie exist in the request
-  if (!session) {
+    //Validate if the cookie exist in the request
+    if (!session) {
+      return NextResponse.json({ isLogged: false }, { status: 401 });
+    }
+
+    //Use Firebase Admin to validate the session cookie
+    try {
+      const decodedClaims = await auth().verifySessionCookie(session, true);
+      if (!decodedClaims) {
+        return NextResponse.json({ isLogged: false }, { status: 401 });
+      }
+    } catch (err: any) {
+      const response = NextResponse.json({ isLogged: false }, { status: 401 });
+      if (err?.code === "auth/session-cookie-expired") {
+        console.log("User session expired");
+        cookies().set({
+          name: "session",
+          value: "",
+          maxAge: -1,
+        });
+      }
+      return response;
+    }
+
+    return NextResponse.json({ isLogged: true }, { status: 200 });
+  } catch (err: any) {
+    console.log(
+      "An error occurred in login get route",
+      err?.body || err?.message
+    );
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
-
-  //Use Firebase Admin to validate the session cookie
-  const decodedClaims = await auth().verifySessionCookie(session, true);
-
-  if (!decodedClaims) {
-    return NextResponse.json({ isLogged: false }, { status: 401 });
-  }
-
-  return NextResponse.json({ isLogged: true }, { status: 200 });
 }
+
+/**
+ * Verifys the passed authorization header, generates a session cookie and return its options
+ *
+ * @param authorization: An optional bearer token containing id token, which can be used to verify the user
+ * @returns
+ */
+const verifyAuthorizationAndGenerateSessionCookieOptions = async (
+  authorization: String | null
+) => {
+  try {
+    if (authorization?.startsWith("Bearer ")) {
+      const idToken = authorization.split("Bearer ")[1];
+      const decodedToken = await auth().verifyIdToken(idToken);
+
+      if (decodedToken) {
+        //Generate session cookie
+        const expiresIn = 5 * 24 * 60 * 60 * 1000; //5 days
+        const sessionCookie = await auth().createSessionCookie(idToken, {
+          expiresIn,
+        });
+        return {
+          name: "session",
+          value: sessionCookie,
+          maxAge: expiresIn,
+          httpOnly: true,
+          secure: true,
+        };
+      }
+    }
+  } catch (err: any) {
+    console.error(
+      err?.message ||
+        "An error occurred while in verifyAuthorizationAndGenerateSessionCookieOptions"
+    );
+  }
+  return null;
+};
