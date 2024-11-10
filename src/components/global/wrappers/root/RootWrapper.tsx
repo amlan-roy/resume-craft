@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchAndActivate } from "firebase/remote-config";
+import { NavigationGuardProvider } from "next-navigation-guard";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import { mailToLinks } from "@/lib/utils/string-helpers";
 import BoxLoader from "@/components/loading/BoxLoader";
@@ -45,36 +46,39 @@ const RootWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
       <UserDataStoreProvider>
-        {isLoading ? (
-          <div className="flex-grow flex w-full h-full justify-center items-center mt-9">
-            <BoxLoader className="w-20 h-20 mx-auto my-auto" />
-          </div>
-        ) : isError ? (
-          <div className="flex-grow flex w-full h-full justify-center items-center mt-9">
-            <span>
-              <h1 className="text-red-700 text-lg">
-                An error occurred while loading the app. Please try again later.
-              </h1>
-              <p className="text-gray-400 text-sm">
-                If the issue persists, please contact{" "}
-                <a
-                  className="text-blue-500"
-                  href={mailToLinks({
-                    subject: "Error in loading the app",
-                    content:
-                      "An error occurred while loading the app. Please check and resolve the issue.\n\n Error: " +
-                      error,
-                  })}
-                >
-                  support
-                </a>
-                !
-              </p>
-            </span>
-          </div>
-        ) : (
-          children
-        )}
+        <NavigationGuardProvider>
+          {isLoading ? (
+            <div className="flex-grow flex w-full h-full justify-center items-center mt-9">
+              <BoxLoader className="w-20 h-20 mx-auto my-auto" />
+            </div>
+          ) : isError ? (
+            <div className="flex-grow flex w-full h-full justify-center items-center mt-9">
+              <span>
+                <h1 className="text-red-700 text-lg">
+                  An error occurred while loading the app. Please try again
+                  later.
+                </h1>
+                <p className="text-gray-400 text-sm">
+                  If the issue persists, please contact{" "}
+                  <a
+                    className="text-blue-500"
+                    href={mailToLinks({
+                      subject: "Error in loading the app",
+                      content:
+                        "An error occurred while loading the app. Please check and resolve the issue.\n\n Error: " +
+                        error,
+                    })}
+                  >
+                    support
+                  </a>
+                  !
+                </p>
+              </span>
+            </div>
+          ) : (
+            children
+          )}
+        </NavigationGuardProvider>
       </UserDataStoreProvider>
     </ThemeProvider>
   );

@@ -168,6 +168,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
                 DEFAULT_FORM_VALUE) as formType
             }
             onSubmit={onSubmit}
+            onCancel={() => router.back()}
             loading={loading}
           />
         )}

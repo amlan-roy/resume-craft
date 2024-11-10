@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigationGuard } from "next-navigation-guard";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -47,6 +48,7 @@ import ModalStateProvider, { ModalStateContext } from "./modal-state-provider";
 type DynamicFormProps = {
   defaultValues?: formType;
   onSubmit: (values: formType) => Promise<void>;
+  onCancel?: Function | any;
   loading?: boolean;
   confirmationModalTextCopies?: {
     cancelText?: string;
@@ -79,6 +81,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   loading,
   confirmationModalTextCopies,
+  onCancel,
 }) => {
   const form = useForm<formType>({
     resolver: zodResolver(formSchema),
@@ -103,6 +106,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   });
 
   const [focusOnLastSection, setFocusOnLastSection] = useState(false);
+  const [
+    forcePreventUnsavedChangesConfirmation,
+    setForcePreventUnsavedChangesConfirmation,
+  ] = useState(false);
 
   const hasValidationTrigerred = () => {
     return !!Object.keys(form.formState.errors).length;
@@ -159,38 +166,47 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     onCancel: modalOnCancel,
   } = modalStateContext.modalState;
 
+  useNavigationGuard({
+    enabled:
+      forcePreventUnsavedChangesConfirmation ||
+      (form.formState.isDirty &&
+        JSON.stringify(form.formState.isDirty) !== "{}"),
+    confirm: () => {
+      return window.confirm("Any unsaved changes will be lost.");
+    },
+  });
+
+  const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fieldsValid = await trigger(undefined, { shouldFocus: true });
+    fieldsValid &&
+      modalStateContext.setModalState({
+        isOpen: true,
+        title: confirmationModalTextCopies?.title || TEXT_COPIES.MODAL.title,
+        message:
+          confirmationModalTextCopies?.description ||
+          TEXT_COPIES.MODAL.description,
+        confirmText:
+          confirmationModalTextCopies?.confirmText ||
+          TEXT_COPIES.MODAL.confirmText,
+        cancelText:
+          confirmationModalTextCopies?.cancelText ||
+          TEXT_COPIES.MODAL.cancelText,
+        onConfirm: () => {
+          setForcePreventUnsavedChangesConfirmation(true);
+          handleSubmit(onSubmit)();
+          modalStateContext.setModalState({ isOpen: false });
+        },
+        onCancel: () => {
+          modalStateContext.setModalState({ isOpen: false });
+        },
+      });
+  };
+
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const fieldsValid = await trigger(undefined, { shouldFocus: true });
-            fieldsValid &&
-              modalStateContext.setModalState({
-                isOpen: true,
-                title:
-                  confirmationModalTextCopies?.title || TEXT_COPIES.MODAL.title,
-                message:
-                  confirmationModalTextCopies?.description ||
-                  TEXT_COPIES.MODAL.description,
-                confirmText:
-                  confirmationModalTextCopies?.confirmText ||
-                  TEXT_COPIES.MODAL.confirmText,
-                cancelText:
-                  confirmationModalTextCopies?.cancelText ||
-                  TEXT_COPIES.MODAL.cancelText,
-                onConfirm: () => {
-                  handleSubmit(onSubmit)();
-                  modalStateContext.setModalState({ isOpen: false });
-                },
-                onCancel: () => {
-                  modalStateContext.setModalState({ isOpen: false });
-                },
-              });
-          }}
-          className="space-y-8"
-        >
+        <form onSubmit={onFormSubmit} className="space-y-8">
           <section className="w-full flex flex-col gap-8">
             {loading ? (
               <>
@@ -521,6 +537,16 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mr-4"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              )}
               <Button type="submit">Submit</Button>
             </>
           )}
