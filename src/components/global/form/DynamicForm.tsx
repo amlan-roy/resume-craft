@@ -160,7 +160,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   } = modalStateContext.modalState;
 
   return (
-    <ModalStateProvider>
+    <>
       <Form {...form}>
         <form
           onSubmit={async (e) => {
@@ -539,7 +539,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           modalOnConfirm?.();
         }}
       />
-    </ModalStateProvider>
+    </>
   );
 };
 export default WrappedDynamicForm;
