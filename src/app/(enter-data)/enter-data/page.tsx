@@ -98,7 +98,7 @@ const EnterDataPage: React.FC<EnterDataPageProps> = () => {
           You can refer this{" "}
           <Link
             href={
-              "https://cdn-careerservices.fas.harvard.edu/wp-content/uploads/sites/161/2023/08/College-resume-and-cover-letter.pdf"
+              "https://careerservices.fas.harvard.edu/resources/create-a-strong-resume/"
             }
             target="_blank"
             aria-label="Visit the external link to harvard resume guide"
