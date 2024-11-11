@@ -1,6 +1,17 @@
 "use client";
 
 import React, { FormEvent, useContext, useState } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -24,6 +35,7 @@ import {
   workExperienceSectionSchema,
 } from "@/lib/types/form";
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
+import { auth } from "@/lib/utils/firebase/config";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -43,6 +55,7 @@ import ProfessionalSummary from "@/components/global/form/form-sections/Professi
 import Projects from "@/components/global/form/form-sections/Projects";
 import Skills from "@/components/global/form/form-sections/Skills";
 import WorkExperience from "@/components/global/form/form-sections/WorkExperience";
+import Column from "./Column";
 import ModalStateProvider, { ModalStateContext } from "./modal-state-provider";
 
 type DynamicFormProps = {
@@ -203,6 +216,50 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
       });
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const [tasks, setTasks] = useState<{ id: Number; title: String }[]>([
+    { id: 1, title: "task1" },
+    { id: 2, title: "task2" },
+    { id: 3, title: "task3" },
+  ]);
+
+  if (auth?.currentUser?.displayName === "Amlan Roy") {
+    console.log();
+
+    const getTaskPosition = (id: String | Number) =>
+      tasks.findIndex(({ id: taskId }) => `${id}` === `${taskId}`);
+
+    const handleDragEnd = (event: DragEndEvent) => {
+      const { active, over } = event;
+
+      if (over === null || active.id === over.id) return;
+
+      setTasks((tasks) => {
+        const originalPos = getTaskPosition(active.id);
+        const newPos = getTaskPosition(over.id);
+
+        return arrayMove(tasks, originalPos, newPos);
+      });
+    };
+
+    return (
+      <DndContext
+        collisionDetection={closestCorners}
+        onDragEnd={handleDragEnd}
+        sensors={sensors}
+      >
+        <Column tasks={tasks} />
+      </DndContext>
+    );
+  }
+
   return (
     <>
       <Form {...form}>
@@ -216,245 +273,271 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             ) : (
               <>
                 <BasicDetails fieldName={"basicDetails" as const} />
-                {fields.map((field, sectionIndex) => {
-                  switch (field.type) {
-                    case SECTION.PROFESSIONAL_SUMMARY:
-                      return (
-                        <ProfessionalSummary
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                        />
-                      );
-                    case SECTION.WORK_EXPERIENCE:
-                      return (
-                        <WorkExperience
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                          fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                          fields={field.fields}
-                          updateFields={(
-                            addFields?: boolean,
-                            index?: number
-                          ): void => {
-                            if (addFields) {
-                              // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
-                              // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
-                              // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
-                              // So we need to use form.getValues instead
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof workExperienceSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.push({
-                                jobTitle: "",
-                                details: "",
-                                companyName: "",
-                                location: "",
-                              });
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
-                              return;
-                            }
-                            if (index || index === 0) {
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof workExperienceSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.splice(index, 1);
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
+                <DndContext>
+                  {fields.map((field, sectionIndex) => {
+                    switch (field.type) {
+                      case SECTION.PROFESSIONAL_SUMMARY:
+                        return (
+                          <ProfessionalSummary
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
                               optionallyTriggerValidationOnDelete();
-                            }
-                          }}
-                        />
-                      );
-                    case SECTION.PROJECTS:
-                      return (
-                        <Projects
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                          fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                          fields={field.fields}
-                          updateFields={(
-                            addFields?: boolean,
-                            index?: number
-                          ): void => {
-                            if (addFields) {
-                              // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
-                              // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
-                              // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
-                              // So we need to use form.getValues instead
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof projectsSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.push({
-                                projectTitle: "",
-                                details: "",
-                              });
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
-                              return;
-                            }
-                            if (index || index === 0) {
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof projectsSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.splice(index, 1);
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
+                            }}
+                            index={sectionIndex}
+                          />
+                        );
+                      case SECTION.WORK_EXPERIENCE:
+                        return (
+                          <WorkExperience
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
                               optionallyTriggerValidationOnDelete();
+                            }}
+                            index={sectionIndex}
+                            fieldErrors={
+                              errors?.optionalSections?.[sectionIndex]
                             }
-                          }}
-                        />
-                      );
-                    case SECTION.SKILLS:
-                      return (
-                        <Skills
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                          fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                          fields={field.fields}
-                          updateFields={(
-                            addFields?: boolean,
-                            index?: number
-                          ): void => {
-                            if (addFields) {
-                              // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
-                              // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
-                              // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
-                              // So we need to use form.getValues instead
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof skillsSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.push({
-                                skills: "",
-                              });
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
-                              return;
-                            }
-                            if (index || index === 0) {
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof skillsSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.splice(index, 1);
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
+                            fields={field.fields}
+                            updateFields={(
+                              addFields?: boolean,
+                              index?: number
+                            ): void => {
+                              if (addFields) {
+                                // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                                // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                                // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                                // So we need to use form.getValues instead
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof workExperienceSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.push({
+                                  jobTitle: "",
+                                  details: "",
+                                  companyName: "",
+                                  location: "",
+                                });
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                return;
+                              }
+                              if (index || index === 0) {
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof workExperienceSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.splice(index, 1);
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                optionallyTriggerValidationOnDelete();
+                              }
+                            }}
+                          />
+                        );
+                      case SECTION.PROJECTS:
+                        return (
+                          <Projects
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
                               optionallyTriggerValidationOnDelete();
+                            }}
+                            index={sectionIndex}
+                            fieldErrors={
+                              errors?.optionalSections?.[sectionIndex]
                             }
-                          }}
-                        />
-                      );
-                    case SECTION.EDUCATION:
-                      return (
-                        <Education
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                          fieldErrors={errors?.optionalSections?.[sectionIndex]}
-                          fields={field.fields}
-                          updateFields={(
-                            addFields?: boolean,
-                            index?: number
-                          ): void => {
-                            if (addFields) {
-                              // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
-                              // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
-                              // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
-                              // So we need to use form.getValues instead
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof educationSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.push({
-                                universityName: "",
-                                degreeName: "",
-                              });
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
-                              return;
-                            }
-                            if (index || index === 0) {
-                              const currentField = form.getValues()
-                                .optionalSections[sectionIndex] as z.infer<
-                                typeof educationSectionSchema
-                              >;
-                              const currentFields = currentField?.fields;
-                              const updatedFields = [...(currentFields || [])];
-                              updatedFields.splice(index, 1);
-                              updateSection(sectionIndex, {
-                                ...currentField,
-                                fields: updatedFields,
-                              });
+                            fields={field.fields}
+                            updateFields={(
+                              addFields?: boolean,
+                              index?: number
+                            ): void => {
+                              if (addFields) {
+                                // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                                // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                                // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                                // So we need to use form.getValues instead
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof projectsSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.push({
+                                  projectTitle: "",
+                                  details: "",
+                                });
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                return;
+                              }
+                              if (index || index === 0) {
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof projectsSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.splice(index, 1);
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                optionallyTriggerValidationOnDelete();
+                              }
+                            }}
+                          />
+                        );
+                      case SECTION.SKILLS:
+                        return (
+                          <Skills
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
                               optionallyTriggerValidationOnDelete();
+                            }}
+                            index={sectionIndex}
+                            fieldErrors={
+                              errors?.optionalSections?.[sectionIndex]
                             }
-                          }}
-                        />
-                      );
-                    case SECTION.ADDITIONAL:
-                      return (
-                        <Additional
-                          key={field.id}
-                          deleteSection={() => {
-                            deleteSection(sectionIndex);
-                            optionallyTriggerValidationOnDelete();
-                          }}
-                          index={sectionIndex}
-                        />
-                      );
-                  }
-                })}
+                            fields={field.fields}
+                            updateFields={(
+                              addFields?: boolean,
+                              index?: number
+                            ): void => {
+                              if (addFields) {
+                                // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                                // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                                // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                                // So we need to use form.getValues instead
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof skillsSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.push({
+                                  skills: "",
+                                });
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                return;
+                              }
+                              if (index || index === 0) {
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof skillsSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.splice(index, 1);
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                optionallyTriggerValidationOnDelete();
+                              }
+                            }}
+                          />
+                        );
+                      case SECTION.EDUCATION:
+                        return (
+                          <Education
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
+                              optionallyTriggerValidationOnDelete();
+                            }}
+                            index={sectionIndex}
+                            fieldErrors={
+                              errors?.optionalSections?.[sectionIndex]
+                            }
+                            fields={field.fields}
+                            updateFields={(
+                              addFields?: boolean,
+                              index?: number
+                            ): void => {
+                              if (addFields) {
+                                // Directly using form.fields here causes an issue where when we click the add section button after the form is first rendered and if the subsections have some value in it, then
+                                // the form.fields will not have the values from the UI. And hence when the button is clicked and a new section is added, then the previous values are lost
+                                // However, after this, the values in form.fields are updated correctly and no values are lost on subsequent subsection additions.
+                                // So we need to use form.getValues instead
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof educationSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.push({
+                                  universityName: "",
+                                  degreeName: "",
+                                });
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                return;
+                              }
+                              if (index || index === 0) {
+                                const currentField = form.getValues()
+                                  .optionalSections[sectionIndex] as z.infer<
+                                  typeof educationSectionSchema
+                                >;
+                                const currentFields = currentField?.fields;
+                                const updatedFields = [
+                                  ...(currentFields || []),
+                                ];
+                                updatedFields.splice(index, 1);
+                                updateSection(sectionIndex, {
+                                  ...currentField,
+                                  fields: updatedFields,
+                                });
+                                optionallyTriggerValidationOnDelete();
+                              }
+                            }}
+                          />
+                        );
+                      case SECTION.ADDITIONAL:
+                        return (
+                          <Additional
+                            key={field.id}
+                            deleteSection={() => {
+                              deleteSection(sectionIndex);
+                              optionallyTriggerValidationOnDelete();
+                            }}
+                            index={sectionIndex}
+                          />
+                        );
+                    }
+                  })}
+                </DndContext>
               </>
             )}
           </section>
