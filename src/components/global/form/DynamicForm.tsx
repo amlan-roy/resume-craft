@@ -25,6 +25,7 @@ import {
   DEFAULT_SKILLS_FORM_VALUE,
   DEFAULT_WORK_EXPERIENCE_FORM_VALUE,
 } from "@/lib/const/form/form-data";
+import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import {
   SECTION,
   educationSectionSchema,
@@ -36,6 +37,7 @@ import {
 } from "@/lib/types/form";
 import { findFirstFocusable } from "@/lib/utils/findFirstFocusableElemInLastCard";
 import { auth } from "@/lib/utils/firebase/config";
+import { EXPERIMENT_NAMES } from "@/lib/utils/firebase/constants/experiments";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -230,7 +232,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     { id: 3, title: "task3" },
   ]);
 
-  if (auth?.currentUser?.displayName === "Amlan Roy") {
+  const [, isExperimentEnabled] = useRemoteConfig();
+
+  if (isExperimentEnabled(EXPERIMENT_NAMES.DRAGGABLE_TEST)) {
     console.log();
 
     const getTaskPosition = (id: String | Number) =>
