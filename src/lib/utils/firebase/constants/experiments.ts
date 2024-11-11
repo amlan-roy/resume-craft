@@ -3,6 +3,7 @@
  */
 export const EXPERIMENT_NAMES = {
   RESUME_GEN_USING_GPT: "experiment_resume_gen_using_gpt",
+  DRAGGABLE_TEST: "experiment_draggable_test",
 };
 
 /**
@@ -11,5 +12,6 @@ export const EXPERIMENT_NAMES = {
  * This object will be set as the default config for the Firebase Remote Config object
  */
 export const EXPERIMENTS = {
-  [EXPERIMENT_NAMES.RESUME_GEN_USING_GPT]: "enabled",
+  [EXPERIMENT_NAMES.RESUME_GEN_USING_GPT]: "control",
+  [EXPERIMENT_NAMES.DRAGGABLE_TEST]: "enabled",
 };
