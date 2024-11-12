@@ -8,23 +8,36 @@ type TaskProps = {
 };
 
 const Task: React.FC<TaskProps> = ({ id, title }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: id.toString(),
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    setActivatorNodeRef,
+  } = useSortable({
+    id: id.toString(),
+  });
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
+    touchAction: "none",
   };
   return (
     <div
       ref={setNodeRef}
-      className="w-full p-2 border-2 border-solid border-black rounded-sm"
-      {...attributes}
-      {...listeners}
+      className="w-full p-2 border-2 border-solid border-black rounded-sm flex flex-row gap-2"
       style={style}
     >
+      <div
+        {...attributes}
+        {...listeners}
+        ref={setActivatorNodeRef}
+        className="w-fit bg-slate-100"
+      >
+        ...
+      </div>
       {title}
     </div>
   );

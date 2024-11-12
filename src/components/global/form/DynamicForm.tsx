@@ -11,6 +11,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from "@dnd-kit/modifiers";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigationGuard } from "next-navigation-guard";
@@ -220,7 +224,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(TouchSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -258,6 +266,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         collisionDetection={closestCorners}
         onDragEnd={handleDragEnd}
         sensors={sensors}
+        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
       >
         <Column tasks={tasks} />
       </DndContext>
